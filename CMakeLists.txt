@@ -48,7 +48,6 @@ include(CppcheckTargets)
 include(DoxygenTargets)
 include(GetDirectoryList)
 include(EnableExtraCompilerWarnings)
-include(StampSourcesWithVersion)
 
 include(CTest)
 include(CreateDashboardScripts)
@@ -58,6 +57,14 @@ include(SearchProgramFilesForOpenSceneGraph)
 find_package(OpenSceneGraph REQUIRED COMPONENTS osgDB osgUtil)
 list(APPEND EXTRA_LIBS ${OPENSCENEGRAPH_LIBRARIES})
 include_directories(${OPENSCENEGRAPH_INCLUDE_DIRS})
+
+get_directory_list(OPENSCENEGRAPH_RUNTIME_LIBRARY_DIRS ${OPENSCENEGRAPH_LIBRARIES})
+list(APPEND RUNTIME_LIBRARY_DIRS ${OPENSCENEGRAPH_RUNTIME_LIBRARY_DIRS})
+if(WIN32)
+    foreach(_dir ${OPENSCENEGRAPH_RUNTIME_LIBRARY_DIRS})
+        list(APPEND RUNTIME_LIBRARY_DIRS ${_dir}/../bin)
+    endforeach()
+endif()
 
 find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
@@ -86,6 +93,12 @@ if(BUILD_TESTING)
 endif()
 
 create_dashboard_scripts("DashboardBuildInitialCache.cmake.in")
+
+include(CreateLaunchers)
+create_default_target_launcher(dummyHand
+	FORWARD_ARGS
+	RUNTIME_LIBRARY_DIRS
+	${RUNTIME_LIBRARY_DIRS})
 
 ###
 # Create config files to allow easy use of this library
