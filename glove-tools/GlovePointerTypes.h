@@ -21,6 +21,7 @@
 
 // Library/third-party includes
 #include <boost/shared_ptr.hpp>
+#include <boost/weak_ptr.hpp>
 
 // Standard includes
 // - none
@@ -28,6 +29,7 @@
 namespace glove {
 	class IGloveHardware;
 	typedef boost::shared_ptr<IGloveHardware> GloveHardwarePtr;
+	typedef boost::weak_ptr<IGloveHardware> GloveHardwareWeakPtr;
 }
 
 #endif // INCLUDED_GlovePointerTypes_h_GUID_82e91079_b61c_4228_810c_2a13ac158f79
