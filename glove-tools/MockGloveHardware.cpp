@@ -20,7 +20,7 @@
 // - none
 
 // Standard includes
-// - none
+#include <cmath>
 
 namespace glove {
 	/// Register this class for create-by-name
@@ -31,11 +31,20 @@ namespace glove {
 		return temp;
 	}
 
-	MockGloveHardware::MockGloveHardware(std::string const & option) {}
+	MockGloveHardware::MockGloveHardware(std::string const & option) :
+		_counter(0) {}
 
 			
 	void MockGloveHardware::updateData() {
 		/// @todo implement
+		double bend = (- std::cos(static_cast<double>(_counter)) + 0.5) * 2;
+		_bends[0] = bend;
+		_bends[1] = bend;
+		_bends[2] = bend;
+		_bends[3] = bend;
+		_bends[4] = bend;
+		_counter++;
+		//change bends
 	}
 
 }

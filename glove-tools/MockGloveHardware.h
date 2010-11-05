@@ -40,6 +40,7 @@ namespace glove {
 
 		protected:
 			MockGloveHardware(std::string const & option);
+			unsigned int _counter;
 	};
 }
 #endif // INCLUDED_MockGloveHardware_h_GUID_99f489e0_8c85_4427_9700_d8a9c79eb90c
