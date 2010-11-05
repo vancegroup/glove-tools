@@ -3,21 +3,14 @@
 ###
 # 5DTGlove Library
 set(SOURCES
-	CubeField.cpp
-	GetVoxelLocations.cpp
-	PointshellView.cpp
-	VoxelizeVisitor.cpp
-	VoxmapView.cpp)
+	Glove.cpp
+	GloveNode.cpp
+	GloveUpdater.cpp)
 
 set(API
-	CubeField.h
-	GetVoxelLocations.h
-	OSGtoVPSMatrix.h
-	PointshellView.h
-	VoxelizeVisitor.h
-	Voxelizer.h
-	VoxmapView.h
-	Voxode.h)
+	Glove.h
+	GloveNode.h
+	GloveUpdater.h)
 
 add_library(5DTGlove ${SOURCES} ${API})
 set_target_properties(5DTGlove PROPERTIES PUBLIC_HEADER "${API}")
