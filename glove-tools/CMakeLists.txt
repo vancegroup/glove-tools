@@ -9,6 +9,7 @@ set(SOURCES
 	IGloveHardware.cpp)
 
 set(API
+	Finger.h
 	Glove.h
 	GloveNode.h
 	GlovePointerTypes.h

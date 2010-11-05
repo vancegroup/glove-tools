@@ -46,7 +46,7 @@ namespace glove {
 		return _node;
 	}
 
-	double Glove::getBend(int finger) const {
+	double Glove::getBend(Finger finger) const {
 		return _bends[finger];
 	}
 

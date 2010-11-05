@@ -16,6 +16,7 @@
 
 // Internal Includes
 #include "GlovePointerTypes.h"
+#include "Finger.h"
 
 // Library/third-party includes
 #include <osg/ref_ptr>
@@ -34,6 +35,8 @@ namespace glove {
 				RIGHT_HAND
 			};
 
+			
+
 			/// Fetch updated data from hardware and process it.
 			void updateData();
 
@@ -41,7 +44,7 @@ namespace glove {
 			/// @name Accessors
 			/// @{
 			osg::ref_ptr<osg::Node> getNode() const;
-			double getBend(int finger) const;
+			double getBend(Finger finger) const;
 			Handedness getHand() const;
 			/// @}
 
