@@ -16,11 +16,9 @@
 
 // Internal Includes
 #include "Glove.h"
-#include "GloveUpdater.h"
 
 // Library/third-party includes
 #include <osg/NodeCallback>
-#include <osg/Node>
 
 // Standard includes
 // - none
@@ -33,7 +31,6 @@ namespace glove {
 
 		private:
 			Glove const & _g;
-
 	};
 
 

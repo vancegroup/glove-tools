@@ -14,6 +14,7 @@
 
 // Internal Includes
 #include "GloveUpdater.h"
+#include "GloveNode.h"
 
 // Library/third-party includes
 // - none
