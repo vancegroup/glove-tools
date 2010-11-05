@@ -16,16 +16,22 @@
 #include "GloveNode.h"
 
 // Library/third-party includes
-// - none
+#include <osgDB/ReadFile>
 
 // Standard includes
-// - none
+#include <cassert>
 
 namespace glove {
 	GloveNode::GloveNode(Glove const & g) :
 			_g(g),
 			_updater(new GloveUpdater(g)) {
 		/// @todo load the model and set the updater here
+
+		osg::Node * hand = osgDB::readNodeFile("hand-structured.osg");
+		assert(hand.valid());
+		hand->setUpdateCallback(_updater.get());
+
+		this->addChild(hand);
 	}
 
 }
