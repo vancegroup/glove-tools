@@ -27,7 +27,15 @@ namespace glove {
 		_g(g) {}
 
 	void GloveUpdater::operator()(osg::Node* node, osg::NodeVisitor* nv) {
-		 /// @todo using the data from _g, update the joints
+		/// @todo using the data from _g, update the joints
+
+		/// @todo also update the switch node's active child, based on the handedness of the glove
+		/* multiplying by:
+			1	0	0	0
+			0	-1	0	0
+			0	0	1	0
+			0	0	0	1
+		  should flip across the y axis */
 	}
 
 }
