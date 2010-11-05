@@ -57,7 +57,7 @@ set(EXTRA_LIBS)
 include(SearchProgramFilesForOpenSceneGraph)
 find_package(OpenSceneGraph REQUIRED COMPONENTS osgDB osgUtil)
 list(APPEND EXTRA_LIBS ${OPENSCENEGRAPH_LIBRARIES})
-
+include_directories(${OPENSCENEGRAPH_INCLUDE_DIRS})
 
 find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
