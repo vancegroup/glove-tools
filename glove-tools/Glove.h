@@ -31,6 +31,11 @@ namespace glove {
 		public:
 			Glove(GloveHardwarePtr hardware);
 
+			enum Handedness {
+				LEFT_HAND,
+				RIGHT_HAND
+			};
+
 			/// Fetch updated data from hardware and process it.
 			void updateData();
 
@@ -39,13 +44,22 @@ namespace glove {
 			/// @{
 			osg::ref_ptr<osg::Node> getNode() const;
 			float getBend(int finger) const;
+			Handedness getHand() const;
+			/// @}
+
+			/// @name Mutators
+			/// @{
+
+			void setHand(Handedness hand);
 			/// @}
 		private:
 			/// @todo change to a pointer to a glovenode
 			osg::ref_ptr<osg::Node> _node;
 
+			Handedness _hand;
+
 			GloveHardwarePtr _hardware;
-			std::vector<float> _bends;
+			std::vector<double> _bends;
 	
 	};
 

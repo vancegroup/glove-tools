@@ -14,10 +14,50 @@
 
 // Internal Includes
 #include "Glove.h"
+#include "GloveNode.h"
 
 // Library/third-party includes
 // - none
 
 // Standard includes
 // - none
+
+namespace glove {
+
+	Glove::Glove(GloveHardwarePtr hardware) :
+			_hand(LEFT_HAND),
+			_hardware(hardware) {
+		_node = new GloveNode(*this);
+		_bends.push_back(0.0);
+		_bends.push_back(0.0);
+		_bends.push_back(0.0);
+		_bends.push_back(0.0);
+		_bends.push_back(0.0);
+	}
+
+	void Glove::updateData() {
+		/// @todo implement!
+
+	}
+
+
+
+	osg::ref_ptr<osg::Node> Glove::getNode() const {
+		return _node;
+	}
+
+	float Glove::getBend(int finger) const {
+		return _bends[finger];
+	}
+
+	Glove::Handedness Glove::getHand() const {
+		return _hand;
+	}
+
+	void Glove::setHand(Handedness hand) {
+	  _hand = hand;
+	}
+
+
+} // end of namespace glove
 
