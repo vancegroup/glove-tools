@@ -35,6 +35,8 @@ int main(int argc, char * argv[]) {
     arguments.getApplicationUsage()->setApplicationName(arguments.getApplicationName());
     arguments.getApplicationUsage()->setDescription(arguments.getApplicationName()+" shows a dummy hand.");
     arguments.getApplicationUsage()->setCommandLineUsage(arguments.getApplicationName()+" [options] ...");
+    arguments.getApplicationUsage()->addCommandLineOption("--device <type>","Choose a different device type.");
+	arguments.getApplicationUsage()->addCommandLineOption("--option <option>","Pass an option to the GloveHardware driver - like an address/port.");
 
     osgViewer::Viewer viewer;
 
@@ -44,6 +46,12 @@ int main(int argc, char * argv[]) {
         arguments.getApplicationUsage()->write(std::cout, helpType);
         return 1;
     }
+	
+	std::string deviceType = "MockGloveHardware";
+	std::string deviceOption = "";
+
+    while (arguments.read("--device", deviceType)) {}
+	while (arguments.read("--option", deviceOption)) {}
 
     // report any errors if they have occurred when parsing the program arguments.
     if (arguments.errors())
@@ -64,7 +72,7 @@ int main(int argc, char * argv[]) {
 	
 	
 	/// The Important Part is Here!	
-	GloveHardwarePtr hardware(GloveHardwareFactory::instance()->createByName("MockGloveHardware"));
+	GloveHardwarePtr hardware(GloveHardwareFactory::instance()->createByName(deviceType, deviceOption));
 	Glove g(hardware);
 
 	osg::ref_ptr<osg::Group> root = new osg::Group();
