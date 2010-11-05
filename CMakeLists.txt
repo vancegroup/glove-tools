@@ -6,7 +6,7 @@
 cmake_minimum_required(VERSION 2.6.2)
 
 # Set package properties
-project(5DTGlove)
+project(glove-tools)
 
 set(CPACK_PACKAGE_VENDOR "Iowa State University")
 set(CPACK_PACKAGE_CONTACT "Ryan Pavlik <rpavlik@iastate.edu>")
@@ -74,7 +74,7 @@ set(CMAKE_DEBUG_POSTFIX  "_d")
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
 
-add_subdirectory(5DTGlove)
+add_subdirectory(glove-tools)
 
 add_subdirectory(applications)
 
