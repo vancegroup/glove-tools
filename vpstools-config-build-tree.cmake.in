@@ -1,0 +1,54 @@
+# CMake cross-platform build system
+# 2009-2010 Ryan Pavlik <rpavlik@iastate.edu>
+# http://academic.cleardefinition.com/
+# Iowa State University HCI Graduate Program/VRAC
+#
+# Will set:
+#  VPSTOOLS_LIBRARIES
+#  VPSTOOLS_VPSTOOLS_LIBRARIES
+#  VPSTOOLS_OSGVPS_LIBRARIES
+#  VPSTOOLS_INCLUDE_DIRS
+#  VPSTOOLS_RUNTIME_LIBRARIES and VPSTOOLS_RUNTIME_LIBRARY_DIRS if applicable
+#  VPSTOOLS_FOUND
+
+set(VPSTOOLS_INCLUDE_DIRS
+	"@CMAKE_CURRENT_SOURCE_DIR@")
+
+include("@CMAKE_CURRENT_BINARY_DIR@/vpstools-targets.cmake")
+
+set(VPSTOOLS_LIBRARIES)
+set(VPSTOOLS_RUNTIME_LIBRARIES)
+set(VPSTOOLS_RUNTIME_LIBRARY_DIRS)
+foreach(_lib osgVPS VPSTools)
+	set(_explib vpstools_buildtree_${_lib}) # The exported target name
+
+	string(TOUPPER VPSTOOLS_${_lib}_LIBRARIES _libvar) # Upper case variable name
+	set(${_libvar} ${_explib})
+
+	list(APPEND VPSTOOLS_LIBRARIES ${_explib})
+
+	# Runtime library info - only useful for shared libraries
+	get_property(_type TARGET ${_explib} PROPERTY TYPE)
+	if(_type STREQUAL "SHARED_LIBRARY")
+		get_property(_configs TARGET ${_explib} PROPERTY IMPORTED_CONFIGURATIONS)
+		foreach(_config ${_configs})
+			get_property(_libloc TARGET ${_explib} PROPERTY IMPORTED_LOCATION_${_config})
+			if(EXISTS "${_libloc}")
+				list(APPEND VPSTOOLS_RUNTIME_LIBRARIES "${_libloc}")
+
+				get_filename_component(_libpath "${_libloc}" PATH)
+				list(APPEND VPSTOOLS_RUNTIME_LIBRARY_DIRS ${_libpath})
+			endif()
+		endforeach()
+	endif()
+endforeach()
+
+if(VPSTOOLS_RUNTIME_LIBRARIES)
+	list(REMOVE_DUPLICATES VPSTOOLS_RUNTIME_LIBRARIES)
+endif()
+
+if(VPSTOOLS_RUNTIME_LIBRARY_DIRS)
+	list(REMOVE_DUPLICATES VPSTOOLS_RUNTIME_LIBRARY_DIRS)
+endif()
+
+set(VPSTOOLS_FOUND ON)
