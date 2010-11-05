@@ -29,7 +29,9 @@ namespace glove {
 
 	void GloveUpdater::operator()(osg::Node* node, osg::NodeVisitor* nv) {
 		GloveNode * n = static_cast<GloveNode *>(node);
-		/// @todo using the data from _g, update the joints
+		/// @todo using the data from _g, update the transforms for the joints
+		double angle = _g.getBend(THUMB) * something;
+		setAttitude...
 
 		/// @todo also update the switch node's active child, based on the handedness of the glove
 		/* multiplying by:
