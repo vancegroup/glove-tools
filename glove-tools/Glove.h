@@ -55,7 +55,7 @@ namespace glove {
 			/// @}
 		private:
 			/// @todo change to a pointer to a glovenode
-			osg::ref_ptr<osg::Node> _node;
+			osg::ref_ptr<osg::GloveNode> _node;
 
 			Handedness _hand;
 
