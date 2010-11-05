@@ -15,6 +15,7 @@
 // Internal Includes
 #include "Glove.h"
 #include "GloveNode.h"
+#include "IGloveHardware.h"
 
 // Library/third-party includes
 // - none
@@ -47,9 +48,11 @@ namespace glove {
 		_node = NULL;
 	}
 
-	void Glove::updateData() {
-		/// @todo implement! should update the hardware, then update our own bend data.
-		/// Eventually will want kalman filter here.
+	void Glove::updateData() {		
+		_hardware->updateData();
+
+		_bends = _hardware->getBends();
+		/// @todo Eventually will want kalman filter here rather than just copying the latest update
 
 	}
 

@@ -39,6 +39,10 @@ namespace glove {
 				return _bends[finger];
 			}
 
+			std::vector<double> getBends() const {
+				return _bends;
+			}
+
 		protected:
 			std::vector<double> _bends;
 	};
