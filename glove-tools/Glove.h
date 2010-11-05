@@ -43,7 +43,7 @@ namespace glove {
 			/// @name Accessors
 			/// @{
 			osg::ref_ptr<osg::Node> getNode() const;
-			float getBend(int finger) const;
+			double getBend(int finger) const;
 			Handedness getHand() const;
 			/// @}
 
