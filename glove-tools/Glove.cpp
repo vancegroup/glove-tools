@@ -23,27 +23,38 @@
 // - none
 
 namespace glove {
+	namespace detail {
+		struct GloveNodeContainer {
+			osg::ref_ptr<GloveNode> n;
+		};
+	}
 
 	Glove::Glove(GloveHardwarePtr hardware) :
+			_node(new detail::GloveNodeContainer),
 			_hand(LEFT_HAND),
 			_hardware(hardware) {
-		_node = new GloveNode(*this);
+		assert(_node);
+		_node->n = new GloveNode(*this);
 		_bends.push_back(0.0);
 		_bends.push_back(0.0);
 		_bends.push_back(0.0);
 		_bends.push_back(0.0);
 		_bends.push_back(0.0);
+	}
+
+	Glove::~Glove() {
+		delete _node;
+		_node = NULL;
 	}
 
 	void Glove::updateData() {
-		/// @todo implement!
+		/// @todo implement! should update the hardware, then update our own bend data.
+		/// Eventually will want kalman filter here.
 
 	}
 
-
-
 	osg::ref_ptr<osg::Node> Glove::getNode() const {
-		return _node;
+		return _node->n;
 	}
 
 	double Glove::getBend(Finger finger) const {

@@ -1,5 +1,5 @@
 /**
-	@file GloveNode.cpp
+	@file MockGloveHardware.cpp
 	@brief
 
 	@date 2010
@@ -13,7 +13,7 @@
 */
 
 // Internal Includes
-#include "GloveNode.h"
+#include "MockGloveHardware.h"
 
 // Library/third-party includes
 // - none
@@ -22,10 +22,12 @@
 // - none
 
 namespace glove {
-	GloveNode::GloveNode(Glove const & g) :
-			_g(g),
-			_updater(new GloveUpdater(g)) {
-		/// @todo load the model and set the updater here
+	/// Register this class for create-by-name
+	DriverRegistration MockGloveHardwareRegistration("MockGloveHardware", &MockGloveHardware::create);
+
+	GloveHardwarePtr MockGloveHardware::create(std::string const & option) {
+		GloveHardwarePtr temp(new MockGloveHardware(option));
+		return temp;
 	}
 
 }

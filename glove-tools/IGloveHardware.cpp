@@ -21,3 +21,22 @@
 // Standard includes
 // - none
 
+namespace glove {
+	std::map<std::string, HardwareCreator> IGloveHardware::s_creators;
+
+	GloveHardwarePtr IGloveHardware::createByName(std::string const & name, std::string const & option) {
+		HardwareCreator f = s_creators[name];
+		if (!f) {
+			throw new UnregisteredHardwareTypeException(name);
+		}
+		return f(option);
+	}
+
+	void IGloveHardware::registerDriver(std::string const & name, HardwareCreator creatorFunc) {
+		s_creators[name] = creatorFunc;
+	}
+
+	DriverRegistration::DriverRegistration(std::string const & name, HardwareCreator creatorFunc) {
+		IGloveHardware::registerDriver(name, creatorFunc);
+	}
+}

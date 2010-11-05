@@ -22,6 +22,8 @@ set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}-${CPACK_PACKAGE_VERSION}-src
 # Set up options
 ###
 
+option(BUILD_WITH_GLOVE5DT "Build with a 5DT Glove driver?" off)
+
 set(BIN_DIR bin)
 set(INCLUDE_DIR include)
 set(ARCH_DIR lib)
@@ -68,6 +70,12 @@ endif()
 
 find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
+
+find_package(Glove5DT)
+if(BUILD_WITH_GLOVE5DT)
+	include_directories(${GLOVE5DT_INCLUDE_DIRS})
+	list(APPEND EXTRA_LIBS ${GLOVE5DT_LIBRARIES})
+endif()
 
 ###
 # End build configuration

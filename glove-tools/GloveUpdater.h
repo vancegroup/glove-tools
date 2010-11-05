@@ -20,8 +20,7 @@
 
 // Library/third-party includes
 #include <osg/NodeCallback>
-#include <osg/Group>
-#include <osg/ref_ptr>
+#include <osg/Node>
 
 // Standard includes
 // - none
@@ -29,11 +28,11 @@
 namespace glove {
 	class GloveUpdater : public osg::NodeCallback {
 		public:
-			GloveUpdater(Glove & g);
+			GloveUpdater(Glove const & g);
 			void operator()(osg::Node* node, osg::NodeVisitor* nv);
 
 		private:
-			Glove & _g;
+			Glove const & _g;
 
 	};
 

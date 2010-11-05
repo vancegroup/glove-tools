@@ -23,7 +23,7 @@
 
 namespace glove {
 
-	GloveUpdater::GloveUpdater(Glove & g) :
+	GloveUpdater::GloveUpdater(Glove const & g) :
 		_g(g) {}
 
 	void GloveUpdater::operator()(osg::Node* node, osg::NodeVisitor* nv) {

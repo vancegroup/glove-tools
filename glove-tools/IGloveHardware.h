@@ -16,14 +16,31 @@
 
 // Internal Includes
 #include "Finger.h"
+#include "GlovePointerTypes.h"
 
 // Library/third-party includes
-// - none
+#include <boost/function.hpp>
 
 // Standard includes
-// - none
+#include <string>
+#include <map>
+#include <stdexcept>
 
 namespace glove {
+
+	typedef boost::function<GloveHardwarePtr(std::string const &)> HardwareCreator;
+
+	/// Class to allow drivers to register a creator function by name
+	class DriverRegistration {
+		public:
+			DriverRegistration(std::string const & name, HardwareCreator creatorFunc);
+	};
+
+	struct UnregisteredHardwareTypeException : public std::runtime_error {
+		UnregisteredHardwareTypeException(std::string const& name) :
+			std::runtime_error("The following device type is not registered so could not be created: " + name) {}
+	};
+
 	class IGloveHardware {
 		public:
 			IGloveHardware() {}
@@ -34,6 +51,14 @@ namespace glove {
 
 			/// Access the bend data for the given finger, normalized into [0, 1]
 			virtual double getBend(Finger finger) const = 0;
+
+			static GloveHardwarePtr createByName(std::string const & name, std::string const & option = "");
+
+			static void registerDriver(std::string const & name, HardwareCreator creatorFunc);
+
+			
+		private:
+			static std::map<std::string, HardwareCreator> s_creators;
 	};
 }
 

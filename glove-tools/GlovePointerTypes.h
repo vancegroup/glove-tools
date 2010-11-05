@@ -25,8 +25,10 @@
 // Standard includes
 // - none
 
-class IGloveHardware;
-typedef boost::shared_ptr<IGloveHardware> GloveHardwarePtr;
+namespace glove {
+	class IGloveHardware;
+	typedef boost::shared_ptr<IGloveHardware> GloveHardwarePtr;
+}
 
 #endif // INCLUDED_GlovePointerTypes_h_GUID_82e91079_b61c_4228_810c_2a13ac158f79
 

@@ -1,5 +1,5 @@
 /**
-	@file GloveNode.cpp
+	@file GloveHardware5DT.cpp
 	@brief
 
 	@date 2010
@@ -13,7 +13,7 @@
 */
 
 // Internal Includes
-#include "GloveNode.h"
+#include "GloveHardware5DT.h"
 
 // Library/third-party includes
 // - none
@@ -21,11 +21,3 @@
 // Standard includes
 // - none
 
-namespace glove {
-	GloveNode::GloveNode(Glove const & g) :
-			_g(g),
-			_updater(new GloveUpdater(g)) {
-		/// @todo load the model and set the updater here
-	}
-
-}

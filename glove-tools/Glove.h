@@ -26,9 +26,14 @@
 // - none
 
 namespace glove {
+	namespace detail {
+		struct GloveNodeContainer;
+	}
+
 	class Glove {
 		public:
 			Glove(GloveHardwarePtr hardware);
+			~Glove();
 
 			enum Handedness {
 				LEFT_HAND,
@@ -50,12 +55,10 @@ namespace glove {
 
 			/// @name Mutators
 			/// @{
-
 			void setHand(Handedness hand);
 			/// @}
 		private:
-			/// @todo change to a pointer to a glovenode
-			osg::ref_ptr<osg::GloveNode> _node;
+			detail::GloveNodeContainer * _node;
 
 			Handedness _hand;
 

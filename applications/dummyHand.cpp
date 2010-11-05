@@ -13,6 +13,8 @@
 // Internal Includes
 #include <glove-tools/Glove.h>
 
+#include <glove-tools/IGloveHardware.h>
+
 // Library/third-party includes
 #include <osgUtil/Optimizer>
 
@@ -62,6 +64,13 @@ int main(int argc, char * argv[]) {
 	
 	/// @todo DO STUFF HERE
 	osg::ref_ptr<osg::Group> root = new osg::Group();
+
+	GloveHardwarePtr hardware(IGloveHardware::createByName("MockGloveHardware"));
+	Glove g(hardware);
+
+	/// @todo make updatedata on the glove be called regularly
+	root->addChild(g.getNode());
+	
 
 	std::cout << "Running viewer..." << std::endl << std::endl;
 	viewer.setSceneData(root.get());

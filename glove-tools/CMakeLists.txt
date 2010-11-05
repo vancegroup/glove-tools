@@ -6,7 +6,8 @@ set(SOURCES
 	Glove.cpp
 	GloveNode.cpp
 	GloveUpdater.cpp
-	IGloveHardware.cpp)
+	IGloveHardware.cpp
+	MockGloveHardware.cpp)
 
 set(API
 	Finger.h
@@ -14,7 +15,15 @@ set(API
 	GloveNode.h
 	GlovePointerTypes.h
 	GloveUpdater.h
-	IGloveHardware.h)
+	IGloveHardware.h
+	MockGloveHardware.h)
+
+if(BUILD_WITH_GLOVE5DT)
+	list(APPEND
+		SOURCES
+		GloveHardware5DT.cpp
+		GloveHardware5DT.h)
+endif()
 
 add_library(glove-tools ${SOURCES} ${API})
 set_target_properties(glove-tools PROPERTIES PUBLIC_HEADER "${API}")

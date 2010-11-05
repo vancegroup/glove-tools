@@ -28,10 +28,10 @@
 namespace glove {
 	class GloveNode : public osg::Group {
 		public:
-			GloveNode(Glove & g);
+			GloveNode(Glove const & g);
 
 		private:
-			Glove & _g;
+			Glove const & _g;
 			osg::ref_ptr<GloveUpdater> _updater;
 	};
 }
