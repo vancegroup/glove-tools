@@ -10,11 +10,31 @@
 	Iowa State University Virtual Reality Applications Center
 	Human-Computer Interaction Graduate Program
 */
-
-
 #pragma once
 #ifndef INCLUDED_GloveNode_h_GUID_d7bdaeda_e402_4aa3_8746_923d38aebd7c
 #define INCLUDED_GloveNode_h_GUID_d7bdaeda_e402_4aa3_8746_923d38aebd7c
+
+// Internal Includes
+#include "Glove.h"
+#include "GloveUpdater.h"
+
+// Library/third-party includes
+#include <osg/Group>
+#include <osg/ref_ptr>
+
+// Standard includes
+// - none
+
+namespace glove {
+	class GloveNode : public osg::Group {
+		public:
+			GloveNode(Glove & g);
+
+		private:
+			Glove & _g;
+			osg::ref_ptr<GloveUpdater> _updater;
+	};
+}
 
 #endif // INCLUDED_GloveNode_h_GUID_d7bdaeda_e402_4aa3_8746_923d38aebd7c
 

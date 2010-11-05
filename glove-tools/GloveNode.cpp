@@ -21,3 +21,11 @@
 // Standard includes
 // - none
 
+namespace glove {
+	GloveNode::GloveNode(Glove & g) :
+			_g(g),
+			_updater(new GloveUpdater(g)) {
+		/// @todo load the model and set the updater here
+	}
+
+}

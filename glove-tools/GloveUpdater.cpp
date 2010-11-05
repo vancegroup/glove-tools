@@ -21,3 +21,13 @@
 // Standard includes
 // - none
 
+namespace glove {
+
+	GloveUpdater::GloveUpdater(Glove & g) :
+		_g(g) {}
+
+	void GloveUpdater::operator()(osg::Node* node, osg::NodeVisitor* nv) {
+		 /// @todo using the data from _g, update the joints
+	}
+
+}
