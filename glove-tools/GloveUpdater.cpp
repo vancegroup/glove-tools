@@ -40,4 +40,11 @@ namespace glove {
 		  should flip across the y axis */
 	}
 
+	GloveDeviceUpdater::GloveDeviceUpdater(Glove & glove) :
+		_g(glove) {}
+
+	void GloveDeviceUpdater::operator()(osg::Node* /*node*/, osg::NodeVisitor* /*nv*/) {
+		_g.updateData();
+	}
+
 }

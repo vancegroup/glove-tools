@@ -12,7 +12,7 @@
 
 // Internal Includes
 #include <glove-tools/Glove.h>
-
+#include <glove-tools/GloveUpdater.h>
 #include <glove-tools/GloveHardwareFactory.h>
 
 // Library/third-party includes
@@ -62,15 +62,17 @@ int main(int argc, char * argv[]) {
         return 1;
     }
 	
-	/// @todo DO STUFF HERE
-	osg::ref_ptr<osg::Group> root = new osg::Group();
-
+	
+	/// The Important Part is Here!	
 	GloveHardwarePtr hardware(GloveHardwareFactory::instance()->createByName("MockGloveHardware"));
 	Glove g(hardware);
 
-	/// @todo make updatedata on the glove be called regularly
+	osg::ref_ptr<osg::Group> root = new osg::Group();
 	root->addChild(g.getNode());
-	
+
+	/// In an app this simple (no physics loop, etc) we can just update the Glove object (and hardware) during the scenegraph update.
+	osg::ref_ptr<GloveDeviceUpdater> deviceUpdater = new GloveDeviceUpdater(g);
+	root->setUpdateCallback(deviceUpdater.get());	
 
 	std::cout << "Running viewer..." << std::endl << std::endl;
 	viewer.setSceneData(root.get());

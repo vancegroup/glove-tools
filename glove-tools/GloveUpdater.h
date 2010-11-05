@@ -24,6 +24,7 @@
 // - none
 
 namespace glove {
+	/// Updates the GloveNode based on the data reported by Glove
 	class GloveUpdater : public osg::NodeCallback {
 		public:
 			GloveUpdater(Glove const & g);
@@ -33,6 +34,15 @@ namespace glove {
 			Glove const & _g;
 	};
 
+	/// Optional node callback to perform a full device update during
+	/// the scenegraph update traversal - updates Glove/GloveHardware
+	class GloveDeviceUpdater : public osg::NodeCallback {
+		public:
+			GloveDeviceUpdater(Glove & glove);
+			void operator()(osg::Node* /*node*/, osg::NodeVisitor* /*nv*/);
+		private:
+			Glove & _g;
+	};
 
 }
 
