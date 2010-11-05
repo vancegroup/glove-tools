@@ -22,43 +22,25 @@
 #include <boost/function.hpp>
 
 // Standard includes
-#include <string>
-#include <map>
-#include <stdexcept>
+#include <vector>
 
 namespace glove {
 
-	typedef boost::function<GloveHardwarePtr(std::string const &)> HardwareCreator;
-
-	/// Class to allow drivers to register a creator function by name
-	class DriverRegistration {
-		public:
-			DriverRegistration(std::string const & name, HardwareCreator creatorFunc);
-	};
-
-	struct UnregisteredHardwareTypeException : public std::runtime_error {
-		UnregisteredHardwareTypeException(std::string const& name) :
-			std::runtime_error("The following device type is not registered so could not be created: " + name) {}
-	};
-
 	class IGloveHardware {
 		public:
-			IGloveHardware() {}
+			IGloveHardware();
 			virtual ~IGloveHardware() {}
 
-			/// Fetch the latest bend information for all fingers and normalize
+			/// Fetch the latest bend information for all fingers and normalizeinto [0, 1]
 			virtual void updateData() = 0;
 
-			/// Access the bend data for the given finger, normalized into [0, 1]
-			virtual double getBend(Finger finger) const = 0;
+			/// Access the bend data for the given finger
+			double getBend(Finger finger) const {
+				return _bends[finger];
+			}
 
-			static GloveHardwarePtr createByName(std::string const & name, std::string const & option = "");
-
-			static void registerDriver(std::string const & name, HardwareCreator creatorFunc);
-
-			
-		private:
-			static std::map<std::string, HardwareCreator> s_creators;
+		protected:
+			std::vector<double> _bends;
 	};
 }
 

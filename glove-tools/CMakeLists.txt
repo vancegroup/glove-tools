@@ -4,7 +4,9 @@
 # glove-tools Library
 set(SOURCES
 	Glove.cpp
+	GloveHardwareFactory.cpp
 	GloveNode.cpp
+	GloveToolsConfig.h.in
 	GloveUpdater.cpp
 	IGloveHardware.cpp
 	MockGloveHardware.cpp)
@@ -12,6 +14,7 @@ set(SOURCES
 set(API
 	Finger.h
 	Glove.h
+	GloveHardwareFactory.h
 	GloveNode.h
 	GlovePointerTypes.h
 	GloveUpdater.h
@@ -24,6 +27,9 @@ if(BUILD_WITH_GLOVE5DT)
 		GloveHardware5DT.cpp
 		GloveHardware5DT.h)
 endif()
+
+include_directories("${CMAKE_CURRENT_BINARY_DIR}")
+configure_file(GloveToolsConfig.h.in GloveToolsConfig.h)
 
 add_library(glove-tools ${SOURCES} ${API})
 set_target_properties(glove-tools PROPERTIES PUBLIC_HEADER "${API}")

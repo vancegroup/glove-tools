@@ -14,6 +14,7 @@
 
 // Internal Includes
 #include "MockGloveHardware.h"
+#include "GloveHardwareFactory.h"
 
 // Library/third-party includes
 // - none
@@ -23,11 +24,18 @@
 
 namespace glove {
 	/// Register this class for create-by-name
-	DriverRegistration MockGloveHardwareRegistration("MockGloveHardware", &MockGloveHardware::create);
+	static GloveHardwareFactory::Registration MockGloveHardwareRegistration("MockGloveHardware", &MockGloveHardware::create);
 
 	GloveHardwarePtr MockGloveHardware::create(std::string const & option) {
 		GloveHardwarePtr temp(new MockGloveHardware(option));
 		return temp;
+	}
+
+	MockGloveHardware::MockGloveHardware(std::string const & option) {}
+
+			
+	void MockGloveHardware::updateData() {
+		/// @todo implement
 	}
 
 }

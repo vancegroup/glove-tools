@@ -30,13 +30,10 @@ namespace glove {
 	class MockGloveHardware : public IGloveHardware {
 		public:
 			
-			virtual ~MockGloveHardware();
+			virtual ~MockGloveHardware() {}
 
 			/// Fetch the latest bend information for all fingers and normalize
-			virtual void updateData();
-
-			/// Access the bend data for the given finger, normalized into [0, 1]
-			virtual double getBend(Finger finger) const;
+			void updateData();
 
 			/// Factory function for use with create-by-name
 			static GloveHardwarePtr create(std::string const & option);
