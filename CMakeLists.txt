@@ -92,22 +92,22 @@ create_dashboard_scripts("DashboardBuildInitialCache.cmake.in")
 ###
 
 # Set up use from build tree
-set(BUILD_TREE_TARGETS 5DTGlove)
+set(BUILD_TREE_TARGETS glove-tools)
 
-configure_file(vpstools-config-build-tree.cmake.in VPSToolsConfig.cmake @ONLY)
+configure_file(glove-tools-config-build-tree.cmake.in glove-toolsConfig.cmake @ONLY)
 export(TARGETS ${BUILD_TREE_TARGETS}
-	NAMESPACE vpstools_buildtree_
-	FILE vpstools-targets.cmake)
+	NAMESPACE glove_tools_imported
+	FILE glove-tools-targets.cmake)
 export(PACKAGE VPSTools)
 
 # Set up use from install tree
-install(EXPORT vpstools-sdk
+install(EXPORT glove-tools-sdk
 	DESTINATION ${EXPORT_DIR}
-	NAMESPACE vpstools_exported_
-	FILE vpstools-targets.cmake)
-configure_file(vpstools-config.cmake.in vpstools-config-for-install.cmake @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/vpstools-config-for-install.cmake
-	RENAME vpstools-config.cmake
+	NAMESPACE glove_tools_imported
+	FILE glove-tools-targets.cmake)
+configure_file(glove-tools-config.cmake.in glove-tools-config-for-install.cmake @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/glove-tools-config-for-install.cmake
+	RENAME glove-tools-config.cmake
 	DESTINATION ${EXPORT_DIR})
 
 
