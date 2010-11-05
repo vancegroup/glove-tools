@@ -11,6 +11,7 @@ set(SOURCES
 set(API
 	Glove.h
 	GloveNode.h
+	GlovePointerTypes.h
 	GloveUpdater.h
 	IGloveHardware.h)
 
