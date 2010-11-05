@@ -1,30 +1,30 @@
 
 
 ###
-# 5DTGlove Library
+# glove-tools Library
 set(SOURCES
 	Glove.cpp
 	GloveNode.cpp
-	GloveUpdater.cpp)
+	GloveUpdater.cpp
+	IGloveHardware.cpp)
 
 set(API
 	Glove.h
 	GloveNode.h
-	GloveUpdater.h)
+	GloveUpdater.h
+	IGloveHardware.h)
 
-add_library(5DTGlove ${SOURCES} ${API})
-set_target_properties(5DTGlove PROPERTIES PUBLIC_HEADER "${API}")
-target_link_libraries(5DTGlove ${EXTRA_LIBS})
+add_library(glove-tools ${SOURCES} ${API})
+set_target_properties(glove-tools PROPERTIES PUBLIC_HEADER "${API}")
+target_link_libraries(glove-tools ${EXTRA_LIBS})
 
-stamp_target_with_version("${CPACK_PACKAGE_VERSION}" 5DTGlove)
-
-add_cppcheck(5DTGlove)
+add_cppcheck(glove-tools)
 
 ###
 # Install files
-install(TARGETS 5DTGlove
-	EXPORT vpstools-sdk
+install(TARGETS glove-tools
+	EXPORT glove-tools-sdk
 	RUNTIME DESTINATION ${BIN_DIR} COMPONENT runtime
 	LIBRARY DESTINATION ${LIB_DIR} COMPONENT sdk
 	ARCHIVE DESTINATION ${ARCH_DIR} COMPONENT sdk
-	PUBLIC_HEADER DESTINATION ${INCLUDE_DIR}/5DTGlove COMPONENT sdk)
+	PUBLIC_HEADER DESTINATION ${INCLUDE_DIR}/glove-tools COMPONENT sdk)
