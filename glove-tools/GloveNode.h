@@ -1,17 +1,20 @@
-// Internal Includes
+/** @file GloveNode.h
+	@brief
 
-// Library/third-party includes
+	@date 2010
 
-// Standard includes
+	@author
+	Ryan Pavlik
+	<rpavlik@iastate.edu> and <abiryan@ryand.net>
+	http://academic.cleardefinition.com/
+	Iowa State University Virtual Reality Applications Center
+	Human-Computer Interaction Graduate Program
+*/
 
 
+#pragma once
+#ifndef INCLUDED_GloveNode_h_GUID_d7bdaeda_e402_4aa3_8746_923d38aebd7c
+#define INCLUDED_GloveNode_h_GUID_d7bdaeda_e402_4aa3_8746_923d38aebd7c
 
-class GloveNode : public OSG::Group
-{
-	public:
-		GloveNode(Glove &g):
-			_glove(g),
-			_updater(new GloveUpdater(g))
-		
-	OSG::ref_ptr<GloveUpdater> _updater;
-}
+#endif // INCLUDED_GloveNode_h_GUID_d7bdaeda_e402_4aa3_8746_923d38aebd7c
+

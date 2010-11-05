@@ -1,4 +1,4 @@
-/** @file GloveUpdater.h
+/** @file IGloveHardware.h
 	@brief
 
 	@date 2010
@@ -13,8 +13,8 @@
 
 
 #pragma once
-#ifndef INCLUDED_GloveUpdater_h_GUID_a6db12e1_46e0_42c7_bb69_ba82a5d6ec5d
-#define INCLUDED_GloveUpdater_h_GUID_a6db12e1_46e0_42c7_bb69_ba82a5d6ec5d
+#ifndef INCLUDED_IGloveHardware_h_GUID_70ba2c9c_5e00_44d8_b9c9_6a16cb9a2fb7
+#define INCLUDED_IGloveHardware_h_GUID_70ba2c9c_5e00_44d8_b9c9_6a16cb9a2fb7
 
-#endif // INCLUDED_GloveUpdater_h_GUID_a6db12e1_46e0_42c7_bb69_ba82a5d6ec5d
+#endif // INCLUDED_IGloveHardware_h_GUID_70ba2c9c_5e00_44d8_b9c9_6a16cb9a2fb7
 

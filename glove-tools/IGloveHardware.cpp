@@ -1,5 +1,5 @@
 /**
-	@file GloveNode.cpp
+	@file IGloveHardware.cpp
 	@brief
 
 	@date 2010
@@ -13,7 +13,7 @@
 */
 
 // Internal Includes
-#include "GloveNode.h"
+#include "IGloveHardware.h"
 
 // Library/third-party includes
 // - none
