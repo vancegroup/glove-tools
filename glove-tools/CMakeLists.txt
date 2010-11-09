@@ -33,16 +33,16 @@ endif()
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 configure_file(GloveToolsConfig.h.in GloveToolsConfig.h)
 
-add_library(glove-tools ${SOURCES} ${API})
-set_target_properties(glove-tools PROPERTIES PUBLIC_HEADER "${API}")
-target_link_libraries(glove-tools ${EXTRA_LIBS})
+add_library(glovetools ${SOURCES} ${API})
+set_target_properties(glovetools PROPERTIES PUBLIC_HEADER "${API}")
+target_link_libraries(glovetools ${EXTRA_LIBS})
 
-add_cppcheck(glove-tools)
+add_cppcheck(glovetools)
 
 ###
 # Install files
-install(TARGETS glove-tools
-	EXPORT glove-tools-sdk
+install(TARGETS glovetools
+	EXPORT glovetools-sdk
 	RUNTIME DESTINATION ${BIN_DIR} COMPONENT runtime
 	LIBRARY DESTINATION ${LIB_DIR} COMPONENT sdk
 	ARCHIVE DESTINATION ${ARCH_DIR} COMPONENT sdk

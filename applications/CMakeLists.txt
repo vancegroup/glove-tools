@@ -10,7 +10,7 @@ if(OPENSCENEGRAPH_FOUND)
 	set(RESOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../hand-structured.osg")
 	add_executable(dummyHand dummyHand.cpp ${RESOURCES})
 	set_target_properties(dummyHand PROPERTIES RESOURCES "${RESOURCES}")
-	target_link_libraries(dummyHand glove-tools ${OPENSCENEGRAPH_LIBRARIES})
+	target_link_libraries(dummyHand glovetools ${OPENSCENEGRAPH_LIBRARIES})
 	copy_resources_to_build_tree(dummyHand)
 	
 	add_cppcheck(dummyHand)

@@ -114,22 +114,22 @@ create_default_target_launcher(dummyHand
 ###
 
 # Set up use from build tree
-set(BUILD_TREE_TARGETS glove-tools)
+set(BUILD_TREE_TARGETS glovetools)
 
-configure_file(glove-tools-config-build-tree.cmake.in glove-toolsConfig.cmake @ONLY)
+configure_file(glovetools-config-build-tree.cmake.in glovetoolsConfig.cmake @ONLY)
 export(TARGETS ${BUILD_TREE_TARGETS}
-	NAMESPACE glove_tools_imported
-	FILE glove-tools-targets.cmake)
-export(PACKAGE VPSTools)
+	NAMESPACE glovetools_imported_
+	FILE glovetools-targets.cmake)
+export(PACKAGE glovetools)
 
 # Set up use from install tree
-install(EXPORT glove-tools-sdk
+install(EXPORT glovetools-sdk
 	DESTINATION ${EXPORT_DIR}
-	NAMESPACE glove_tools_imported
-	FILE glove-tools-targets.cmake)
-configure_file(glove-tools-config.cmake.in glove-tools-config-for-install.cmake @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/glove-tools-config-for-install.cmake
-	RENAME glove-tools-config.cmake
+	NAMESPACE glovetools_imported_
+	FILE glovetools-targets.cmake)
+configure_file(glovetools-config.cmake.in glovetools-config-for-install.cmake @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/glovetools-config-for-install.cmake
+	RENAME glovetools-config.cmake
 	DESTINATION ${EXPORT_DIR})
 
 install(FILES hand-structured.osg
