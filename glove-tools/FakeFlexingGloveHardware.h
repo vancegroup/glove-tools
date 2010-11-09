@@ -1,4 +1,4 @@
-/** @file MockGloveHardware.h
+/** @file FakeFlexingGloveHardware.h
 	@brief
 
 	@date 2010
@@ -11,10 +11,9 @@
 	Human-Computer Interaction Graduate Program
 */
 
-
 #pragma once
-#ifndef INCLUDED_MockGloveHardware_h_GUID_99f489e0_8c85_4427_9700_d8a9c79eb90c
-#define INCLUDED_MockGloveHardware_h_GUID_99f489e0_8c85_4427_9700_d8a9c79eb90c
+#ifndef INCLUDED_FakeFlexingGloveHardware_h_GUID_e4064cee_ec76_40b1_9660_6eef14208c35
+#define INCLUDED_FakeFlexingGloveHardware_h_GUID_e4064cee_ec76_40b1_9660_6eef14208c35
 
 // Internal Includes
 #include "IGloveHardware.h"
@@ -25,12 +24,13 @@
 // Standard includes
 // - none
 
+
 namespace glove {
 
-	class MockGloveHardware : public IGloveHardware {
+	class FakeFlexingGloveHardware : public IGloveHardware {
 		public:
 
-			virtual ~MockGloveHardware() {}
+			virtual ~FakeFlexingGloveHardware() {}
 
 			/// Fetch the latest bend information for all fingers and normalize
 			void updateData();
@@ -38,12 +38,10 @@ namespace glove {
 			/// Factory function for use with create-by-name
 			static GloveHardwarePtr create(std::string const & option);
 
-			void setBendValue(double bend);
-
 		protected:
-			MockGloveHardware(std::string const & option);
-			double _bend;
+			FakeFlexingGloveHardware(std::string const & option);
+			unsigned int _counter;
 	};
 }
-#endif // INCLUDED_MockGloveHardware_h_GUID_99f489e0_8c85_4427_9700_d8a9c79eb90c
 
+#endif // INCLUDED_FakeFlexingGloveHardware_h_GUID_e4064cee_ec76_40b1_9660_6eef14208c35

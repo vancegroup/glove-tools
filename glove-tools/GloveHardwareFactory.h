@@ -39,12 +39,8 @@ namespace glove {
 		public:
 			static GloveHardwareFactory * instance();
 			GloveHardwarePtr createByName(std::string const & name, std::string const & option = "");
-
-			/// Class to allow drivers to register a creator function by name
-			class Registration {
-				public:
-					Registration(std::string const & name, HardwareCreator creatorFunc);
-			};
+			
+			bool registerHardwareCreator(std::string const & name, HardwareCreator creatorFunc);
 
 			struct UnregisteredHardwareTypeException : public std::runtime_error {
 				UnregisteredHardwareTypeException(std::string const& name) :

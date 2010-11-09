@@ -19,8 +19,10 @@
 
 #include "MockGloveHardware.h"
 
+#include "FakeFlexingGloveHardware.h"
+
 #ifdef BUILD_WITH_GLOVE5DT
-#include "GloveHardware5DT.h"
+#	include "GloveHardware5DT.h"
 #endif
 
 // Library/third-party includes
@@ -43,16 +45,17 @@ namespace glove {
 		return f(option);
 	}
 
-	GloveHardwareFactory::Registration::Registration(std::string const & name, HardwareCreator creatorFunc) {
+	bool GloveHardwareFactory::registerHardwareCreator(std::string const & name, HardwareCreator creatorFunc) {
 		std::cout << "Registering new GloveHardware creator: " << name << std::endl;
-		GloveHardwareFactory::instance()->_creators[name] = creatorFunc;
+		_creators[name] = creatorFunc;
 	}
 	
 	GloveHardwareFactory::GloveHardwareFactory() {
-		/// @todo figure out why the static factory isn't working right
-		_creators["MockGloveHardware"] = & MockGloveHardware::create;
+		registerHardwareCreator("MockGloveHardware", & MockGloveHardware::create);
+		registerHardwareCreator("FakeFlexingGloveHardware", & FakeFlexingGloveHardware::create);
+		
 		#ifdef BUILD_WITH_GLOVE5DT
-		_creators["GloveHardware5DT"] = & GloveHardware5DT::create;
+		registerHardwareCreator("GloveHardware5DT", & GloveHardware5DT::create);
 		#endif
 	}
 

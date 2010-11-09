@@ -47,7 +47,7 @@ int main(int argc, char * argv[]) {
 		return 1;
 	}
 
-	std::string deviceType = "MockGloveHardware";
+	std::string deviceType = "FakeFlexingGloveHardware";
 	std::string deviceOption = "";
 
 	while (arguments.read("--device", deviceType)) {}
