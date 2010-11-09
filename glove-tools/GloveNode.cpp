@@ -17,6 +17,7 @@
 
 // Library/third-party includes
 #include <osgDB/ReadFile>
+#include <osg/ref_ptr>
 
 // Standard includes
 #include <cassert>
@@ -27,7 +28,7 @@ namespace glove {
 			_updater(new GloveUpdater(g)) {
 		/// @todo load the model and set the updater here
 
-		osg::Node * hand = osgDB::readNodeFile("hand-structured.osg");
+		osg::ref_ptr<osg::Node> hand = osgDB::readNodeFile("hand-structured.osg");
 		assert(hand.valid());
 		hand->setUpdateCallback(_updater.get());
 
