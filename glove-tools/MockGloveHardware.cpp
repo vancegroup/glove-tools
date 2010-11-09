@@ -23,8 +23,6 @@
 #include <cmath>
 
 namespace glove {
-	/// Register this class for create-by-name
-	static GloveHardwareFactory::Registration MockGloveHardwareRegistration("MockGloveHardware", &MockGloveHardware::create);
 
 	GloveHardwarePtr MockGloveHardware::create(std::string const & option) {
 		GloveHardwarePtr temp(new MockGloveHardware(option));
@@ -46,5 +44,4 @@ namespace glove {
 		_counter++;
 		//change bends
 	}
-
 }
