@@ -14,7 +14,6 @@
 
 // Internal Includes
 #include "MockGloveHardware.h"
-#include "GloveHardwareFactory.h"
 
 // Library/third-party includes
 // - none
