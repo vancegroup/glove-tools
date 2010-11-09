@@ -4,50 +4,42 @@
 # Iowa State University HCI Graduate Program/VRAC
 #
 # Will set:
-#  VPSTOOLS_LIBRARIES
-#  VPSTOOLS_VPSTOOLS_LIBRARIES
-#  VPSTOOLS_OSGVPS_LIBRARIES
-#  VPSTOOLS_INCLUDE_DIRS
-#  VPSTOOLS_RUNTIME_LIBRARIES and VPSTOOLS_RUNTIME_LIBRARY_DIRS if applicable
-#  VPSTOOLS_FOUND
+#  GLOVETOOLS_LIBRARIES
+#  GLOVETOOLS_INCLUDE_DIRS
+#  GLOVETOOLS_RUNTIME_LIBRARIES and GLOVETOOLS_RUNTIME_LIBRARY_DIRS if applicable
+#  GLOVETOOLS_MODEL
+#  GLOVETOOLS_FOUND
 
 
 get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
-include("${_IMPORT_PREFIX}/vpstools-targets.cmake")
+include("${_IMPORT_PREFIX}/glove-tools-targets.cmake")
 
-set(VPSTOOLS_LIBRARIES)
-set(VPSTOOLS_RUNTIME_LIBRARIES)
-set(VPSTOOLS_RUNTIME_LIBRARY_DIRS)
-foreach(_lib osgVPS VPSTools)
-	set(_explib vpstools_exported_${_lib}) # The exported target name
+set(GLOVETOOLS_LIBRARIES glove_tools_imported_glove-tools)
+set(GLOVETOOLS_RUNTIME_LIBRARIES)
+set(GLOVETOOLS_RUNTIME_LIBRARY_DIRS)
 
-	string(TOUPPER VPSTOOLS_${_lib}_LIBRARIES _libvar) # Upper case variable name
-	set(${_libvar} ${_explib})
 
-	list(APPEND VPSTOOLS_LIBRARIES ${_explib})
+# Runtime library info - only useful for shared libraries
+get_property(_type TARGET ${GLOVETOOLS_LIBRARIES} PROPERTY TYPE)
+if(_type STREQUAL "SHARED_LIBRARY")
+	get_property(_configs TARGET ${GLOVETOOLS_LIBRARIES} PROPERTY IMPORTED_CONFIGURATIONS)
+	foreach(_config ${_configs})
+		get_property(_libloc TARGET ${GLOVETOOLS_LIBRARIES} PROPERTY IMPORTED_LOCATION_${_config})
+		if(EXISTS "${_libloc}")
+			list(APPEND GLOVETOOLS_RUNTIME_LIBRARIES "${_libloc}")
 
-	# Runtime library info - only useful for shared libraries
-	get_property(_type TARGET ${_explib} PROPERTY TYPE)
-	if(_type STREQUAL "SHARED_LIBRARY")
-		get_property(_configs TARGET ${_explib} PROPERTY IMPORTED_CONFIGURATIONS)
-		foreach(_config ${_configs})
-			get_property(_libloc TARGET ${_explib} PROPERTY IMPORTED_LOCATION_${_config})
-			if(EXISTS "${_libloc}")
-				list(APPEND VPSTOOLS_RUNTIME_LIBRARIES "${_libloc}")
-
-				get_filename_component(_libpath "${_libloc}" PATH)
-				list(APPEND VPSTOOLS_RUNTIME_LIBRARY_DIRS ${_libpath})
-			endif()
-		endforeach()
-	endif()
-endforeach()
-
-if(VPSTOOLS_RUNTIME_LIBRARIES)
-	list(REMOVE_DUPLICATES VPSTOOLS_RUNTIME_LIBRARIES)
+			get_filename_component(_libpath "${_libloc}" PATH)
+			list(APPEND GLOVETOOLS_RUNTIME_LIBRARY_DIRS ${_libpath})
+		endif()
+	endforeach()
 endif()
 
-if(VPSTOOLS_RUNTIME_LIBRARY_DIRS)
-	list(REMOVE_DUPLICATES VPSTOOLS_RUNTIME_LIBRARY_DIRS)
+if(GLOVETOOLS_RUNTIME_LIBRARIES)
+	list(REMOVE_DUPLICATES GLOVETOOLS_RUNTIME_LIBRARIES)
+endif()
+
+if(GLOVETOOLS_RUNTIME_LIBRARY_DIRS)
+	list(REMOVE_DUPLICATES GLOVETOOLS_RUNTIME_LIBRARY_DIRS)
 endif()
 
 # Compute the installation prefix relative to this file.
@@ -57,7 +49,9 @@ if(NOT WIN32)
 	get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
 endif()
 
-set(VPSTOOLS_INCLUDE_DIRS "${_IMPORT_PREFIX}/include")
+set(GLOVETOOLS_INCLUDE_DIRS "${_IMPORT_PREFIX}/include")
+set(GLOVETOOLS_MODEL "${_IMPORT_PREFIX}/share/glove-tools/hand-structured.osg")
+
 set(_IMPORT_PREFIX)
 
-set(VPSTOOLS_FOUND ON)
+set(GLOVETOOLS_FOUND ON)

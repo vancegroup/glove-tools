@@ -27,12 +27,13 @@ option(BUILD_WITH_GLOVE5DT "Build with a 5DT Glove driver?" off)
 set(BIN_DIR bin)
 set(INCLUDE_DIR include)
 set(ARCH_DIR lib)
+set(DATA_DIR share/glove-tools)
 if(WIN32)
 	set(LIB_DIR bin)
 	set(EXPORT_DIR cmake)
 else()
 	set(LIB_DIR lib)
-	set(EXPORT_DIR ${LIB_DIR}/5DTGlove)
+	set(EXPORT_DIR ${LIB_DIR}/glove-tools)
 endif()
 
 ###
@@ -131,6 +132,8 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/glove-tools-config-for-install.cmake
 	RENAME glove-tools-config.cmake
 	DESTINATION ${EXPORT_DIR})
 
+install(FILES hand-structured.osg
+	DESTINATION ${DATA_DIR})
 
 ###
 # Set packaging options (for CPack)
