@@ -31,7 +31,7 @@ namespace glove {
 			IGloveHardware();
 			virtual ~IGloveHardware() {}
 
-			/// Fetch the latest bend information for all fingers and normalizeinto [0, 1]
+			/// Fetch the latest bend information for all fingers and normalize into [0, 1]
 			virtual void updateData() = 0;
 
 			/// Access the bend data for the given finger
