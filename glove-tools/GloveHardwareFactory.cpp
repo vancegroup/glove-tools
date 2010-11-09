@@ -48,6 +48,7 @@ namespace glove {
 	bool GloveHardwareFactory::registerHardwareCreator(std::string const & name, HardwareCreator creatorFunc) {
 		std::cout << "Registering new GloveHardware creator: " << name << std::endl;
 		_creators[name] = creatorFunc;
+		return true;
 	}
 	
 	GloveHardwareFactory::GloveHardwareFactory() {
