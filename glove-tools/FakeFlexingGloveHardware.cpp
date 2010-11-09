@@ -30,7 +30,7 @@ namespace glove {
 	FakeFlexingGloveHardware::FakeFlexingGloveHardware(std::string const & option) :
 		_counter(0) {}
 
-			
+
 	void FakeFlexingGloveHardware::updateData() {
 		double bend = (- std::cos(static_cast<double>(_counter)) + 0.5) * 2;
 		_bends[0] = bend;

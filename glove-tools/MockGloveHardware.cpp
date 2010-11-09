@@ -38,9 +38,9 @@ namespace glove {
 			_bend = 0.0;
 		} else {
 			_bend = bend;
-		}	
+		}
 	}
-			
+
 	void MockGloveHardware::updateData() {
 		_bends[0] = _bend;
 		_bends[1] = _bend;

@@ -29,7 +29,7 @@ namespace glove {
 
 	class FakeFlexingGloveHardware : public IGloveHardware {
 		public:
-			
+
 			virtual ~FakeFlexingGloveHardware() {}
 
 			/// Fetch the latest bend information for all fingers and normalize
