@@ -14,17 +14,14 @@
 
 // Internal Includes
 #include "MockGloveHardware.h"
-#include "GloveHardwareFactory.h"
 
 // Library/third-party includes
 // - none
 
 // Standard includes
-#include <cmath>
+// - none
 
 namespace glove {
-	/// Register this class for create-by-name
-	static GloveHardwareFactory::Registration MockGloveHardwareRegistration("MockGloveHardware", &MockGloveHardware::create);
 
 	GloveHardwarePtr MockGloveHardware::create(std::string const & option) {
 		GloveHardwarePtr temp(new MockGloveHardware(option));
@@ -32,19 +29,23 @@ namespace glove {
 	}
 
 	MockGloveHardware::MockGloveHardware(std::string const & option) :
-		_counter(0) {}
+		_bend(0.0) {}
 
-			
-	void MockGloveHardware::updateData() {
-		/// @todo implement
-		double bend = (- std::cos(static_cast<double>(_counter)) + 0.5) * 2;
-		_bends[0] = bend;
-		_bends[1] = bend;
-		_bends[2] = bend;
-		_bends[3] = bend;
-		_bends[4] = bend;
-		_counter++;
-		//change bends
+	void MockGloveHardware::setBendValue(double bend) {
+		if (bend > 1.0) {
+			_bend = 1.0;
+		} else if (bend < 0.0) {
+			_bend = 0.0;
+		} else {
+			_bend = bend;
+		}
 	}
 
+	void MockGloveHardware::updateData() {
+		_bends[0] = _bend;
+		_bends[1] = _bend;
+		_bends[2] = _bend;
+		_bends[3] = _bend;
+		_bends[4] = _bend;
+	}
 }
