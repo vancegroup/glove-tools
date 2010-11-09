@@ -19,6 +19,8 @@
 
 #include "MockGloveHardware.h"
 
+#include "FakeFlexingGloveHardware.h"
+
 #ifdef BUILD_WITH_GLOVE5DT
 #	include "GloveHardware5DT.h"
 #endif
@@ -50,6 +52,7 @@ namespace glove {
 	
 	GloveHardwareFactory::GloveHardwareFactory() {
 		registerHardwareCreator("MockGloveHardware", & MockGloveHardware::create);
+		registerHardwareCreator("FakeFlexingGloveHardware", & FakeFlexingGloveHardware::create);
 		
 		#ifdef BUILD_WITH_GLOVE5DT
 		registerHardwareCreator("GloveHardware5DT", & GloveHardware5DT::create);

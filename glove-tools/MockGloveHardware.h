@@ -37,10 +37,12 @@ namespace glove {
 
 			/// Factory function for use with create-by-name
 			static GloveHardwarePtr create(std::string const & option);
+			
+			void setBendValue(double bend);
 
 		protected:
 			MockGloveHardware(std::string const & option);
-			unsigned int _counter;
+			double _bend;
 	};
 }
 #endif // INCLUDED_MockGloveHardware_h_GUID_99f489e0_8c85_4427_9700_d8a9c79eb90c
