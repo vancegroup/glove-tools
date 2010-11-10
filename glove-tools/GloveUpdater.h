@@ -34,7 +34,7 @@ namespace glove {
 	class GloveDeviceUpdater : public osg::NodeCallback {
 		public:
 			GloveDeviceUpdater(Glove & glove);
-			void operator()(osg::Node* /*node*/, osg::NodeVisitor* /*nv*/);
+			virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
 		private:
 			Glove & _g;
 	};

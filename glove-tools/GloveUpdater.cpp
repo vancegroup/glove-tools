@@ -35,8 +35,9 @@ namespace glove {
 	GloveDeviceUpdater::GloveDeviceUpdater(Glove & glove) :
 		_g(glove) {}
 
-	void GloveDeviceUpdater::operator()(osg::Node* /*node*/, osg::NodeVisitor* /*nv*/) {
+	void GloveDeviceUpdater::operator()(osg::Node* node, osg::NodeVisitor* nv) {
 		_g.updateData();
+		traverse(node, nv);
 	}
 
 }
