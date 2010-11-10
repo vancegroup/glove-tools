@@ -66,6 +66,11 @@ namespace glove {
 		this->addChild(hand);
 	}
 	
+	void GloveNode::update() {
+		/// @todo implement me!
+		std::cout << "Implement this function! " << __FUNCTION__ << std::endl;
+	}
+	
 	GloveNode::JointList GloveNode::_findJoints(osg::ref_ptr<osg::MatrixTransform> const& parent) {
 		JointList singleFinger;
 		osg::ref_ptr<osg::MatrixTransform> joint = parent;
