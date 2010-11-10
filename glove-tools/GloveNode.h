@@ -23,7 +23,7 @@
 #include <osg/ref_ptr>
 
 // Standard includes
-#include <vector.h>
+#include <vector>
 
 namespace glove {
 	class GloveNode : public osg::Group {
@@ -33,7 +33,7 @@ namespace glove {
 		private:
 			Glove const & _g;
 			osg::ref_ptr<GloveUpdater> _updater;
-			std::vector< std::vector< osg::ref_ptr<osg::MatrixTransform> > > _joints;
+			//std::vector< std::vector< osg::ref_ptr<osg::MatrixTransform> > > _joints;
 			
 	};
 }

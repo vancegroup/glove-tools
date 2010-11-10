@@ -31,9 +31,9 @@ namespace glove {
 		GloveNode * n = static_cast<GloveNode *>(node);
 		// using the data from _g, update the transforms for the joints
 		double fingerAngle;
-		double fingerBendScale;
+		double fingerBendScale = 0.5;
 
-		for (unsigned int j = 0; j < 5; j++)
+		/*for (unsigned int j = 0; j < 5; j++)
 		{
 			fingerAngle = _g.getBend(j) * fingerBendScale;
 			for (unsigned int i = 0; i < _joints[j].size(); i++) //should be 2x
@@ -44,18 +44,18 @@ namespace glove {
 
 		//update the switch node's active child, based on the handedness of the glove
 		if (n->Handedness == RIGHT_HAND)
-		{
+		{*/
 			/* multiplying by:
 			1	0	0	0
 			0	-1	0	0
 			0	0	1	0
 			0	0	0	1
 			should flip across the y axis */
-		}
+		/*}
 		else
 		{
 
-		}
+		}*/
 		
 	}
 
