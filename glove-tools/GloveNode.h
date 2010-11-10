@@ -20,7 +20,7 @@
 // Library/third-party includes
 #include <osg/Group>
 #include <osg/ref_ptr>
-#include <osg/MatrixTransform>
+#include <osg/PositionAttitudeTransform>
 
 // Standard includes
 #include <vector>
@@ -35,14 +35,14 @@ namespace glove {
 			void doUpdate();
 
 		private:
-			typedef std::vector< osg::ref_ptr<osg::MatrixTransform> > JointList;
+			typedef std::vector< osg::ref_ptr<osg::PositionAttitudeTransform> > JointList;
 			
 			/// @name Helper routines
 			/// @{
 			void _updateFinger(Finger finger);
 			
-			static JointList _findJoints(osg::ref_ptr<osg::MatrixTransform> const& parent);
-			static osg::ref_ptr<osg::MatrixTransform> _getChildTransform(osg::ref_ptr<osg::Group> const& parent);
+			static JointList _findJoints(osg::ref_ptr<osg::PositionAttitudeTransform> const& parent);
+			static osg::ref_ptr<osg::PositionAttitudeTransform> _getChildTransform(osg::ref_ptr<osg::Group> const& parent);
 			static osg::ref_ptr<osg::Node> _getNamedChild(osg::ref_ptr<osg::Group> const& parent, std::string const& name);
 			/// @}
 			

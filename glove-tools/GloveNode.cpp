@@ -19,6 +19,7 @@
 #include <osgDB/ReadFile>
 #include <osg/ref_ptr>
 #include <osg/Switch>
+#include <osg/MatrixTransform>
 
 // Standard includes
 #include <cassert>
@@ -40,25 +41,25 @@ namespace glove {
 			hand = hand->getChild(0)->asGroup(); // only has 1 child
 		}
 
-		osg::ref_ptr<osg::MatrixTransform> fingerBase;
+		osg::ref_ptr<osg::PositionAttitudeTransform> fingerBase;
 		
-		fingerBase = dynamic_cast<osg::MatrixTransform*>(_getNamedChild(hand, "thumb0").get());
+		fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "thumb0").get());
 		assert(fingerBase.valid());
 		_joints.push_back(_findJoints(fingerBase));
 		
-		fingerBase = dynamic_cast<osg::MatrixTransform*>(_getNamedChild(hand, "index0").get());
+		fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "index0").get());
 		assert(fingerBase.valid());
 		_joints.push_back(_findJoints(fingerBase));
 		
-		fingerBase = dynamic_cast<osg::MatrixTransform*>(_getNamedChild(hand, "middle0").get());
+		fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "middle0").get());
 		assert(fingerBase.valid());
 		_joints.push_back(_findJoints(fingerBase));
 		
-		fingerBase = dynamic_cast<osg::MatrixTransform*>(_getNamedChild(hand, "ring0").get());
+		fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "ring0").get());
 		assert(fingerBase.valid());
 		_joints.push_back(_findJoints(fingerBase));
 		
-		fingerBase = dynamic_cast<osg::MatrixTransform*>(_getNamedChild(hand, "pinky0").get());
+		fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "pinky0").get());
 		assert(fingerBase.valid());
 		_joints.push_back(_findJoints(fingerBase));
 		
@@ -113,14 +114,13 @@ namespace glove {
 	void GloveNode::_updateFinger(Finger finger) {
 		double fingerAngle = _g.getBend(finger) * 0.5;
 		for (unsigned int i = 0; i < _joints[finger].size(); i++) {
-			osg::Matrix m(osg::Matrix::rotate(fingerAngle, osg::Vec3f(1.0f, 0.0f, 0.0f))); //rotate around X axis
-			_joints[finger][i]->setMatrix(m);
+			_joints[finger][i]->setAttitude(osg::Quat(fingerAngle, osg::Vec3f(1.0f, 0.0f, 0.0f))); //rotate around X axis
 		}
 	}
 	
-	GloveNode::JointList GloveNode::_findJoints(osg::ref_ptr<osg::MatrixTransform> const& parent) {
+	GloveNode::JointList GloveNode::_findJoints(osg::ref_ptr<osg::PositionAttitudeTransform> const& parent) {
 		JointList singleFinger;
-		osg::ref_ptr<osg::MatrixTransform> joint = parent;
+		osg::ref_ptr<osg::PositionAttitudeTransform> joint = parent;
 		
 		while (joint.valid()) {
 			singleFinger.push_back(joint);
@@ -130,10 +130,10 @@ namespace glove {
 		return singleFinger;	
 	}
 	
-	osg::ref_ptr<osg::MatrixTransform> GloveNode::_getChildTransform(osg::ref_ptr<osg::Group> const& parent) {
-		osg::ref_ptr<osg::MatrixTransform> child;
+	osg::ref_ptr<osg::PositionAttitudeTransform> GloveNode::_getChildTransform(osg::ref_ptr<osg::Group> const& parent) {
+		osg::ref_ptr<osg::PositionAttitudeTransform> child;
 		for (unsigned int i = 0; i < parent->getNumChildren(); ++i) {
-			child = dynamic_cast<osg::MatrixTransform*>(parent->getChild(i));
+			child = dynamic_cast<osg::PositionAttitudeTransform*>(parent->getChild(i));
 			if (child.valid()) {
 				return child;
 			}
