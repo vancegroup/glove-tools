@@ -30,6 +30,9 @@ namespace glove {
 	void GloveUpdater::operator()(osg::Node* node, osg::NodeVisitor* nv) {
 		GloveNode * n = dynamic_cast<GloveNode *>(node);
 		assert(n);
+		n->update();
+
+		/// @todo move everything below here into GloveNode::update
 		// using the data from _g, update the transforms for the joints
 		double fingerAngle;
 		double fingerBendScale = 0.5;
