@@ -29,17 +29,34 @@ namespace glove {
 
 	void GloveUpdater::operator()(osg::Node* node, osg::NodeVisitor* nv) {
 		GloveNode * n = static_cast<GloveNode *>(node);
-		/// @todo using the data from _g, update the transforms for the joints
-		//double angle = _g.getBend(THUMB) * something;
-		//setAttitude...
+		// using the data from _g, update the transforms for the joints
+		double fingerAngle;
+		double fingerBendScale;
 
-		/// @todo also update the switch node's active child, based on the handedness of the glove
-		/* multiplying by:
+		for (unsigned int j = 0; j < 5; j++)
+		{
+			fingerAngle = _g.getBend(j) * fingerBendScale;
+			for (unsigned int i = 0; i < _joints[j].size(); i++) //should be 2x
+			{
+				_joints[j][i]->matrix.makeRotate(fingerAngle, osg::Vec3f(1.0f, 0.0f, 0.0f)); //rotate around X axis
+			}
+		}
+
+		//update the switch node's active child, based on the handedness of the glove
+		if (n->Handedness == RIGHT_HAND)
+		{
+			/* multiplying by:
 			1	0	0	0
 			0	-1	0	0
 			0	0	1	0
 			0	0	0	1
-		  should flip across the y axis */
+			should flip across the y axis */
+		}
+		else
+		{
+
+		}
+		
 	}
 
 	GloveDeviceUpdater::GloveDeviceUpdater(Glove & glove) :
