@@ -29,35 +29,35 @@ namespace glove {
 			_updater(new GloveUpdater(g)) {
 		/// @todo load the model and set the updater here
 
-		osg::ref_ptr<osg::Node> hand = osgDB::readNodeFile("hand-structured.osg");
-		assert(hand.valid());
+		osg::ref_ptr<osg::Node> model = osgDB::readNodeFile("hand-structured.osg");
+		assert(model.valid());
 		
 		/// Grab the meaningful parent node.
-		osg::ref_ptr<osg::Group> root = hand->asGroup();
-		while (root->getName() != "hand") {
-			assert(root->getNumChildren() == 1);
-			root = root->getChild(0)->asGroup(); // only has 1 child
+		osg::ref_ptr<osg::Group> hand = model->asGroup();
+		while (hand->getName() != "hand") {
+			assert(hand->getNumChildren() == 1);
+			hand = hand->getChild(0)->asGroup(); // only has 1 child
 		}
 
 		osg::ref_ptr<osg::MatrixTransform> fingerBase;
 		
-		fingerBase = dynamic_cast<osg::MatrixTransform*>(_getNamedChild(root, "thumb0").get());
+		fingerBase = dynamic_cast<osg::MatrixTransform*>(_getNamedChild(hand, "thumb0").get());
 		assert(fingerBase.valid());
 		_joints.push_back(_findJoints(fingerBase));
 		
-		fingerBase = dynamic_cast<osg::MatrixTransform*>(_getNamedChild(root, "index0").get());
+		fingerBase = dynamic_cast<osg::MatrixTransform*>(_getNamedChild(hand, "index0").get());
 		assert(fingerBase.valid());
 		_joints.push_back(_findJoints(fingerBase));
 		
-		fingerBase = dynamic_cast<osg::MatrixTransform*>(_getNamedChild(root, "middle0").get());
+		fingerBase = dynamic_cast<osg::MatrixTransform*>(_getNamedChild(hand, "middle0").get());
 		assert(fingerBase.valid());
 		_joints.push_back(_findJoints(fingerBase));
 		
-		fingerBase = dynamic_cast<osg::MatrixTransform*>(_getNamedChild(root, "ring0").get());
+		fingerBase = dynamic_cast<osg::MatrixTransform*>(_getNamedChild(hand, "ring0").get());
 		assert(fingerBase.valid());
 		_joints.push_back(_findJoints(fingerBase));
 		
-		fingerBase = dynamic_cast<osg::MatrixTransform*>(_getNamedChild(root, "pinky0").get());
+		fingerBase = dynamic_cast<osg::MatrixTransform*>(_getNamedChild(hand, "pinky0").get());
 		assert(fingerBase.valid());
 		_joints.push_back(_findJoints(fingerBase));
 
