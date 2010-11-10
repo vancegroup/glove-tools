@@ -103,19 +103,19 @@ namespace glove {
 		_leftyrighty->setSingleChildOn(_g.getHand());
 
 		// using the data from _g, update the transforms for the joints
-		updateFinger(THUMB);
-		updateFinger(INDEX_FINGER);
-		updateFinger(MIDDLE_FINGER);
-		updateFinger(RING_FINGER);
-		updateFinger(PINKY_FINGER);
+		_updateFinger(THUMB);
+		_updateFinger(INDEX_FINGER);
+		_updateFinger(MIDDLE_FINGER);
+		_updateFinger(RING_FINGER);
+		_updateFinger(PINKY_FINGER);
 	}
 
-	void GloveNode::updateFinger(Finger finger) {
-		/*double fingerAngle = _g.getBend(finger) * 0.5;
+	void GloveNode::_updateFinger(Finger finger) {
+		double fingerAngle = _g.getBend(finger) * 0.5;
 		for (unsigned int i = 0; i < _joints[finger].size(); i++) {
 			osg::Matrix m(osg::Matrix::rotate(fingerAngle, osg::Vec3f(1.0f, 0.0f, 0.0f))); //rotate around X axis
 			_joints[finger][i]->setMatrix(m);
-		}*/
+		}
 	}
 	
 	GloveNode::JointList GloveNode::_findJoints(osg::ref_ptr<osg::MatrixTransform> const& parent) {

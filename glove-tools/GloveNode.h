@@ -39,10 +39,11 @@ namespace glove {
 			
 			/// @name Helper routines
 			/// @{
+			void _updateFinger(Finger finger);
+			
 			static JointList _findJoints(osg::ref_ptr<osg::MatrixTransform> const& parent);
 			static osg::ref_ptr<osg::MatrixTransform> _getChildTransform(osg::ref_ptr<osg::Group> const& parent);
 			static osg::ref_ptr<osg::Node> _getNamedChild(osg::ref_ptr<osg::Group> const& parent, std::string const& name);
-			static void updateFinger(Finger finger);
 			/// @}
 			
 			Glove const & _g;
