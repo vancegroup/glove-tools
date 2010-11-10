@@ -73,7 +73,7 @@ int main(int argc, char * argv[]) {
 
 	/// In an app this simple (no physics loop, etc) we can just update the Glove object (and hardware) during the scenegraph update.
 	osg::ref_ptr<GloveDeviceUpdater> deviceUpdater = new GloveDeviceUpdater(g);
-	root->setUpdateCallback(deviceUpdater.get());	
+	root->setUpdateCallback(deviceUpdater.get());
 
 	std::cout << "Running viewer..." << std::endl << std::endl;
 	viewer.setSceneData(root.get());

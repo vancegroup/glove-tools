@@ -1,29 +1,29 @@
-Group {
-  UniqueID Group_0
+MatrixTransform {
+  UniqueID MatrixTransform_0
   DataVariance DYNAMIC
-  name "C:\Users\rpavlik\Desktop\hand-structured.3ds"
+  name "hand-structured.3ds"
   nodeMask 0xffffffff
   cullingActive TRUE
   num_children 1
-  Group {
+  MatrixTransform {
     DataVariance DYNAMIC
     name "hand"
     nodeMask 0xffffffff
     cullingActive TRUE
     num_children 6
-    Group {
+    MatrixTransform {
       DataVariance DYNAMIC
       name "thumb0"
       nodeMask 0xffffffff
       cullingActive TRUE
       num_children 2
-      Group {
+      MatrixTransform {
         DataVariance DYNAMIC
         name "thumb1"
         nodeMask 0xffffffff
         cullingActive TRUE
         num_children 2
-        Group {
+        MatrixTransform {
           DataVariance DYNAMIC
           name "thumb2"
           nodeMask 0xffffffff
@@ -760,19 +760,19 @@ Group {
         }
       }
     }
-    Group {
+    MatrixTransform {
       DataVariance DYNAMIC
       name "pinky0"
       nodeMask 0xffffffff
       cullingActive TRUE
       num_children 2
-      Group {
+      MatrixTransform {
         DataVariance DYNAMIC
         name "pinky1"
         nodeMask 0xffffffff
         cullingActive TRUE
         num_children 2
-        Group {
+        MatrixTransform {
           DataVariance DYNAMIC
           name "pinky2"
           nodeMask 0xffffffff
@@ -1511,19 +1511,19 @@ Group {
         }
       }
     }
-    Group {
+    MatrixTransform {
       DataVariance DYNAMIC
       name "index0"
       nodeMask 0xffffffff
       cullingActive TRUE
       num_children 2
-      Group {
+      MatrixTransform {
         DataVariance DYNAMIC
         name "index1"
         nodeMask 0xffffffff
         cullingActive TRUE
         num_children 2
-        Group {
+        MatrixTransform {
           DataVariance DYNAMIC
           name "index2"
           nodeMask 0xffffffff
@@ -2256,19 +2256,19 @@ Group {
         }
       }
     }
-    Group {
+    MatrixTransform {
       DataVariance DYNAMIC
       name "middle0"
       nodeMask 0xffffffff
       cullingActive TRUE
       num_children 2
-      Group {
+      MatrixTransform {
         DataVariance DYNAMIC
         name "middle1"
         nodeMask 0xffffffff
         cullingActive TRUE
         num_children 2
-        Group {
+        MatrixTransform {
           DataVariance DYNAMIC
           name "middle2"
           nodeMask 0xffffffff
@@ -3009,19 +3009,19 @@ Group {
         }
       }
     }
-    Group {
+    MatrixTransform {
       DataVariance DYNAMIC
       name "ring0"
       nodeMask 0xffffffff
       cullingActive TRUE
       num_children 2
-      Group {
+      MatrixTransform {
         DataVariance DYNAMIC
         name "ring1"
         nodeMask 0xffffffff
         cullingActive TRUE
         num_children 2
-        Group {
+        MatrixTransform {
           DataVariance DYNAMIC
           name "ring2"
           nodeMask 0xffffffff

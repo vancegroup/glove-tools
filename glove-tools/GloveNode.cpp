@@ -21,6 +21,7 @@
 
 // Standard includes
 #include <cassert>
+#include <vector>
 
 namespace glove {
 	GloveNode::GloveNode(Glove const & g) :
@@ -30,6 +31,32 @@ namespace glove {
 
 		osg::ref_ptr<osg::Node> hand = osgDB::readNodeFile("hand-structured.osg");
 		assert(hand.valid());
+
+		// Setup the vector
+		/*osg::ref_ptr<osg::MatrixTransform> empty;
+		_joints[THUMB].push_back(empty);
+		_joints[INDEX_FINGER].push_back(empty);
+		_joints[MIDDLE_FINGER].push_back(empty);
+		_joints[RING_FINGER].push_back(empty);
+		_joints[PINKY_FINGER].push_back(empty);*/
+
+		/*for (unsigned int i = 0; i < 5; i++)
+		{
+			std::vector<osg::ref_ptr<MatrixTransform> > singleFinger;
+			osg::ref_ptr<osg::MatrixTransform> joint;
+
+			joint = dynamic_cast<osg::MatrixTransform*>(hand->getChild(i));
+			singleFinger.push_back(joint);
+			joint = dynamic_cast<osg::MatrixTransform*>(hand->getChild(i)->getChild(0));
+			singleFinger.push_back(joint);
+			joint = dynamic_cast<osg::MatrixTransform*>(hand->getChild(i)->getChild(0)->getChild(0));
+			singleFinger.push_back(joint);
+
+			_joints.push_back(singleFinger);
+
+			singleFinger.clear()
+		}*/
+
 		hand->setUpdateCallback(_updater.get());
 
 		this->addChild(hand);
