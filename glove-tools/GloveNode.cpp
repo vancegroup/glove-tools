@@ -31,31 +31,35 @@ namespace glove {
 
 		osg::ref_ptr<osg::Node> hand = osgDB::readNodeFile("hand-structured.osg");
 		assert(hand.valid());
+		
+		/// Grab the meaningful parent node.
+		osg::ref_ptr<osg::Group> root = hand->asGroup();
+		while (root->getName() != "hand") {
+			assert(root->getNumChildren() == 1);
+			root = root->getChild(0)->asGroup(); // only has 1 child
+		}
 
-		// Setup the vector
-		/*osg::ref_ptr<osg::MatrixTransform> empty;
-		_joints[THUMB].push_back(empty);
-		_joints[INDEX_FINGER].push_back(empty);
-		_joints[MIDDLE_FINGER].push_back(empty);
-		_joints[RING_FINGER].push_back(empty);
-		_joints[PINKY_FINGER].push_back(empty);*/
-
-		/*for (unsigned int i = 0; i < 5; i++)
-		{
-			std::vector<osg::ref_ptr<MatrixTransform> > singleFinger;
-			osg::ref_ptr<osg::MatrixTransform> joint;
-
-			joint = dynamic_cast<osg::MatrixTransform*>(hand->getChild(i));
-			singleFinger.push_back(joint);
-			joint = dynamic_cast<osg::MatrixTransform*>(hand->getChild(i)->getChild(0));
-			singleFinger.push_back(joint);
-			joint = dynamic_cast<osg::MatrixTransform*>(hand->getChild(i)->getChild(0)->getChild(0));
-			singleFinger.push_back(joint);
-
-			_joints.push_back(singleFinger);
-
-			singleFinger.clear()
-		}*/
+		osg::ref_ptr<osg::MatrixTransform> fingerBase;
+		
+		fingerBase = dynamic_cast<osg::MatrixTransform*>(_getNamedChild(root, "thumb0").get());
+		assert(fingerBase.valid());
+		_joints.push_back(_findJoints(fingerBase));
+		
+		fingerBase = dynamic_cast<osg::MatrixTransform*>(_getNamedChild(root, "index0").get());
+		assert(fingerBase.valid());
+		_joints.push_back(_findJoints(fingerBase));
+		
+		fingerBase = dynamic_cast<osg::MatrixTransform*>(_getNamedChild(root, "middle0").get());
+		assert(fingerBase.valid());
+		_joints.push_back(_findJoints(fingerBase));
+		
+		fingerBase = dynamic_cast<osg::MatrixTransform*>(_getNamedChild(root, "ring0").get());
+		assert(fingerBase.valid());
+		_joints.push_back(_findJoints(fingerBase));
+		
+		fingerBase = dynamic_cast<osg::MatrixTransform*>(_getNamedChild(root, "pinky0").get());
+		assert(fingerBase.valid());
+		_joints.push_back(_findJoints(fingerBase));
 
 		hand->setUpdateCallback(_updater.get());
 
