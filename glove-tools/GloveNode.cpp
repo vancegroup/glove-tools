@@ -96,7 +96,7 @@ namespace glove {
 		this->addChild(_leftyrighty.get());
 	}
 	
-	void GloveNode::update() {
+	void GloveNode::doUpdate() {
 		std::cout << "Implement this function! " << __FUNCTION__ << std::endl;
 
 		/// Update Handedness

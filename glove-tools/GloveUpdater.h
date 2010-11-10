@@ -26,12 +26,7 @@
 namespace glove {
 	/// Updates the GloveNode based on the data reported by Glove
 	class GloveUpdater : public osg::NodeCallback {
-		public:
-			GloveUpdater(Glove const & g);
-			void operator()(osg::Node* node, osg::NodeVisitor* nv);
-
-		private:
-			Glove const & _g;
+			virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
 	};
 
 	/// Optional node callback to perform a full device update during

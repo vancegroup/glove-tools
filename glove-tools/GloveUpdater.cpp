@@ -21,17 +21,15 @@
 
 // Standard includes
 #include <iostream>
+#include <cassert>
 
 namespace glove {
 
-	GloveUpdater::GloveUpdater(Glove const & g) :
-		_g(g) {}
-
 	void GloveUpdater::operator()(osg::Node* node, osg::NodeVisitor* nv) {
-		std::cout << "In GloveUpdater::operator()" << std::endl;
 		GloveNode * n = dynamic_cast<GloveNode *>(node);
 		assert(n);
-		n->update();
+		n->doUpdate();
+		traverse(node, nv);
 	}
 
 	GloveDeviceUpdater::GloveDeviceUpdater(Glove & glove) :

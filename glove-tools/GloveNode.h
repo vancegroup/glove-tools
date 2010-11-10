@@ -32,7 +32,7 @@ namespace glove {
 			GloveNode(Glove const & g);
 			
 			/// Called from GloveUpdater::operator()()
-			void update();
+			void doUpdate();
 
 		private:
 			typedef std::vector< osg::ref_ptr<osg::MatrixTransform> > JointList;
