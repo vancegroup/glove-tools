@@ -28,7 +28,7 @@ namespace glove {
 	GloveNode::GloveNode(Glove const & g) :
 			_g(g),
 			_leftyrighty(new osg::Switch) {
-		/// @todo load the model and set the updater here
+		/// load the model and set the updater here
 
 		osg::ref_ptr<osg::Node> model = osgDB::readNodeFile("hand-structured.osg");
 		assert(model.valid());
@@ -75,15 +75,19 @@ namespace glove {
 		{
 			/// Model is right hand by default, so leave right-hand xform as identity.
 			osg::ref_ptr<osg::MatrixTransform> leftXform = dynamic_cast<osg::MatrixTransform*>(_leftyrighty->getChild(Glove::LEFT_HAND));
-			/// @todo set the leftXform's matrix
 		
-			//leftXform->setMatrix
 			/* multiplying by:
 			1	0	0	0
 			0	-1	0	0
 			0	0	1	0
 			0	0	0	1
 			should flip across the y axis */
+			leftXform->setMatrix(
+					osg::Matrix(1, 0, 0, 0,
+					0, -1, 0, 0,
+					0, 0, 1, 0,
+					0, 0, 0, 1)
+					);
 		}
 		
 		/// Set up handedness right the first time
@@ -93,23 +97,25 @@ namespace glove {
 	}
 	
 	void GloveNode::update() {
-		/// @todo implement me!
 		std::cout << "Implement this function! " << __FUNCTION__ << std::endl;
-		
+
 		/// Update Handedness
 		_leftyrighty->setSingleChildOn(_g.getHand());
-		
-		/*
+
 		// using the data from _g, update the transforms for the joints
-		double fingerAngle;
-		double fingerBendScale = 0.5;
-		for (unsigned int j = 0; j < 5; j++) {
-			fingerAngle = _g.getBend(j) * fingerBendScale;
-			for (unsigned int i = 0; i < _joints[j].size(); i++) {
-				_joints[j][i]->matrix.makeRotate(fingerAngle, osg::Vec3f(1.0f, 0.0f, 0.0f)); //rotate around X axis
-			}
-		}
-		*/
+		updateFinger(THUMB);
+		updateFinger(INDEX_FINGER);
+		updateFinger(MIDDLE_FINGER);
+		updateFinger(RING_FINGER);
+		updateFinger(PINKY_FINGER);
+	}
+
+	void GloveNode::updateFinger(Finger finger) {
+		/*double fingerAngle = _g.getBend(finger) * 0.5;
+		for (unsigned int i = 0; i < _joints[finger].size(); i++) {
+			osg::Matrix m(osg::Matrix::rotate(fingerAngle, osg::Vec3f(1.0f, 0.0f, 0.0f))); //rotate around X axis
+			_joints[finger][i]->setMatrix(m);
+		}*/
 	}
 	
 	GloveNode::JointList GloveNode::_findJoints(osg::ref_ptr<osg::MatrixTransform> const& parent) {
@@ -150,5 +156,4 @@ namespace glove {
 	
 		return nullPtr;
 	}
-
 }
