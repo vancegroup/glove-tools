@@ -20,7 +20,7 @@
 // - none
 
 // Standard includes
-// - none
+#include <iostream>
 
 namespace glove {
 
@@ -28,6 +28,7 @@ namespace glove {
 		_g(g) {}
 
 	void GloveUpdater::operator()(osg::Node* node, osg::NodeVisitor* nv) {
+		std::cout << "In GloveUpdater::operator()" << std::endl;
 		GloveNode * n = dynamic_cast<GloveNode *>(node);
 		assert(n);
 		n->update();
