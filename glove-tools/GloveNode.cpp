@@ -61,5 +61,43 @@ namespace glove {
 
 		this->addChild(hand);
 	}
+	
+	GloveNode::JointList GloveNode::_findJoints(osg::ref_ptr<osg::MatrixTransform> const& parent) {
+		JointList singleFinger;
+		osg::ref_ptr<osg::MatrixTransform> joint = parent;
+		
+		while (joint.valid()) {
+			singleFinger.push_back(joint);
+			joint = _getChildTransform(joint);
+		}
+		return singleFinger;	
+	}
+	
+	osg::ref_ptr<osg::MatrixTransform> GloveNode::_getChildTransform(osg::ref_ptr<osg::Group> const& parent) {
+		osg::ref_ptr<osg::MatrixTransform> child;
+		for (unsigned int i = 0; i < parent->getNumChildren(); ++i) {
+			child = dynamic_cast<osg::MatrixTransform*>(parent->getChild(i));
+			if (child.valid()) {
+				return child;
+			}
+		}
+		return child;
+	}
+	
+	osg::ref_ptr<osg::Node> GloveNode::_getNamedChild(osg::ref_ptr<osg::Group> const& parent, std::string const& name) {
+		osg::ref_ptr<osg::Node> nullPtr;
+		if (!parent.valid()) {
+			return nullPtr;
+		}
+		const unsigned int n = parent->getNumChildren();
+		for (unsigned int i = 0; i < n; ++i) {
+			osg::ref_ptr<osg::Node> child = parent->getChild(i);
+			if (child->getName() == name) {
+				return child;
+			}
+		}
+	
+		return nullPtr;
+	}
 
 }
