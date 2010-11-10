@@ -76,9 +76,15 @@ namespace glove {
 		{
 			/// Model is right hand by default, so leave right-hand xform as identity.
 			osg::ref_ptr<osg::MatrixTransform> leftXform = dynamic_cast<osg::MatrixTransform*>(_leftyrighty->getChild(Glove::LEFT_HAND));
-			/// @todo set the leftXform's matrix as seen in GloveUpdater here.
+			/// @todo set the leftXform's matrix
 		
 			//leftXform->setMatrix
+			/* multiplying by:
+			1	0	0	0
+			0	-1	0	0
+			0	0	1	0
+			0	0	0	1
+			should flip across the y axis */
 		}
 		
 		/// Set up handedness right the first time
@@ -97,6 +103,17 @@ namespace glove {
 		/// Update Handedness
 		_leftyrighty->setSingleChildOn(_g.getHand());
 		
+		/*
+		// using the data from _g, update the transforms for the joints
+		double fingerAngle;
+		double fingerBendScale = 0.5;
+		for (unsigned int j = 0; j < 5; j++) {
+			fingerAngle = _g.getBend(j) * fingerBendScale;
+			for (unsigned int i = 0; i < _joints[j].size(); i++) {
+				_joints[j][i]->matrix.makeRotate(fingerAngle, osg::Vec3f(1.0f, 0.0f, 0.0f)); //rotate around X axis
+			}
+		}
+		*/
 	}
 	
 	GloveNode::JointList GloveNode::_findJoints(osg::ref_ptr<osg::MatrixTransform> const& parent) {
