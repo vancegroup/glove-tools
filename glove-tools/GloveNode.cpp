@@ -61,7 +61,7 @@ namespace glove {
 		assert(fingerBase.valid());
 		_joints.push_back(_findJoints(fingerBase));
 
-		hand->setUpdateCallback(_updater.get());
+		this->setUpdateCallback(_updater.get());
 
 		this->addChild(hand);
 	}
