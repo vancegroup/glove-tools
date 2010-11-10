@@ -18,6 +18,7 @@
 // Library/third-party includes
 #include <osgDB/ReadFile>
 #include <osg/ref_ptr>
+#include <osg/Switch>
 
 // Standard includes
 #include <cassert>
@@ -26,7 +27,8 @@
 namespace glove {
 	GloveNode::GloveNode(Glove const & g) :
 			_g(g),
-			_updater(new GloveUpdater(g)) {
+			_updater(new GloveUpdater(g)),
+			_leftyrighty(new osg::Switch) {
 		/// @todo load the model and set the updater here
 
 		osg::ref_ptr<osg::Node> model = osgDB::readNodeFile("hand-structured.osg");
@@ -60,10 +62,32 @@ namespace glove {
 		fingerBase = dynamic_cast<osg::MatrixTransform*>(_getNamedChild(hand, "pinky0").get());
 		assert(fingerBase.valid());
 		_joints.push_back(_findJoints(fingerBase));
+		
+		{
+			osg::ref_ptr<osg::MatrixTransform> handedness = new osg::MatrixTransform;
+			handedness->addChild(model);
+			_leftyrighty->addChild(handedness);
+		
+			handedness = new osg::MatrixTransform;
+			handedness->addChild(model);
+			_leftyrighty->addChild(handedness);
+		}
+		
+		{
+			/// Model is right hand by default, so leave right-hand xform as identity.
+			osg::ref_ptr<osg::MatrixTransform> leftXform = dynamic_cast<osg::MatrixTransform*>(_leftyrighty->getChild(Glove::LEFT_HAND));
+			/// @todo set the leftXform's matrix as seen in GloveUpdater here.
+		
+			//leftXform->setMatrix
+		}
+		
+		/// Set up handedness right the first time
+		_leftyrighty->setSingleChildOn(_g.getHand());
+		
 
 		this->setUpdateCallback(_updater.get());
 
-		this->addChild(hand);
+		this->addChild(_leftyrighty.get());
 	}
 	
 	void GloveNode::update() {

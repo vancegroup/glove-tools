@@ -48,6 +48,7 @@ namespace glove {
 			
 			Glove const & _g;
 			osg::ref_ptr<GloveUpdater> _updater;
+			osg::ref_ptr<osg::Switch> _leftyrighty;
 			
 			std::vector<JointList> _joints;
 			
