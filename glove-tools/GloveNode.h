@@ -21,6 +21,7 @@
 // Library/third-party includes
 #include <osg/Group>
 #include <osg/ref_ptr>
+#include <osg/MatrixTransform>
 
 // Standard includes
 #include <vector>
@@ -33,7 +34,8 @@ namespace glove {
 		private:
 			Glove const & _g;
 			osg::ref_ptr<GloveUpdater> _updater;
-			//std::vector< std::vector< osg::ref_ptr<osg::MatrixTransform> > > _joints;
+			typedef std::vector< osg::ref_ptr<osg::MatrixTransform> > JointList;
+			std::vector<JointList> _joints;
 			
 	};
 }
