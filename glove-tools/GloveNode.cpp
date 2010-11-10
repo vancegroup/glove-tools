@@ -21,7 +21,7 @@
 
 // Standard includes
 #include <cassert>
-#include <vector>
+#include <iostream>
 
 namespace glove {
 	GloveNode::GloveNode(Glove const & g) :
@@ -74,6 +74,7 @@ namespace glove {
 			singleFinger.push_back(joint);
 			joint = _getChildTransform(joint);
 		}
+		std::cout << "Finger starting with " << parent->getName() << " has " << singleFinger.size() << " joints." << std::endl;
 		return singleFinger;	
 	}
 	
