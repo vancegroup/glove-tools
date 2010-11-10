@@ -37,7 +37,7 @@ namespace glove {
 			_hardware(hardware) {
 		assert(_node);
 		_node->n = new GloveNode(*this);
-		_node->n->setUpdateCallback(new GloveUpdater(*this));
+		_node->n->setUpdateCallback(new GloveUpdater);
 		_bends.push_back(0.0);
 		_bends.push_back(0.0);
 		_bends.push_back(0.0);
