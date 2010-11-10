@@ -31,6 +31,10 @@ namespace glove {
 	class GloveNode : public osg::Group {
 		public:
 			GloveNode(Glove const & g);
+			
+			/// Called from GloveUpdater::operator()()
+			/// @todo needs implementation!
+			void update();
 
 		private:
 			typedef std::vector< osg::ref_ptr<osg::MatrixTransform> > JointList;
