@@ -93,6 +93,10 @@ namespace glove {
 	void GloveNode::update() {
 		/// @todo implement me!
 		std::cout << "Implement this function! " << __FUNCTION__ << std::endl;
+		
+		/// Update Handedness
+		_leftyrighty->setSingleChildOn(_g.getHand());
+		
 	}
 	
 	GloveNode::JointList GloveNode::_findJoints(osg::ref_ptr<osg::MatrixTransform> const& parent) {
