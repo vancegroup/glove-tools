@@ -15,6 +15,7 @@
 // Internal Includes
 #include "Glove.h"
 #include "GloveNode.h"
+#include "GloveUpdater.h"
 #include "IGloveHardware.h"
 
 // Library/third-party includes
@@ -36,6 +37,7 @@ namespace glove {
 			_hardware(hardware) {
 		assert(_node);
 		_node->n = new GloveNode(*this);
+		_node->n->setUpdateCallback(new GloveUpdater(*this));
 		_bends.push_back(0.0);
 		_bends.push_back(0.0);
 		_bends.push_back(0.0);

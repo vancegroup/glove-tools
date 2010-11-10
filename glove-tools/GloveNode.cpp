@@ -27,7 +27,6 @@
 namespace glove {
 	GloveNode::GloveNode(Glove const & g) :
 			_g(g),
-			_updater(new GloveUpdater(g)),
 			_leftyrighty(new osg::Switch) {
 		/// @todo load the model and set the updater here
 
@@ -89,9 +88,6 @@ namespace glove {
 		
 		/// Set up handedness right the first time
 		_leftyrighty->setSingleChildOn(_g.getHand());
-		
-
-		this->setUpdateCallback(_updater.get());
 
 		this->addChild(_leftyrighty.get());
 	}
