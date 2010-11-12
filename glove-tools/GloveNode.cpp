@@ -123,6 +123,12 @@ namespace glove {
 		osg::ref_ptr<osg::PositionAttitudeTransform> joint = parent;
 		
 		while (joint.valid()) {
+			//set pivot point so the joints don't jump around
+			osg::BoundingBox bbox;
+			bbox.expandBy(joint->getBound()); //convert boundingsphere to boundingbox
+			osg::Vec3d centerpoint = osg::Vec3d(bbox.center);
+			centerpoint.set(centerpoint.x, centerpoint.y, bbox.zMin);
+			joint->setPivotPoint(centerpoint));
 			singleFinger.push_back(joint);
 			joint = _getChildTransform(joint);
 		}
