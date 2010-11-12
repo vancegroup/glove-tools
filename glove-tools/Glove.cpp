@@ -36,7 +36,7 @@ namespace glove {
 			_hand(LEFT_HAND),
 			_hardware(hardware) {
 		if (!_node) {
-			throw new std::bad_alloc("Couldn't allocate glove node container!");
+			throw new std::bad_alloc();
 		}
 		_node->n = new GloveNode(*this);
 		_node->n->setUpdateCallback(new GloveUpdater);
