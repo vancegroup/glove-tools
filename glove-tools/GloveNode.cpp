@@ -126,9 +126,9 @@ namespace glove {
 			//set pivot point so the joints don't jump around
 			osg::BoundingBox bbox;
 			bbox.expandBy(joint->getBound()); //convert boundingsphere to boundingbox
-			osg::Vec3d centerpoint = osg::Vec3d(bbox.center);
-			centerpoint.set(centerpoint.x, centerpoint.y, bbox.zMin);
-			joint->setPivotPoint(centerpoint));
+			osg::Vec3d centerpoint = osg::Vec3d(bbox.center());
+			centerpoint.set(centerpoint.x(), centerpoint.y(), bbox.zMin());
+			joint->setPivotPoint(centerpoint);
 			singleFinger.push_back(joint);
 			joint = _getChildTransform(joint);
 		}
