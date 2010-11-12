@@ -22,7 +22,7 @@
 // - none
 
 // Standard includes
-// - none
+#include <iostream>
 
 namespace glove {
 	namespace detail {
@@ -35,7 +35,9 @@ namespace glove {
 			_node(new detail::GloveNodeContainer),
 			_hand(LEFT_HAND),
 			_hardware(hardware) {
-		assert(_node);
+		if (!_node) {
+			throw new std::bad_alloc("Couldn't allocate glove node container!");
+		}
 		_node->n = new GloveNode(*this);
 		_node->n->setUpdateCallback(new GloveUpdater);
 		_bends.push_back(0.0);
@@ -55,7 +57,15 @@ namespace glove {
 
 		_bends = _hardware->getBends();
 		/// @todo Eventually will want kalman filter here rather than just copying the latest update
-
+		for (unsigned int i = 0; i < 5; ++i) {
+			if (_bends[i] > 1.0) {
+				std::cerr << "WARNING: your GloveHardware driver is returning too high of a bend value (" << _bends[i] << ") ! Please report this bug to glovetools." << std::endl;
+				_bends[i] = 1.0;
+			} else if (_bends[i] < 0.0) {
+				std::cerr << "WARNING: your GloveHardware driver is returning too low of a bend value (" << _bends[i] << ") ! Please report this bug to glovetools." << std::endl;
+				_bends[i] = 0.0;
+			}
+		}
 	}
 
 	osg::ref_ptr<osg::Node> Glove::getNode() const {
