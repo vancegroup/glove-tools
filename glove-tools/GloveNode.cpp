@@ -112,7 +112,7 @@ namespace glove {
 
 	void GloveNode::_updateFinger(Finger finger) {
 		/// @todo adjust scale here
-		double fingerAngle = _g.getBend(finger) * 0.5;
+		double fingerAngle = _g.getBend(finger) * 0.9;
 		for (unsigned int i = 0; i < _joints[finger].size(); i++) {
 			_joints[finger][i]->setAttitude(osg::Quat(fingerAngle, osg::Vec3f(1.0f, 0.0f, 0.0f))); //rotate around X axis
 		}
