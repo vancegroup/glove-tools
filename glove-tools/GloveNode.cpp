@@ -36,6 +36,7 @@ namespace glove {
 		
 		/// Grab the meaningful parent node.
 		osg::ref_ptr<osg::Group> hand = model->asGroup();
+		hand->computeBound(); //calculate bound information since we need this before update is called
 		while (hand->getName() != "hand") {
 			assert(hand->getNumChildren() == 1);
 			hand = hand->getChild(0)->asGroup(); // only has 1 child
@@ -98,8 +99,6 @@ namespace glove {
 	}
 	
 	void GloveNode::doUpdate() {
-		std::cout << "Implement this function! " << __FUNCTION__ << std::endl;
-
 		/// Update Handedness
 		_leftyrighty->setSingleChildOn(_g.getHand());
 
