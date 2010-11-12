@@ -46,23 +46,23 @@ namespace glove {
 		
 		fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "thumb0").get());
 		assert(fingerBase.valid());
-		_joints.push_back(_findJoints(fingerBase));
+		_joints.push_back(_findJoints(THUMB, fingerBase));
 		
 		fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "index0").get());
 		assert(fingerBase.valid());
-		_joints.push_back(_findJoints(fingerBase));
+		_joints.push_back(_findJoints(INDEX_FINGER, fingerBase));
 		
 		fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "middle0").get());
 		assert(fingerBase.valid());
-		_joints.push_back(_findJoints(fingerBase));
+		_joints.push_back(_findJoints(MIDDLE_FINGER, fingerBase));
 		
 		fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "ring0").get());
 		assert(fingerBase.valid());
-		_joints.push_back(_findJoints(fingerBase));
+		_joints.push_back(_findJoints(RING_FINGER, fingerBase));
 		
 		fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "pinky0").get());
 		assert(fingerBase.valid());
-		_joints.push_back(_findJoints(fingerBase));
+		_joints.push_back(_findJoints(PINKY_FINGER, fingerBase));
 		
 		{
 			osg::ref_ptr<osg::MatrixTransform> handedness = new osg::MatrixTransform;
@@ -120,11 +120,12 @@ namespace glove {
 		}
 	}
 	
-	GloveNode::JointList GloveNode::_findJoints(osg::ref_ptr<osg::PositionAttitudeTransform> const& parent) {
+	GloveNode::JointList GloveNode::_findJoints(Finger finger, osg::ref_ptr<osg::PositionAttitudeTransform> const& parent) {
 		JointList singleFinger;
 		osg::ref_ptr<osg::PositionAttitudeTransform> joint = parent;
 		
 		while (joint.valid()) {
+			/// @todo check if (finger == THUMB) { do something slightly different - maybe add a pair of rotations to change the axis? }
 			/// set pivot point and position so the joints don't jump around
 			const osg::BoundingSphere & bs = joint->getBound();
 			osg::Vec3d pivot(bs.center().x(),
