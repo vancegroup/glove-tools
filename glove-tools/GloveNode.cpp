@@ -111,6 +111,7 @@ namespace glove {
 	}
 
 	void GloveNode::_updateFinger(Finger finger) {
+		/// @todo adjust scale here
 		double fingerAngle = _g.getBend(finger) * 0.5;
 		for (unsigned int i = 0; i < _joints[finger].size(); i++) {
 			_joints[finger][i]->setAttitude(osg::Quat(fingerAngle, osg::Vec3f(1.0f, 0.0f, 0.0f))); //rotate around X axis
@@ -123,11 +124,14 @@ namespace glove {
 		
 		while (joint.valid()) {
 			//set pivot point so the joints don't jump around
-			osg::BoundingBox bbox;
-			bbox.expandBy(joint->getBound()); //convert boundingsphere to boundingbox
-			osg::Vec3d centerpoint = osg::Vec3d(bbox.center());
-			centerpoint.set(centerpoint.x(), bbox.yMin(), centerpoint.z());
-			joint->setPivotPoint(centerpoint);
+			const osg::BoundingSphere & bs = joint->getBound();
+			osg::Vec3d pivot(bs.center().x(),
+				bs.center().y() - (0.9 * bs.radius()), /// Scale radius by 0.9 to not go all the way down.
+				bs.center().z());
+
+			std::cout << "Radius: " << bs.radius() <<  ", Pivot at " << pivot.x() << ", " << pivot.y() << ", " << pivot.z() << std::endl;
+			joint->setPivotPoint(pivot);
+			joint->setPosition(pivot);
 			singleFinger.push_back(joint);
 			joint = _getChildTransform(joint);
 		}
