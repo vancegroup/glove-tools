@@ -32,14 +32,12 @@ namespace glove {
 
 
 	void FakeFlexingGloveHardware::updateData() {
-		double bend = (- std::cos(static_cast<double>(_counter)) + 0.5) * 2;
-		if (_counter % 25 == 0) {
-			_bends[0] = bend;
-			_bends[1] = bend;
-			_bends[2] = bend;
-			_bends[3] = bend;
-			_bends[4] = bend;
-		}
+		double bend = (- std::cos(static_cast<double>(_counter) / 50.0) + 1.0) / 2.0;
+		_bends[0] = bend;
+		_bends[1] = bend;
+		_bends[2] = bend;
+		_bends[3] = bend;
+		_bends[4] = bend;
 		_counter++;
 	}
 
