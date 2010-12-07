@@ -156,7 +156,8 @@ namespace glove {
 			const osg::BoundingSphere & bs = joint->getBound();
 			osg::Vec3d pivot(bs.center().x(),
 				bs.center().y() - 0.01,
-				bs.center().z() - 0.8 * bs.radius()); /// Scale radius to not pivot around the very bottom of the bounds.
+				bs.center().z() - 0.8 * bs.radius()); /// Scale radius to not pivot around the very bottom of the bounds.
+
 
 			std::cout << "Radius: " << bs.radius() <<  ", Pivot at " << pivot.x() << ", " << pivot.y() << ", " << pivot.z() << std::endl;
 			joint->setPivotPoint(pivot);
