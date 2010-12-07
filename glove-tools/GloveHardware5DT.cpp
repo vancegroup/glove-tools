@@ -21,3 +21,25 @@
 // Standard includes
 // - none
 
+namespace glove {
+	GloveHardwarePtr GloveHardware5DT::create(std::string const & option) {
+		GloveHardwarePtr temp(new GloveHardware5DT(option));
+		return temp;
+	}
+
+	GloveHardware5DT::GloveHardware5DT(std::string const & option) :
+			_fd(NULL) {
+		/// @todo do stuff
+		/// @todo open glove device ehre
+	}
+
+	GloveHardware5DT::~GloveHardware5DT() {
+		if (_fd) {
+			/// @todo close glove here
+		}
+	}
+
+	void GloveHardware5DT::updateData() {
+		/// @todo do stuff
+	}
+}
