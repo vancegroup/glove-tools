@@ -24,8 +24,37 @@
 // Standard includes
 #include <cassert>
 #include <iostream>
+#include <cmath>
 
 namespace glove {
+	osg::Vec3f const& GloveNode::_getJointAxis(Finger f, int joint) {
+		static std::vector< std::vector<osg::Vec3f> > axes;
+		static bool loaded = false;
+		if (!loaded) {
+			{
+				// Thumb
+				std::vector<osg::Vec3f> finger;
+				osg::Vec3f thumb_oppose(0, 0, -1);
+				thumb_oppose.normalize();
+				finger.push_back(thumb_oppose);
+				finger.push_back(osg::Vec3f(1/std::sqrt(2.0), 0, -1/std::sqrt(2.0)));
+				finger.push_back(osg::Vec3f(1/std::sqrt(2.0), 0, -1/std::sqrt(2.0)));
+				axes.push_back(finger);
+			}
+			for (unsigned int i = 0; i < 4; ++i) {
+				// other fingers
+				std::vector<osg::Vec3f> finger;
+				finger.push_back(osg::Vec3f(1, 0, 0));
+				finger.push_back(osg::Vec3f(1, 0, 0));
+				finger.push_back(osg::Vec3f(1, 0, 0));
+				axes.push_back(finger);
+			}
+			loaded = true;
+		}
+		return axes[f][joint];
+	}
+			
+
 	GloveNode::GloveNode(Glove const & g) :
 			_g(g),
 			_leftyrighty(new osg::Switch) {
@@ -114,7 +143,7 @@ namespace glove {
 		/// @todo adjust scale here
 		double fingerAngle = _g.getBend(finger) * 0.9;
 		for (unsigned int i = 0; i < _joints[finger].size(); i++) {
-			_joints[finger][i]->setAttitude(osg::Quat(fingerAngle, osg::Vec3f(1.0f, 0.0f, 0.0f))); //rotate around X axis
+			_joints[finger][i]->setAttitude(osg::Quat(fingerAngle, _getJointAxis(finger, i))); //rotate around X axis
 		}
 	}
 	

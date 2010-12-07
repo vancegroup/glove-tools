@@ -50,6 +50,7 @@ namespace glove {
 			osg::ref_ptr<osg::Switch> _leftyrighty;
 			
 			std::vector<JointList> _joints;
+			static osg::Vec3f const& _getJointAxis(Finger f, int joint);
 			
 	};
 }
