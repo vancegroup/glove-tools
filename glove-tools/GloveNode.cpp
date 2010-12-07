@@ -34,7 +34,7 @@ namespace glove {
 			{
 				// Thumb
 				std::vector<osg::Vec3f> finger;
-				osg::Vec3f thumb_oppose(0, 0, -1);
+				osg::Vec3f thumb_oppose(0.1, 0, -1);
 				thumb_oppose.normalize();
 				finger.push_back(thumb_oppose);
 				finger.push_back(osg::Vec3f(1/std::sqrt(2.0), 0, -1/std::sqrt(2.0)));
