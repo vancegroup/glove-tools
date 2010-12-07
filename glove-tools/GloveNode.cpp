@@ -141,9 +141,19 @@ namespace glove {
 
 	void GloveNode::_updateFinger(Finger finger) {
 		/// @todo adjust scale here
-		double fingerAngle = _g.getBend(finger) * 0.9;
+		/// Scales chosen here are just based on "what looks right"
+		double fingerAngle = _g.getBend(finger) * 1.8;
+		if (finger == THUMB) {
+			/// Thumb doesn't bend as far
+			fingerAngle /= 1.5;
+		}
 		for (unsigned int i = 0; i < _joints[finger].size(); i++) {
-			_joints[finger][i]->setAttitude(osg::Quat(fingerAngle, _getJointAxis(finger, i))); //rotate around X axis
+			double jointAngle = fingerAngle;
+			if (i == 0) {
+				/// First joint on every finger doesn't bend as far
+				jointAngle /= 2.0;
+			}
+			_joints[finger][i]->setAttitude(osg::Quat(jointAngle, _getJointAxis(finger, i))); //rotate around X axis
 		}
 	}
 	
