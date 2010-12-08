@@ -25,7 +25,7 @@
 #undef LPVOID
 
 // Standard includes
-// - none
+#include <string>
 
 namespace glove {
 
@@ -39,6 +39,18 @@ namespace glove {
 
 			/// Factory function for use with create-by-name
 			static GloveHardwarePtr create(std::string const & option);
+
+			// Return true if glove is right handed, NULL on error
+			bool isRightHanded();
+
+			// Return the type of the glove, NULL on error
+			std::string returnGloveType();
+
+			// Return the number of sensors on the glove, NULL on error
+			int returnNumSensors();
+
+			// Resets the calibration settings back to default, NULL on error
+			void resetGloveCalibration();
 
 		protected:
 			GloveHardware5DT(std::string const & option);

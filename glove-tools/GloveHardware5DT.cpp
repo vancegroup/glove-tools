@@ -19,7 +19,7 @@
 // - none
 
 // Standard includes
-// - none
+#include <string>
 
 namespace glove {
 	GloveHardwarePtr GloveHardware5DT::create(std::string const & option) {
@@ -29,17 +29,96 @@ namespace glove {
 
 	GloveHardware5DT::GloveHardware5DT(std::string const & option) :
 			_fd(NULL) {
-		/// @todo do stuff
-		/// @todo open glove device ehre
+			// For the option parameter, please specify the COM port of the device
+			// Valid inputs are COM1 through COM8
+			// Note, this may be different under Linux
+
+			// Open 5DT glove
+			_fd = fdOpen(option.c_str());
+			if (!_fd)
+			{
+				std::cerr << "WARNING: Unable to open 5DT data glove" << std::endl;
+			}
+
+			// Reset the calibration settings
+			fdResetCalibration(_fd);
 	}
 
 	GloveHardware5DT::~GloveHardware5DT() {
 		if (_fd) {
-			/// @todo close glove here
+			// Close the 5DT glove
+			if (fdClose(_fd) == 0)
+			{
+				std::cerr << "WARNING: Unable to close 5DT data glove" << std::endl;
+			}
 		}
 	}
 
+	bool GloveHardware5DT::isRightHanded()
+	{
+		if (_fd) {
+			// Determines the handedness of the glove and returns true if right handed
+			if (FD_HAND_RIGHT == fdGetGloveHand(_fd))
+				return true;
+			else if (FD_HAND_LEFT == fdGetGloveHand(_fd))
+				return false;
+		}
+		return NULL;
+	}
+
+	std::string GloveHardware5DT::returnGloveType()
+	{
+		if (_fd) {
+			// Returns a string of the 5DT device type
+			if (fdGetGloveType(_fd) == FD_GLOVE7)
+			{
+				return std::string("5DT Data Glove 5");
+			}
+			else if (fdGetGloveType(_fd) == FD_GLOVE7W)
+			{
+				return std::string("Wireless 5DT Data Glove 5");
+			}
+			else if (fdGetGloveType(_fd) == FD_GLOVE16)
+			{
+				return std::string("5DT Data Glove 16");
+			}
+			else if (fdGetGloveType(_fd) == FD_GLOVE16W)
+			{
+				return std::string("Wireless 5DT Data Glove 16");
+			}
+			else if (fdGetGloveType(_fd) == FD_GLOVENONE)
+			{
+				return std::string("No 5DT Glove");
+			}
+		}
+		return NULL;
+	}
+
+	int GloveHardware5DT::returnNumSensors()
+	{
+		if (_fd) {
+			// This returns the number of sensors on the device
+			// The 16 sensor model actually returns 18 since it also counts the tilt sensors
+			return fdGetNumSensors(_fd);
+		}
+		return NULL;
+	}
+
+	void GloveHardware5DT::resetGloveCalibration()
+	{
+		if (_fd) {
+			// Resets glove calibration to default settings
+			fdResetCalibration(_fd);
+		}
+		return NULL;
+	}
+
 	void GloveHardware5DT::updateData() {
-		/// @todo do stuff
+		// Update stored bend values
+		for (unsigned int i = 0; i < 5; ++)
+		{
+			//@TODO: do stuff
+			// use float fdGetSensorScaled(fdGlove *pFG, int nSensor)
+		}
 	}
 }
