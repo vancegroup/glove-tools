@@ -105,7 +105,7 @@ namespace glove {
 		
 		{
 			/// Model is right hand by default, so leave right-hand xform as identity.
-			osg::ref_ptr<osg::MatrixTransform> leftXform = dynamic_cast<osg::MatrixTransform*>(_leftyrighty->getChild(Glove::LEFT_HAND));
+			osg::ref_ptr<osg::MatrixTransform> leftXform = dynamic_cast<osg::MatrixTransform*>(_leftyrighty->getChild(LEFT_HAND));
 		
 			/* multiplying by:
 			1	0	0	0

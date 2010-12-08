@@ -17,6 +17,7 @@
 // Internal Includes
 #include "GlovePointerTypes.h"
 #include "Finger.h"
+#include "Handedness.h"
 
 // Library/third-party includes
 #include <osg/ref_ptr>
@@ -33,14 +34,7 @@ namespace glove {
 	class Glove {
 		public:
 			Glove(GloveHardwarePtr hardware);
-			~Glove();
-
-			enum Handedness {
-				LEFT_HAND,
-				RIGHT_HAND
-			};
-
-			
+			~Glove();	
 
 			/// Fetch updated data from hardware and process it.
 			void updateData();
