@@ -30,19 +30,43 @@ namespace glove {
 
 	GloveHardware5DT::GloveHardware5DT(std::string const & option) :
 			_fd(NULL) {
-			// For the option parameter, please specify the COM port of the device
-			// Valid inputs are COM1 through COM8
-			// Note, this may be different under Linux
+			// For the option parameter, please specify either the COM port or USB port of the device
+			// Valid inputs are "COM1" through "COM8" for serial COM
+			// and "USB0" through "USB3" for USB
+			// Note, these values may be different under Linux
 
-			// Open 5DT glove
-			_fd = fdOpen(const_cast<char*>(option.c_str()));
-			if (!_fd)
+			if (option.c_str() == "USB0" || option.c_str() == "USB1" || option.c_str() == "USB2" || option.c_str() == "USB3")
 			{
-				std::cerr << "WARNING: Unable to open 5DT data glove" << std::endl;
+				// First check and see if there are any USB devices available
+				unsigned short aPID[5];
+				int numFound = 0;
+				fdScanUSB(aPID, numFound);
+				if (numFound > 0)
+				{
+					// Try to open 5DT glove on USB port
+					_fd = fdOpen(const_cast<char*>(option.c_str()));
+					if (!_fd)
+					{
+						std::cerr << "WARNING: Unable to open 5DT data glove on USB port" << std::endl;
+					}
+				}
+				else
+				{
+					std::cerr << "WARNING: No 5DT USB gloves connected" << std::endl;
+				}
+			}
+			else
+			{
+				// Try to open 5DT glove on serial port
+				_fd = fdOpen(const_cast<char*>(option.c_str()));
+				if (!_fd)
+				{
+					std::cerr << "WARNING: Unable to open 5DT data glove on serial port" << std::endl;
+				}
 			}
 
 			// Reset the calibration settings
-			fdResetCalibration(_fd);
+			resetGloveCalibration();
 	}
 
 	GloveHardware5DT::~GloveHardware5DT() {
@@ -99,15 +123,15 @@ namespace glove {
 			{
 				return std::string("Wireless 5DT Data Glove 16");
 			}
-			else if == (fdGetGloveType(_fd_) == FD_GLOVE14)
+			else if (fdGetGloveType(_fd) == FD_GLOVE14U)
 			{
 				return std::string("5DT Data Glove 14 Ultra");
 			}
-			else if == (fdGetGloveType(_fd_) == FD_GLOVE14W)
+			else if (fdGetGloveType(_fd) == FD_GLOVE14UW)
 			{
 				return std::string("Wireless 5DT Data Glove 14 Ultra");
 			}
-			else if == (fdGetGloveType(_fd_) == FD_GLOVE14_USB)
+			else if (fdGetGloveType(_fd) == FD_GLOVE14U_USB)
 			{
 				return std::string("5DT Data Glove 14 Ultra on USB");
 			}
@@ -149,8 +173,8 @@ namespace glove {
 					// use float fdGetSensorScaled(fdGlove *pFG, int nSensor)
 				}
 			}
-			else if (fdGetGloveType(_fd) == FD_GLOVE16 || fdGetGloveType(_fd) == FD_GLOVE16W || fdGetGloveType(_fd) == FD_GLOVE14 
-				|| fdGetGloveType(_fd) == FD_GLOVE14W || fdGetGloveType(_fd) == FD_GLOVE14_USB)
+			else if (fdGetGloveType(_fd) == FD_GLOVE16 || fdGetGloveType(_fd) == FD_GLOVE16W || fdGetGloveType(_fd) == FD_GLOVE14U 
+				|| fdGetGloveType(_fd) == FD_GLOVE14UW || fdGetGloveType(_fd) == FD_GLOVE14U_USB)
 			{
 				// 14 total sensors for all fingers
 				// @TODO: implement me, we don't have these gloves to test
