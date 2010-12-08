@@ -16,6 +16,7 @@
 
 // Internal Includes
 #include "Finger.h"
+#include "Handedness.h"
 #include "GlovePointerTypes.h"
 
 // Library/third-party includes
@@ -39,6 +40,11 @@ namespace glove {
 			/// Fetch the latest bend information for all fingers and normalize into [0, 1]
 			virtual void updateData() = 0;
 
+			/// Return the glove's handedness, if our hardware interface tells us this
+			Handedness getHand() const {
+				return _hand;
+			}
+
 			/// Access the bend data for the given finger
 			double getBend(Finger finger) const {
 				return _bends[finger];
@@ -49,7 +55,14 @@ namespace glove {
 			}
 
 		protected:
+			void _setHand(Handedness const h) {
+				_hand = h;
+			}
+
 			std::vector<double> _bends;
+
+		private:
+			Handedness _hand;
 	};
 }
 

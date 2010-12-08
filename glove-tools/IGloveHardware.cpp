@@ -22,7 +22,8 @@
 // - none
 
 namespace glove {
-	IGloveHardware::IGloveHardware() {
+	IGloveHardware::IGloveHardware() :
+			_hand(UNKNOWN_HAND) {
 		_bends.push_back(0.0);
 		_bends.push_back(0.0);
 		_bends.push_back(0.0);

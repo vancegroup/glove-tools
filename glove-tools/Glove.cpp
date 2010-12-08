@@ -77,7 +77,11 @@ namespace glove {
 	}
 
 	Handedness Glove::getHand() const {
+		if (_hardware->getHand() == UNKNOWN_HAND) {
 			return _hand;
+		} else {
+			return _hardware->getHand();
+		}
 	}
 
 	void Glove::setHand(Handedness hand) {
