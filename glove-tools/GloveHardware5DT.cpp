@@ -30,52 +30,52 @@ namespace glove {
 
 	GloveHardware5DT::GloveHardware5DT(std::string const & option) :
 			_fd(NULL) {
-			// For the option parameter, please specify either the COM port or USB port of the device
-			// Valid inputs are "COM1" through "COM8" for serial COM
-			// and "USB0" through "USB3" for USB
-			// Note, these values may be different under Linux
+		// For the option parameter, please specify either the COM port or USB port of the device
+		// Valid inputs are "COM1" through "COM8" for serial COM
+		// and "USB0" through "USB3" for USB
+		// Note, these values may be different under Linux
 
-			if (option.find("USB") != std::string::npos) {
-				// First check and see if there are any USB devices available
-#define MAXUSB 5
-				unsigned short aPID[MAXUSB];
-				int numMax = MAXUSB;
+		if (option.find("USB") != std::string::npos) {
+			// First check and see if there are any USB devices available
+#define MAXUSB 4
+			unsigned short aPID[MAXUSB];
+			int numMax = MAXUSB;
 #undef MAXUSB
-				int numFound = fdScanUSB(aPID, numMax);
-				if (numFound > 0) {
-					// Try to open 5DT glove on USB port
-					_fd = fdOpen(const_cast<char*>(option.c_str()));
-					if (!_fd) {
-						std::cerr << "WARNING: Unable to open 5DT data glove on USB port" << std::endl;
-						throw new USBGlove5DTConnectionFailed;
-					}
-				} else {
-					std::cerr << "WARNING: No 5DT USB gloves connected" << std::endl;
-					throw new NoUSBGlove5DTFound;
-				}
-			} else {
-				// Try to open 5DT glove on serial port
+			int numFound = fdScanUSB(aPID, numMax);
+			if (numFound > 0) {
+				// Try to open 5DT glove on USB port
 				_fd = fdOpen(const_cast<char*>(option.c_str()));
 				if (!_fd) {
-					std::cerr << "WARNING: Unable to open 5DT data glove on serial port" << std::endl;
-					throw new SerialGlove5DTConnectionFailed;
+					std::cerr << "WARNING: Unable to open 5DT data glove on USB port" << std::endl;
+					throw new USBGlove5DTConnectionFailed;
 				}
+			} else {
+				std::cerr << "WARNING: No 5DT USB gloves connected" << std::endl;
+				throw new NoUSBGlove5DTFound;
 			}
-
-			switch (fdGetGloveHand(_fd)) {
-				case FD_HAND_RIGHT:
-					_setHand(RIGHT_HAND);
-					break;
-				case FD_HAND_LEFT:
-					_setHand(LEFT_HAND);
-					break;
-				default:
-					/// No idea what happened here
-					throw new std::runtime_error("Should never happen: fdGetGloveHand didn't return a value we could handle!");
+		} else {
+			// Try to open 5DT glove on serial port
+			_fd = fdOpen(const_cast<char*>(option.c_str()));
+			if (!_fd) {
+				std::cerr << "WARNING: Unable to open 5DT data glove on serial port" << std::endl;
+				throw new SerialGlove5DTConnectionFailed;
 			}
+		}
 
-			// Reset the calibration settings
-			resetGloveCalibration();
+		switch (fdGetGloveHand(_fd)) {
+			case FD_HAND_RIGHT:
+				_setHand(RIGHT_HAND);
+				break;
+			case FD_HAND_LEFT:
+				_setHand(LEFT_HAND);
+				break;
+			default:
+				/// No idea what happened here
+				throw new std::runtime_error("Should never happen: fdGetGloveHand didn't return a value we could handle!");
+		}
+
+		// Reset the calibration settings
+		resetGloveCalibration();
 	}
 
 	GloveHardware5DT::~GloveHardware5DT() {
