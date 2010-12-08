@@ -168,9 +168,9 @@ namespace glove {
 				|| fdGetGloveType(_fd) == FD_GLOVE5UW || fdGetGloveType(_fd) == FD_GLOVE5U_USB)
 			{
 				// 5 total sensors for all fingers
-				for (unsigned int i = 0; i <= 12; i+=3)
+				for (unsigned int i = 0, j = 0; i <= 12; i+=3, j++)
 				{
-					// use float fdGetSensorScaled(fdGlove *pFG, int nSensor)
+					_bends[j] = fdGetSensorScaled(_fd, i);
 				}
 			}
 			else if (fdGetGloveType(_fd) == FD_GLOVE16 || fdGetGloveType(_fd) == FD_GLOVE16W || fdGetGloveType(_fd) == FD_GLOVE14U 
