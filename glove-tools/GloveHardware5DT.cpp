@@ -37,11 +37,12 @@ namespace glove {
 
 			if (option.find("USB") != std::string::npos) {
 				// First check and see if there are any USB devices available
-				unsigned short aPID[5];
-				int numFound = 0;
-				fdScanUSB(aPID, numFound);
-				if (numFound > 0)
-				{
+#define MAXUSB 5
+				unsigned short aPID[MAXUSB];
+				int numMax = MAXUSB;
+#undef MAXUSB
+				int numFound = fdScanUSB(aPID, numMax);
+				if (numFound > 0) {
 					// Try to open 5DT glove on USB port
 					_fd = fdOpen(const_cast<char*>(option.c_str()));
 					if (!_fd) {
