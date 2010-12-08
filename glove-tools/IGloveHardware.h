@@ -23,8 +23,13 @@
 
 // Standard includes
 #include <vector>
+#include <stdexcept>
 
 namespace glove {
+
+	struct GloveConnectionError : public std::runtime_error {
+		GloveConnectionError(std::string const& what = "Could not connect to glove!") : std::runtime_error(what) {}
+	};
 
 	class IGloveHardware {
 		public:

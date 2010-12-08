@@ -29,6 +29,18 @@
 
 namespace glove {
 
+	struct NoUSBGlove5DTFound : public GloveConnectionError {
+		NoUSBGlove5DTFound() : GloveConnectionError("USB address specified, but no 5DT USB gloves connected!") {}
+	};
+
+	struct USBGlove5DTConnectionFailed : public GloveConnectionError {
+		USBGlove5DTConnectionFailed() : GloveConnectionError("Unable to open 5DT data glove on USB port!") {}
+	};
+
+	struct SerialGlove5DTConnectionFailed : public GloveConnectionError {
+		SerialGlove5DTConnectionFailed() : GloveConnectionError("Unable to open 5DT data glove on serial port!") {}
+	};
+
 	class GloveHardware5DT : public IGloveHardware {
 		public:
 
