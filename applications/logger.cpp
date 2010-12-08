@@ -20,6 +20,7 @@
 
 // Standard includes
 #include <iostream>
+#include <fstream>
 #include <string>
 
 using namespace glove;
@@ -34,7 +35,8 @@ int main(int argc, char * argv[]) {
 	arguments.getApplicationUsage()->setCommandLineUsage(arguments.getApplicationName()+" [options] ...");
 	arguments.getApplicationUsage()->addCommandLineOption("--device <type>","Choose a different device type.");
 	arguments.getApplicationUsage()->addCommandLineOption("--option <option>","Pass an option to the GloveHardware driver - like an address/port.");
-	/// @todo
+	arguments.getApplicationUsage()->addCommandLineOption("--max <type>","Specify the max number of lines to write to the file.");
+	arguments.getApplicationUsage()->addCommandLineOption("--file <type>","Specify the filename in CSV format.");
 
 	unsigned int helpType = 0;
 	if ((helpType = arguments.readHelpType()))
@@ -82,11 +84,23 @@ int main(int argc, char * argv[]) {
 	std::cout << "Connection successful! Startup is continuing..." << std::endl;
 	Glove g(hardware);
 
-	/// @todo open file here
+	// Open file
+	std::ofstream outfile (filename.c_str());
+	if (!outfile.is_open())
+		std::cerr << "Unable to open file for writing" << std::endl;
+	
+	outfile << "Timestep, Thumb, Index, Middle, Ring, Pinky\n";
 	for (unsigned int i = 0; i < maxSamples; ++i) {
 		hardware->updateData();
 		g.updateData();
-		/// @todo log to file here in csv format
+		/// log to file here in csv format
+		outfile << i << ", " << g.getBend(Finger(THUMB)) << ", " << g.getBend(Finger(INDEX_FINGER)) << ", " 
+		<< g.getBend(Finger(MIDDLE_FINGER)) << ", " << g.getBend(Finger(RING_FINGER)) << ", " << g.getBend(Finger(PINKY_FINGER)) << "\n";
 	}
+
+	// Close file
+	outfile.close();
+	std::cout << "Finished writing to file." << std::endl;
+
 	return 0;
 }
