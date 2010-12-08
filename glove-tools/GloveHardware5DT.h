@@ -64,6 +64,7 @@ namespace glove {
 		protected:
 			GloveHardware5DT(std::string const & option);
 			fdGlove * _fd;
+			bool _raw;
 	};
 }
 

@@ -32,6 +32,10 @@ namespace glove {
 		GloveConnectionError(std::string const& what = "Could not connect to glove!") : std::runtime_error(what) {}
 	};
 
+	struct InvalidGloveOptionError : public std::runtime_error {
+		InvalidGloveOptionError(std::string const& what = "Could not understand provided glove option!") : std::runtime_error(what) {}
+	};
+
 	class IGloveHardware {
 		public:
 			IGloveHardware();

@@ -16,7 +16,7 @@
 #include "GloveHardware5DT.h"
 
 // Library/third-party includes
-// - none
+#include <boost/algorithm/string.hpp>
 
 // Standard includes
 #include <sstream>
@@ -37,12 +37,30 @@ namespace glove {
 	}
 
 	GloveHardware5DT::GloveHardware5DT(std::string const & option) :
-			_fd(NULL) {
+			_fd(NULL),
+			_raw(false) {
 		// For the option parameter, please specify either the COM port or USB port of the device
 		// Valid inputs are "COM1" through "COM8" for serial COM
 		// and "USB0" through "USB3" for USB
 		// Note, these values may be different under Linux
-		std::string devname = option;
+
+		std::string devname;
+		std::vector<std::string> strs;
+		boost::split(strs, option, boost::is_any_of("\t ;,"));
+		for(unsigned int i = 0; i < strs.size(); ++i) {
+			std::string opt = strs[i];
+			std::string optCaps = boost::to_upper_copy(strs[i]);
+			if (optCaps.find("USB") != std::string::npos || optCaps.find("COM") != std::string::npos) {
+				devname = strs[i];
+			} else if (optCaps == "RAW") {
+				std::cout << "Switching GloveHardware5DT into RAW mode..." << std::endl;
+				_raw = true;
+			} else {
+				std::cerr << "ERROR: Unrecognized option! '" << opt << std::endl;
+				throw new InvalidGloveOptionError;
+			}
+		}
+
 		if (devname.empty()) {
 			/// By default, look on USB.
 			static int nextUSB = 0;
@@ -181,7 +199,13 @@ namespace glove {
 				// 5 total sensors for all fingers
 				for (unsigned int i = 0, j = 0; i <= 12; i+=3, j++)
 				{
-					_bends[j] = fdGetSensorScaled(_fd, i);
+					if (_raw) {
+						unsigned short rawVal = fdGetSensorRaw(_fd, i);
+						/// Convert to a floating-point number by dividing by the max value from the sensor (12-bit unsigned -> 0 to 4095)
+						_bends[j] = static_cast<double>(rawVal)/4095.0;
+					} else {
+						_bends[j] = fdGetSensorScaled(_fd, i);
+					}
 				}
 			}
 			else if (fdGetGloveType(_fd) == FD_GLOVE16 || fdGetGloveType(_fd) == FD_GLOVE16W || fdGetGloveType(_fd) == FD_GLOVE14U 
