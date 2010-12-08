@@ -75,21 +75,21 @@ namespace glove {
 			// First check and see if there are any USB devices available
 
 			if (_numUSBGloves() == 0) {
-				std::cerr << "WARNING: No 5DT USB gloves connected" << std::endl;
+				std::cerr << "ERROR: No 5DT USB gloves connected" << std::endl;
 				throw new NoUSBGlove5DTFound;
 			}
 
 			// Try to open 5DT glove on USB port
 			_fd = fdOpen(const_cast<char*>(devname.c_str()));
 			if (!_fd) {
-				std::cerr << "WARNING: Unable to open 5DT data glove on USB port" << std::endl;
+				std::cerr << "ERROR: Unable to open 5DT data glove on USB port" << std::endl;
 				throw new USBGlove5DTConnectionFailed;
 			}
 		} else {
 			// Try to open 5DT glove on serial port
 			_fd = fdOpen(const_cast<char*>(devname.c_str()));
 			if (!_fd) {
-				std::cerr << "WARNING: Unable to open 5DT data glove on serial port" << std::endl;
+				std::cerr << "ERROR: Unable to open 5DT data glove on serial port" << std::endl;
 				throw new SerialGlove5DTConnectionFailed;
 			}
 		}
