@@ -49,7 +49,7 @@ namespace glove {
 			// Return the number of sensors on the glove, NULL on error
 			int returnNumSensors();
 
-			// Resets the calibration settings back to default, NULL on error
+			// Resets the calibration settings back to default
 			void resetGloveCalibration();
 
 		protected:

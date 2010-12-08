@@ -20,6 +20,7 @@
 
 // Standard includes
 #include <string>
+#include <iostream>
 
 namespace glove {
 	GloveHardwarePtr GloveHardware5DT::create(std::string const & option) {
@@ -34,7 +35,7 @@ namespace glove {
 			// Note, this may be different under Linux
 
 			// Open 5DT glove
-			_fd = fdOpen(option.c_str());
+			_fd = fdOpen(const_cast<std::string&>option.c_str()); //@todo <- how to remove constnes?
 			if (!_fd)
 			{
 				std::cerr << "WARNING: Unable to open 5DT data glove" << std::endl;
@@ -110,12 +111,11 @@ namespace glove {
 			// Resets glove calibration to default settings
 			fdResetCalibration(_fd);
 		}
-		return NULL;
 	}
 
 	void GloveHardware5DT::updateData() {
 		// Update stored bend values
-		for (unsigned int i = 0; i < 5; ++)
+		for (unsigned int i = 0; i < 5; ++i)
 		{
 			//@TODO: do stuff
 			// use float fdGetSensorScaled(fdGlove *pFG, int nSensor)
