@@ -169,13 +169,13 @@ namespace glove {
 				bs.center().z() - 0.7 * bs.radius()); /// Scale radius to not pivot around the very bottom of the bounds.
 
 
-			std::cout << "Radius: " << bs.radius() <<  ", Pivot at " << pivot.x() << ", " << pivot.y() << ", " << pivot.z() << std::endl;
+			//std::cout << "Radius: " << bs.radius() <<  ", Pivot at " << pivot.x() << ", " << pivot.y() << ", " << pivot.z() << std::endl;
 			joint->setPivotPoint(pivot);
 			joint->setPosition(pivot);
 			singleFinger.push_back(joint);
 			joint = _getChildTransform(joint);
 		}
-		std::cout << "Finger starting with " << parent->getName() << " has " << singleFinger.size() << " joints." << std::endl;
+		//std::cout << "Finger starting with " << parent->getName() << " has " << singleFinger.size() << " joints." << std::endl;
 		return singleFinger;	
 	}
 	
