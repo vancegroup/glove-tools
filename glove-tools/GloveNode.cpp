@@ -24,8 +24,37 @@
 // Standard includes
 #include <cassert>
 #include <iostream>
+#include <cmath>
 
 namespace glove {
+	osg::Vec3f const& GloveNode::_getJointAxis(Finger f, int joint) {
+		static std::vector< std::vector<osg::Vec3f> > axes;
+		static bool loaded = false;
+		if (!loaded) {
+			{
+				// Thumb
+				std::vector<osg::Vec3f> finger;
+				osg::Vec3f thumb_oppose(0.1, 0, -1);
+				thumb_oppose.normalize();
+				finger.push_back(thumb_oppose);
+				finger.push_back(osg::Vec3f(1/std::sqrt(2.0), 0, -1/std::sqrt(2.0)));
+				finger.push_back(osg::Vec3f(1/std::sqrt(2.0), 0, -1/std::sqrt(2.0)));
+				axes.push_back(finger);
+			}
+			for (unsigned int i = 0; i < 4; ++i) {
+				// other fingers
+				std::vector<osg::Vec3f> finger;
+				finger.push_back(osg::Vec3f(1, 0, 0));
+				finger.push_back(osg::Vec3f(1, 0, 0));
+				finger.push_back(osg::Vec3f(1, 0, 0));
+				axes.push_back(finger);
+			}
+			loaded = true;
+		}
+		return axes[f][joint];
+	}
+			
+
 	GloveNode::GloveNode(Glove const & g) :
 			_g(g),
 			_leftyrighty(new osg::Switch) {
@@ -76,7 +105,7 @@ namespace glove {
 		
 		{
 			/// Model is right hand by default, so leave right-hand xform as identity.
-			osg::ref_ptr<osg::MatrixTransform> leftXform = dynamic_cast<osg::MatrixTransform*>(_leftyrighty->getChild(Glove::LEFT_HAND));
+			osg::ref_ptr<osg::MatrixTransform> leftXform = dynamic_cast<osg::MatrixTransform*>(_leftyrighty->getChild(LEFT_HAND));
 		
 			/* multiplying by:
 			1	0	0	0
@@ -112,11 +141,19 @@ namespace glove {
 
 	void GloveNode::_updateFinger(Finger finger) {
 		/// @todo adjust scale here: we are scaling bend values (in [0, 1]) to radians per joint
-		double fingerAngle = _g.getBend(finger) * 0.9;
+		/// Scales chosen here are just based on "what looks right"
+		double fingerAngle = _g.getBend(finger) * 1.5;
+		if (finger == THUMB) {
+			/// Thumb doesn't bend as far
+			fingerAngle /= 1.5;
+		}
 		for (unsigned int i = 0; i < _joints[finger].size(); i++) {
-			_joints[finger][i]->setAttitude(osg::Quat(fingerAngle, osg::Vec3f(1.0f, 0.0f, 0.0f))); //rotate around X axis
-			/// @todo look up rotation axis per finger: the thumb shouldn't be about the X axis,
-			/// and slightly off-axis would be more realistic for the other fingers too
+			double jointAngle = fingerAngle;
+			if (i == 0) {
+				/// First joint on every finger doesn't bend as far
+				jointAngle /= 1.3;
+			}
+			_joints[finger][i]->setAttitude(osg::Quat(jointAngle, _getJointAxis(finger, i))); //rotate around X axis
 		}
 	}
 	
@@ -125,19 +162,20 @@ namespace glove {
 		osg::ref_ptr<osg::PositionAttitudeTransform> joint = parent;
 		
 		while (joint.valid()) {
-			/// set pivot point and position so the joints don't jump around
+			//set pivot point so the joints don't jump around
 			const osg::BoundingSphere & bs = joint->getBound();
 			osg::Vec3d pivot(bs.center().x(),
-				bs.center().y() - (0.9 * bs.radius()), /// Scale radius by 0.9 to not go all the way down. @todo tweak this scale
-				bs.center().z());
+				bs.center().y() + 0.01,
+				bs.center().z() - 0.7 * bs.radius()); /// Scale radius to not pivot around the very bottom of the bounds.
 
-			std::cout << "Radius: " << bs.radius() <<  ", Pivot at " << pivot.x() << ", " << pivot.y() << ", " << pivot.z() << std::endl;
+
+			//std::cout << "Radius: " << bs.radius() <<  ", Pivot at " << pivot.x() << ", " << pivot.y() << ", " << pivot.z() << std::endl;
 			joint->setPivotPoint(pivot);
 			joint->setPosition(pivot);
 			singleFinger.push_back(joint);
 			joint = _getChildTransform(joint);
 		}
-		std::cout << "Finger starting with " << parent->getName() << " has " << singleFinger.size() << " joints." << std::endl;
+		//std::cout << "Finger starting with " << parent->getName() << " has " << singleFinger.size() << " joints." << std::endl;
 		return singleFinger;	
 	}
 	

@@ -76,8 +76,12 @@ namespace glove {
 		return _bends[finger];
 	}
 
-	Glove::Handedness Glove::getHand() const {
-		return _hand;
+	Handedness Glove::getHand() const {
+		if (_hardware->getHand() == UNKNOWN_HAND) {
+			return _hand;
+		} else {
+			return _hardware->getHand();
+		}
 	}
 
 	void Glove::setHand(Handedness hand) {

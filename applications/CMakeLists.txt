@@ -15,3 +15,7 @@ if(OPENSCENEGRAPH_FOUND)
 	
 	add_cppcheck(dummyHand)
 endif()
+
+add_executable(logger logger.cpp)
+target_link_libraries(logger glovetools ${OPENSCENEGRAPH_LIBRARIES})
+add_cppcheck(logger)

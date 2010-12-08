@@ -12,14 +12,11 @@
 
 // Internal Includes
 #include <glove-tools/Glove.h>
-#include <glove-tools/GloveUpdater.h>
+#include <glove-tools/IGloveHardware.h>
 #include <glove-tools/GloveHardwareFactory.h>
 
 // Library/third-party includes
-#include <osgUtil/Optimizer>
-
-#include <osgViewer/Viewer>
-#include <osgViewer/ViewerEventHandlers>
+#include <osg/ArgumentParser>
 
 // Standard includes
 #include <iostream>
@@ -33,12 +30,11 @@ int main(int argc, char * argv[]) {
 	osg::ArgumentParser arguments(&argc,argv);
 
 	arguments.getApplicationUsage()->setApplicationName(arguments.getApplicationName());
-	arguments.getApplicationUsage()->setDescription(arguments.getApplicationName()+" shows a dummy hand.");
+	arguments.getApplicationUsage()->setDescription(arguments.getApplicationName()+" logs hand data to file.");
 	arguments.getApplicationUsage()->setCommandLineUsage(arguments.getApplicationName()+" [options] ...");
 	arguments.getApplicationUsage()->addCommandLineOption("--device <type>","Choose a different device type.");
 	arguments.getApplicationUsage()->addCommandLineOption("--option <option>","Pass an option to the GloveHardware driver - like an address/port.");
-
-	osgViewer::Viewer viewer;
+	/// @todo
 
 	unsigned int helpType = 0;
 	if ((helpType = arguments.readHelpType()))
@@ -47,12 +43,16 @@ int main(int argc, char * argv[]) {
 		return 1;
 	}
 
-	// Fake glove for testing visualization
+	// Fake glove for testing
 	std::string deviceType = "FakeFlexingGloveHardware";
 	std::string deviceOption = "";
+	std::string filename = "log.csv";
+	unsigned int maxSamples = 300;
 
 	while (arguments.read("--device", deviceType)) {}
 	while (arguments.read("--option", deviceOption)) {}
+	while (arguments.read("--max", maxSamples)) {}
+	while (arguments.read("--file", filename)) {}
 
 	// any option left unread are converted into errors to write out later.
 	arguments.reportRemainingOptionsAsUnrecognized();
@@ -82,18 +82,11 @@ int main(int argc, char * argv[]) {
 	std::cout << "Connection successful! Startup is continuing..." << std::endl;
 	Glove g(hardware);
 
-	osg::ref_ptr<osg::Group> root = new osg::Group();
-	root->addChild(g.getNode());
-
-	/// In an app this simple (no physics loop, etc) we can just update the Glove object (and hardware) during the scenegraph update.
-	osg::ref_ptr<GloveDeviceUpdater> deviceUpdater = new GloveDeviceUpdater(g);
-	root->setUpdateCallback(deviceUpdater.get());
-
-	std::cout << "Running viewer..." << std::endl << std::endl;
-	viewer.setSceneData(root.get());
-
-	viewer.addEventHandler(new osgViewer::ScreenCaptureHandler);
-
-	viewer.realize();
-	return viewer.run();
+	/// @todo open file here
+	for (unsigned int i = 0; i < maxSamples; ++i) {
+		hardware->updateData();
+		g.updateData();
+		/// @todo log to file here in csv format
+	}
+	return 0;
 }

@@ -1,5 +1,4 @@
-/**
-	@file IGloveHardware.cpp
+/** @file Handedness.h
 	@brief
 
 	@date 2010
@@ -12,8 +11,13 @@
 	Human-Computer Interaction Graduate Program
 */
 
+
+#pragma once
+#ifndef INCLUDED_Handedness_h_GUID_ff30d335_df40_4187_bc34_8eedccb05b2f
+#define INCLUDED_Handedness_h_GUID_ff30d335_df40_4187_bc34_8eedccb05b2f
+
 // Internal Includes
-#include "IGloveHardware.h"
+// - none
 
 // Library/third-party includes
 // - none
@@ -22,12 +26,12 @@
 // - none
 
 namespace glove {
-	IGloveHardware::IGloveHardware() :
-			_hand(UNKNOWN_HAND) {
-		_bends.push_back(0.0);
-		_bends.push_back(0.0);
-		_bends.push_back(0.0);
-		_bends.push_back(0.0);
-		_bends.push_back(0.0);
-	}
+	enum Handedness {
+		LEFT_HAND,
+		RIGHT_HAND,
+		UNKNOWN_HAND
+	};
 }
+
+#endif // INCLUDED_Handedness_h_GUID_ff30d335_df40_4187_bc34_8eedccb05b2f
+

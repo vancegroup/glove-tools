@@ -109,6 +109,11 @@ create_default_target_launcher(dummyHand
 	RUNTIME_LIBRARY_DIRS
 	${RUNTIME_LIBRARY_DIRS})
 
+create_target_launcher(logger
+	FORWARD_ARGS
+	RUNTIME_LIBRARY_DIRS
+	${RUNTIME_LIBRARY_DIRS})
+
 ###
 # Create config files to allow easy use of this library
 ###

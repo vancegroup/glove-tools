@@ -20,6 +20,7 @@ set(API
 	GloveNode.h
 	GlovePointerTypes.h
 	GloveUpdater.h
+	Handedness.h
 	IGloveHardware.h
 	MockGloveHardware.h)
 
