@@ -35,8 +35,7 @@ namespace glove {
 			// and "USB0" through "USB3" for USB
 			// Note, these values may be different under Linux
 
-			if (option.c_str() == "USB0" || option.c_str() == "USB1" || option.c_str() == "USB2" || option.c_str() == "USB3")
-			{
+			if (option.find("USB") != std::string::npos) {
 				// First check and see if there are any USB devices available
 				unsigned short aPID[5];
 				int numFound = 0;
