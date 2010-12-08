@@ -65,8 +65,21 @@ int main(int argc, char * argv[]) {
 	}
 
 
-	/// The Important Part is Here!	
-	GloveHardwarePtr hardware(GloveHardwareFactory::instance()->createByName(deviceType, deviceOption));
+	/// The Important Part is Here!
+	GloveHardwarePtr hardware;
+	
+	try {
+		std::cout << "Trying to open glove hardware..." << std::endl;
+		std::cout << "Device type: '" << deviceType << "'" << std::endl;
+		std::cout << "Device option: '" << deviceOption << "'" << std::endl;
+		GloveHardwarePtr tmp(GloveHardwareFactory::instance()->createByName(deviceType, deviceOption));
+		hardware = tmp;
+	} catch (std::exception & e) {
+		std::cerr << "Could not open glove hardware!  Error was: " << e.what() << std::endl;
+		exit(1);
+	}
+
+	std::cout << "Connection successful! Startup is continuing..." << std::endl;
 	Glove g(hardware);
 
 	osg::ref_ptr<osg::Group> root = new osg::Group();
