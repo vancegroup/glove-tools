@@ -35,7 +35,7 @@ namespace glove {
 			// Note, this may be different under Linux
 
 			// Open 5DT glove
-			_fd = fdOpen(const_cast<std::string&>option.c_str()); //@todo <- how to remove constnes?
+			_fd = fdOpen(const_cast<char*>(option.c_str()));
 			if (!_fd)
 			{
 				std::cerr << "WARNING: Unable to open 5DT data glove" << std::endl;
@@ -79,6 +79,18 @@ namespace glove {
 			{
 				return std::string("Wireless 5DT Data Glove 5");
 			}
+			else if (fdGetGloveType(_fd) == FD_GLOVE5U)
+			{
+				return std::string("5DT Data Glove 5 Ultra on Serial Port");
+			}
+			else if (fdGetGloveType(_fd) == FD_GLOVE5UW)
+			{
+				return std::string("Wireless 5DT Data Glove 5 Ultra on Serial Port");
+			}
+			else if (fdGetGloveType(_fd) == FD_GLOVE5U_USB)
+			{
+				return std::string("5DT Data Glove 5 Ultra on USB");
+			}
 			else if (fdGetGloveType(_fd) == FD_GLOVE16)
 			{
 				return std::string("5DT Data Glove 16");
@@ -86,6 +98,18 @@ namespace glove {
 			else if (fdGetGloveType(_fd) == FD_GLOVE16W)
 			{
 				return std::string("Wireless 5DT Data Glove 16");
+			}
+			else if == (fdGetGloveType(_fd_) == FD_GLOVE14)
+			{
+				return std::string("5DT Data Glove 14 Ultra");
+			}
+			else if == (fdGetGloveType(_fd_) == FD_GLOVE14W)
+			{
+				return std::string("Wireless 5DT Data Glove 14 Ultra");
+			}
+			else if == (fdGetGloveType(_fd_) == FD_GLOVE14_USB)
+			{
+				return std::string("5DT Data Glove 14 Ultra on USB");
 			}
 			else if (fdGetGloveType(_fd) == FD_GLOVENONE)
 			{
@@ -115,10 +139,23 @@ namespace glove {
 
 	void GloveHardware5DT::updateData() {
 		// Update stored bend values
-		for (unsigned int i = 0; i < 5; ++i)
-		{
-			//@TODO: do stuff
-			// use float fdGetSensorScaled(fdGlove *pFG, int nSensor)
+		if (_fd) {
+			if (fdGetGloveType(_fd) == FD_GLOVE7 || fdGetGloveType(_fd) == FD_GLOVE7W || fdGetGloveType(_fd) == FD_GLOVE5U 
+				|| fdGetGloveType(_fd) == FD_GLOVE5UW || fdGetGloveType(_fd) == FD_GLOVE5U_USB)
+			{
+				// 5 total sensors for all fingers
+				for (unsigned int i = 0; i <= 12; i+=3)
+				{
+					// use float fdGetSensorScaled(fdGlove *pFG, int nSensor)
+				}
+			}
+			else if (fdGetGloveType(_fd) == FD_GLOVE16 || fdGetGloveType(_fd) == FD_GLOVE16W || fdGetGloveType(_fd) == FD_GLOVE14 
+				|| fdGetGloveType(_fd) == FD_GLOVE14W || fdGetGloveType(_fd) == FD_GLOVE14_USB)
+			{
+				// 14 total sensors for all fingers
+				// @TODO: implement me, we don't have these gloves to test
+				std::cerr << "WARNING: This device isn't implemented yet." << std::endl;
+			}
 		}
 	}
 }

@@ -34,7 +34,7 @@ namespace glove {
 
 			virtual ~GloveHardware5DT();
 
-			/// Fetch the latest bend information for all fingers and normalize
+			/// Fetch the latest bend information for all fingers with calibration settings
 			void updateData();
 
 			/// Factory function for use with create-by-name
