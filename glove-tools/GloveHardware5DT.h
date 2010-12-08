@@ -52,9 +52,6 @@ namespace glove {
 			/// Factory function for use with create-by-name
 			static GloveHardwarePtr create(std::string const & option);
 
-			// Return true if glove is right handed, NULL on error
-			bool isRightHanded();
-
 			// Return the type of the glove, NULL on error
 			std::string returnGloveType();
 

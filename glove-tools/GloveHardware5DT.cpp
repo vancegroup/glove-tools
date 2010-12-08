@@ -61,6 +61,18 @@ namespace glove {
 				}
 			}
 
+			switch (fdGetGloveHand(_fd)) {
+				case FD_HAND_RIGHT:
+					_setHand(RIGHT_HAND);
+					break;
+				case FD_HAND_LEFT:
+					_setHand(LEFT_HAND);
+					break;
+				default:
+					/// No idea what happened here
+					throw new std::runtime_error("Should never happen: fdGetGloveHand didn't return a value we could handle!");
+			}
+
 			// Reset the calibration settings
 			resetGloveCalibration();
 	}
@@ -73,18 +85,6 @@ namespace glove {
 				std::cerr << "WARNING: Unable to close 5DT data glove" << std::endl;
 			}
 		}
-	}
-
-	bool GloveHardware5DT::isRightHanded()
-	{
-		if (_fd) {
-			// Determines the handedness of the glove and returns true if right handed
-			if (FD_HAND_RIGHT == fdGetGloveHand(_fd))
-				return true;
-			else if (FD_HAND_LEFT == fdGetGloveHand(_fd))
-				return false;
-		}
-		return NULL;
 	}
 
 	std::string GloveHardware5DT::returnGloveType()
