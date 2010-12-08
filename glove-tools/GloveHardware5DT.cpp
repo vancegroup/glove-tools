@@ -19,7 +19,7 @@
 // - none
 
 // Standard includes
-#include <string>
+#include <sstream>
 #include <iostream>
 
 namespace glove {
@@ -28,34 +28,48 @@ namespace glove {
 		return temp;
 	}
 
+	static int _numUSBGloves() {
+#define MAXUSB 4
+		unsigned short aPID[MAXUSB];
+		int numMax = MAXUSB;
+#undef MAXUSB
+		return fdScanUSB(aPID, numMax);
+	}
+
 	GloveHardware5DT::GloveHardware5DT(std::string const & option) :
 			_fd(NULL) {
 		// For the option parameter, please specify either the COM port or USB port of the device
 		// Valid inputs are "COM1" through "COM8" for serial COM
 		// and "USB0" through "USB3" for USB
 		// Note, these values may be different under Linux
+		std::string devname = option;
+		if (devname.empty()) {
+			/// By default, look on USB.
+			static int nextUSB = 0;
+			std::stringstream s;
+			s << "USB" << nextUSB;
+			devname = s.str();
+			nextUSB++;
+			std::cerr << "No port specified for GloveHardware5DT, defaulting to " << devname << std::endl;
+		}
 
-		if (option.find("USB") != std::string::npos) {
+		if (devname.find("USB") != std::string::npos) {
 			// First check and see if there are any USB devices available
-#define MAXUSB 4
-			unsigned short aPID[MAXUSB];
-			int numMax = MAXUSB;
-#undef MAXUSB
-			int numFound = fdScanUSB(aPID, numMax);
-			if (numFound > 0) {
-				// Try to open 5DT glove on USB port
-				_fd = fdOpen(const_cast<char*>(option.c_str()));
-				if (!_fd) {
-					std::cerr << "WARNING: Unable to open 5DT data glove on USB port" << std::endl;
-					throw new USBGlove5DTConnectionFailed;
-				}
-			} else {
+
+			if (_numUSBGloves() == 0) {
 				std::cerr << "WARNING: No 5DT USB gloves connected" << std::endl;
 				throw new NoUSBGlove5DTFound;
 			}
+
+			// Try to open 5DT glove on USB port
+			_fd = fdOpen(const_cast<char*>(devname.c_str()));
+			if (!_fd) {
+				std::cerr << "WARNING: Unable to open 5DT data glove on USB port" << std::endl;
+				throw new USBGlove5DTConnectionFailed;
+			}
 		} else {
 			// Try to open 5DT glove on serial port
-			_fd = fdOpen(const_cast<char*>(option.c_str()));
+			_fd = fdOpen(const_cast<char*>(devname.c_str()));
 			if (!_fd) {
 				std::cerr << "WARNING: Unable to open 5DT data glove on serial port" << std::endl;
 				throw new SerialGlove5DTConnectionFailed;
