@@ -22,6 +22,13 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
+#include <ctime>
+
+static void sleepSeconds(double seconds) {
+	std::clock_t done = clock() + seconds * CLOCKS_PER_SEC;
+	while (clock() < done) {}
+}
 
 using namespace glove;
 
@@ -96,6 +103,7 @@ int main(int argc, char * argv[]) {
 		/// log to file here in csv format
 		outfile << i << ", " << g.getBend(Finger(THUMB)) << ", " << g.getBend(Finger(INDEX_FINGER)) << ", " 
 		<< g.getBend(Finger(MIDDLE_FINGER)) << ", " << g.getBend(Finger(RING_FINGER)) << ", " << g.getBend(Finger(PINKY_FINGER)) << "\n";
+		sleepSeconds(1.0/1000.0);
 	}
 
 	// Close file
