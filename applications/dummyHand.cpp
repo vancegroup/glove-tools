@@ -37,6 +37,9 @@ int main(int argc, char * argv[]) {
 	arguments.getApplicationUsage()->setCommandLineUsage(arguments.getApplicationName()+" [options] ...");
 	arguments.getApplicationUsage()->addCommandLineOption("--device <type>","Choose a different device type.");
 	arguments.getApplicationUsage()->addCommandLineOption("--option <option>","Pass an option to the GloveHardware driver - like an address/port.");
+	arguments.getApplicationUsage()->addCommandLineOption("--raw","Use raw values.");
+	arguments.getApplicationUsage()->addCommandLineOption("--calib","Use values calibrated by glovetools.");
+	arguments.getApplicationUsage()->addCommandLineOption("--filter","Use values processed by the Kalman filter.");
 
 	osgViewer::Viewer viewer;
 
@@ -54,6 +57,19 @@ int main(int argc, char * argv[]) {
 	while (arguments.read("--device", deviceType)) {}
 	while (arguments.read("--option", deviceOption)) {}
 
+	Glove::ReportType r = Glove::REPORT_HWSCALED;
+	while (arguments.read("--raw")) {
+		r = Glove::REPORT_RAW;
+	}
+
+	while (arguments.read("--calib")) {
+		r = Glove::REPORT_CALIBRATED;
+	}
+
+	while (arguments.read("--filter")) {
+		r = Glove::REPORT_FILTERED;
+	}
+
 	// any option left unread are converted into errors to write out later.
 	arguments.reportRemainingOptionsAsUnrecognized();
 
@@ -67,7 +83,7 @@ int main(int argc, char * argv[]) {
 
 	/// The Important Part is Here!
 	GloveHardwarePtr hardware;
-	
+
 	try {
 		std::cout << "Trying to open glove hardware..." << std::endl;
 		std::cout << "Device type: '" << deviceType << "'" << std::endl;
@@ -81,6 +97,37 @@ int main(int argc, char * argv[]) {
 
 	std::cout << "Connection successful! Startup is continuing..." << std::endl;
 	Glove g(hardware);
+
+	bool didSetReport = g.setReportType(r);
+	if (!didSetReport) {
+		std::cerr << "Warning: could not set report type - usually this means you chose 'filter' but didn't build with Kalman filter turned on" << std::endl;
+	}
+
+	std::cout << "Glove will report ";
+	switch (g.getReportType()) {
+		/// raw values from the device
+		case Glove::REPORT_RAW:
+			std::cout << "raw values from the hardware" << std::endl;
+			break;
+
+		/// values scaled by the device's hardware/drivers
+		case Glove::REPORT_HWSCALED:
+			std::cout << "values scaled by the hardware/driver (default)." << std::endl;
+			break;
+
+		/// values scaled by glove-tools
+		case Glove::REPORT_CALIBRATED:
+			std::cout << "values calibrated by glovetools" << std::endl;
+			break;
+
+		/// values scaled and filtered by glove-tools
+		case Glove::REPORT_FILTERED:
+			std::cout << "values processed by the Kalman filter" << std::endl;
+			break;
+		default:
+			std::cout << "an unknown report type - BUG - contact the glovetools authors!" << std::endl;
+	}
+
 
 	osg::ref_ptr<osg::Group> root = new osg::Group();
 	root->addChild(g.getNode());
