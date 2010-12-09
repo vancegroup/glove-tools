@@ -46,8 +46,7 @@ int main(int argc, char * argv[]) {
 	arguments.getApplicationUsage()->addCommandLineOption("--file <type>","Specify the filename in CSV format.");
 
 	unsigned int helpType = 0;
-	if ((helpType = arguments.readHelpType()))
-	{
+	if ((helpType = arguments.readHelpType())) {
 		arguments.getApplicationUsage()->write(std::cout, helpType);
 		return 1;
 	}
@@ -67,8 +66,7 @@ int main(int argc, char * argv[]) {
 	arguments.reportRemainingOptionsAsUnrecognized();
 
 	// report any errors if they have occurred when parsing the program arguments.
-	if (arguments.errors())
-	{
+	if (arguments.errors()) {
 		arguments.writeErrorMessages(std::cout);
 		return 1;
 	}
@@ -97,8 +95,9 @@ int main(int argc, char * argv[]) {
 
 	// Open file
 	std::ofstream outfile (filename.c_str());
-	if (!outfile.is_open())
+	if (!outfile.is_open()) {
 		std::cerr << "Unable to open file for writing" << std::endl;
+	}
 	
 	outfile << "Timestep, Thumb, Index, Middle, Ring, Pinky\n";
 	for (unsigned int i = 0; i < maxSamples; ++i) {
@@ -117,12 +116,8 @@ int main(int argc, char * argv[]) {
 	}
 
 	// Calculate average for each finger
-	for (unsigned int i = 0; i < 5; ++i)
-	{
-		if (sum[i] != 0)
-			average[i] = (sum[i] / maxSamples);
-		else
-			average[i] = 0;
+	for (unsigned int i = 0; i < 5; ++i) {
+		average[i] = (sum[i] / maxSamples);
 	}
 
 	// Close file
@@ -132,12 +127,12 @@ int main(int argc, char * argv[]) {
 	// Open the file up and read it in to calculate the variance
 	std::string line;
 	std::ifstream infile (filename.c_str());
-	if (!infile.is_open())
+	if (!infile.is_open()) {
 		std::cerr << "Unable to open file for reading" << std::endl;
+	}
 
 	getline(infile, line); //ignore the first line (header)
-	while (infile.good())
-    {
+	while (infile.good()) {
 		getline(infile, line);
 
 		std::string token, text(line);
@@ -146,8 +141,7 @@ int main(int argc, char * argv[]) {
 		while (getline(iss, token, ',')) //split up the string
 		{
 			//ignore the first value (just the counter)
-			if (counter != 0)
-			{
+			if (counter != 0) {
 				//Subtract value from average
 				int temp = atoi(token.c_str());
 				temp = temp - average[counter];
@@ -161,12 +155,8 @@ int main(int argc, char * argv[]) {
     }
 
 	// Finish variance calculation by dividing for each finger
-	for (unsigned int i = 0; i < 5; ++i)
-	{
-		if (variance[i] != 0)
-			variance[i] = (variance[i] / maxSamples);
-		else
-			variance[i] = 0;
+	for (unsigned int i = 0; i < 5; ++i) {
+		variance[i] = (variance[i] / maxSamples);
 	}
 	
 	// close file
@@ -174,8 +164,7 @@ int main(int argc, char * argv[]) {
 
 
 	// Print out results
-	for (unsigned int i = 0; i < 5; ++i)
-	{
+	for (unsigned int i = 0; i < 5; ++i) {
 		std::cout << "Finger: " << i << std::endl;
 		std::cout << "Average: " << average[i] << std::endl;
 		std::cout << "Variance: " << variance[i] << std::endl;
