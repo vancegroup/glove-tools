@@ -199,13 +199,11 @@ namespace glove {
 				// 5 total sensors for all fingers
 				for (unsigned int i = 0, j = 0; i <= 12; i+=3, j++)
 				{
-					if (_raw) {
-						unsigned short rawVal = fdGetSensorRaw(_fd, i);
-						/// Convert to a floating-point number by dividing by the max value from the sensor (12-bit unsigned -> 0 to 4095)
-						_bends[j] = static_cast<double>(rawVal)/4095.0;
-					} else {
-						_bends[j] = fdGetSensorScaled(_fd, i);
-					}
+					unsigned short rawVal = fdGetSensorRaw(_fd, i);
+					/// Convert to a floating-point number by dividing by the max value from the sensor (12-bit unsigned -> 0 to 4095)
+					double raw = static_cast<double>(rawVal)/4095.0;
+					double bend = fdGetSensorScaled(_fd, i);
+					_setBend(j, bend, raw);
 				}
 			}
 			else if (fdGetGloveType(_fd) == FD_GLOVE16 || fdGetGloveType(_fd) == FD_GLOVE16W || fdGetGloveType(_fd) == FD_GLOVE14U 

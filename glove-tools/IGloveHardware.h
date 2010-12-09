@@ -57,15 +57,21 @@ namespace glove {
 			std::vector<double> getBends() const {
 				return _bends;
 			}
+			
+			std::vector<double> getRaw() const {
+				return _raw;
+			}
 
 		protected:
+			void _setBend(Finger const f, double bend, double raw = -1);
 			void _setHand(Handedness const h) {
 				_hand = h;
 			}
-
-			std::vector<double> _bends;
-
+			
 		private:
+			std::vector<double> _bends;
+			std::vector<double> _raw;
+
 			Handedness _hand;
 	};
 }

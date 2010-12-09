@@ -42,10 +42,10 @@ namespace glove {
 	}
 
 	void MockGloveHardware::updateData() {
-		_bends[0] = _bend;
-		_bends[1] = _bend;
-		_bends[2] = _bend;
-		_bends[3] = _bend;
-		_bends[4] = _bend;
+		_setBend(THUMB, _bend);
+		_setBend(INDEX_FINGER, _bend);
+		_setBend(MIDDLE_FINGER, _bend);
+		_setBend(RING_FINGER, _bend);
+		_setBend(PINKY_FINGER, _bend);
 	}
 }
