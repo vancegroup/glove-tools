@@ -129,5 +129,57 @@ int main(int argc, char * argv[]) {
 	outfile.close();
 	std::cout << "Finished writing to file." << std::endl;
 
+	// Open the file up and read it in to calculate the variance
+	std::string line;
+	std::ifstream infile (filename.c_str());
+	if (!infile.is_open())
+		std::cerr << "Unable to open file for reading" << std::endl;
+
+	getline(infile, line); //ignore the first line (header)
+	while (infile.good())
+    {
+		getline(infile, line);
+
+		std::string token, text(line);
+		std::istringstream iss(text);
+		unsigned int counter = 0; //should run for all 5 fingers
+		while (getline(iss, token, ',')) //split up the string
+		{
+			//ignore the first value (just the counter)
+			if (counter != 0)
+			{
+				//Subtract value from average
+				int temp = atoi(token.c_str());
+				temp = temp - average[counter];
+				//square the result (make sure it's positive)
+				temp = pow(temp, 2.0);
+				// update variance (just total at this point)
+				variance[counter] += temp;
+			}
+			counter++;
+		}
+    }
+
+	// Finish variance calculation by dividing for each finger
+	for (unsigned int i = 0; i < 5; ++i)
+	{
+		if (variance[i] != 0)
+			variance[i] = (variance[i] / maxSamples);
+		else
+			variance[i] = 0;
+	}
+	
+	// close file
+    infile.close();
+
+
+	// Print out results
+	for (unsigned int i = 0; i < 5; ++i)
+	{
+		std::cout << "Finger: " << i << std::endl;
+		std::cout << "Average: " << average[i] << std::endl;
+		std::cout << "Variance: " << variance[i] << std::endl;
+	}
+
 	return 0;
 }
