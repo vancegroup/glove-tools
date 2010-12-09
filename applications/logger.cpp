@@ -101,8 +101,8 @@ int main(int argc, char * argv[]) {
 		hardware->updateData();
 		g.updateData();
 		/// log to file here in csv format
-		outfile << i << ", " << g.getBend(Finger(THUMB)) << ", " << g.getBend(Finger(INDEX_FINGER)) << ", " 
-		<< g.getBend(Finger(MIDDLE_FINGER)) << ", " << g.getBend(Finger(RING_FINGER)) << ", " << g.getBend(Finger(PINKY_FINGER)) << "\n";
+		outfile << i << "," << g.getBend(Finger(THUMB)) << "," << g.getBend(Finger(INDEX_FINGER)) << "," 
+		<< g.getBend(Finger(MIDDLE_FINGER)) << "," << g.getBend(Finger(RING_FINGER)) << "," << g.getBend(Finger(PINKY_FINGER)) << "\n";
 		sleepSeconds(1.0/1000.0);
 	}
 
