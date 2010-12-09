@@ -116,6 +116,15 @@ int main(int argc, char * argv[]) {
 		sleepSeconds(1.0/1000.0);
 	}
 
+	// Calculate average for each finger
+	for (unsigned int i = 0; i < 5; ++i)
+	{
+		if (sum[i] != 0)
+			average[i] = (sum[i] / maxSamples);
+		else
+			average[i] = 0;
+	}
+
 	// Close file
 	outfile.close();
 	std::cout << "Finished writing to file." << std::endl;
