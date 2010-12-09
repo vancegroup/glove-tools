@@ -16,6 +16,7 @@
 
 // Internal Includes
 #include "GlovePointerTypes.h"
+#include "Calibration.h"
 #include "Finger.h"
 #include "Handedness.h"
 
@@ -54,8 +55,7 @@ namespace glove {
 			/// Fetch updated data from hardware and process it.
 			void updateData();
 
-			/// Set requested report type.  Returns true if successful.
-			bool setReportType(ReportType r);
+			
 
 
 			/// @name Accessors
@@ -63,11 +63,18 @@ namespace glove {
 			osg::ref_ptr<osg::Node> getNode() const;
 			double getBend(Finger finger) const;
 			Handedness getHand() const;
+			void printCalibration(std::ostream & s = std::cout) const;
+			ReportType getReportType() const;
 			/// @}
 
 			/// @name Mutators
 			/// @{
 			void setHand(Handedness hand);
+			void startCalibrating();
+			void stopCalibrating();
+			
+			/// Set requested report type.  Returns true if successful.
+			bool setReportType(ReportType r);
 			/// @}
 		private:
 			detail::GloveNodeContainer * _node;
@@ -79,7 +86,8 @@ namespace glove {
 
 			GloveHardwarePtr _hardware;
 			std::vector<double> _bends;
-
+			
+			Calibration _calib;
 	};
 
 } // end of namespace glove

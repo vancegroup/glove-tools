@@ -33,7 +33,7 @@ namespace glove {
 		struct GloveNodeContainer {
 			osg::ref_ptr<GloveNode> n;
 		};
-		
+
 #ifdef BUILD_WITH_EIGENKF
 		typedef SimpleState<2> state_t;
 		typedef ConstantProcess<2, state_t> process_t;
@@ -60,7 +60,7 @@ namespace glove {
 		_bends.push_back(0.0);
 		_bends.push_back(0.0);
 		_bends.push_back(0.0);
-		
+
 #ifdef BUILD_WITH_EIGENKF
 		_filter = new detail::GloveFilterContainer;
 #endif
@@ -75,12 +75,12 @@ namespace glove {
 #endif
 	}
 
-	void Glove::updateData() {		
+	void Glove::updateData() {
 		_hardware->updateData();
 
 		std::vector<double> bends = _hardware->getBends();
 		std::vector<double> raw = _hardware->getRaw();
-		/// @todo Eventually will want kalman filter here rather than just copying the latest update
+
 		for (unsigned int i = 0; i < 5; ++i) {
 			if (bends[i] > 1.0) {
 				std::cerr << "WARNING: your GloveHardware driver is returning too high of a bend value (" << bends[i] << ") ! Please report this bug to glovetools." << std::endl;
@@ -99,22 +99,33 @@ namespace glove {
 				}
 			}
 		}
-		
-		/// @todo pass into calib here
+
+		std::vector<double> calib;
+		if (raw.size() > 0) {
+			calib = _calib.processBends(raw);
+		}
+
+
+		/// @todo Eventually will want kalman filter here rather than just copying the latest update
 		if (_r == REPORT_RAW && raw.size() > 0) {
 			_bends = raw;
 			return;
 		}
+
+		if (_r == REPORT_CALIBRATED && calib.size() > 0) {
+			_bends = calib;
+			return;
+		}
 		/*
 		if (_r == REPORT_FILTERED) {
-		
+
 		}
 		*/
-		
+
 		/// Fallback
 		_bends = bends;
 	}
-	
+
 	bool Glove::setReportType(ReportType r) {
 #ifndef BUILD_WITH_EIGENKF
 		/// Disallow filtered mode if built without filtering.
@@ -122,7 +133,8 @@ namespace glove {
 			return false;
 		}
 #endif
-		_r = r;	
+		_r = r;
+		return true;
 	}
 
 	osg::ref_ptr<osg::Node> Glove::getNode() const {
@@ -141,8 +153,24 @@ namespace glove {
 		}
 	}
 
+	void Glove::printCalibration(std::ostream & s) const {
+		s << _calib;
+	}
+
+	Glove::ReportType Glove::getReportType() const {
+		return _r;
+	}
+
 	void Glove::setHand(Handedness hand) {
 	  _hand = hand;
+	}
+
+	void Glove::startCalibrating() {
+		_calib.startCalibrating();
+	}
+
+	void Glove::stopCalibrating() {
+		_calib.stopCalibrating();
 	}
 
 
