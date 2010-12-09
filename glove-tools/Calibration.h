@@ -38,12 +38,13 @@ namespace glove {
 			
 			std::vector<double> processBends(std::vector<double> const& bends);
 			
-			std::vector<double> getRanges() const;
+			std::vector<double> const& getRanges() const;
 			std::vector<double> const& getMins() const;
 			std::vector<double> const& getMaxes() const;	
 			
 		private:
 			bool _autoCalibrating;
+			std::vector<double> _ranges;
 			std::vector<double> _mins;
 			std::vector<double> _maxes;
 	};
