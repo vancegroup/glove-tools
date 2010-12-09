@@ -24,7 +24,9 @@
 namespace glove {
 
 Calibration::Calibration() :
-	_autoCalibrating(true) { }
+	_autoCalibrating(true),
+	_init(false) {
+}
 Calibration::~Calibration() {}
 
 void Calibration::startCalibrating() {
@@ -38,13 +40,15 @@ void Calibration::stopCalibrating() {
 std::vector<double> Calibration::processBends(std::vector<double> const& bends) {
 	
 	if (_autoCalibrating) {
-		if (_mins.size() < 5) {
+	
+		if (!_init) {
 			// first time!
 			for (unsigned int i = 0; i < 5; ++i) {
 				_ranges.push_back(0);
 				_mins.push_back(bends[i]);
 				_maxes.push_back(bends[i]);
 			}
+			_init = true;
 		} else {
 			// been here before, just update
 			for (unsigned int i = 0; i < 5; ++i) {
@@ -62,11 +66,10 @@ std::vector<double> Calibration::processBends(std::vector<double> const& bends) 
 	
 	std::vector<double> ret;
 	for (unsigned int i = 0; i < 5; ++i) {
-		if (_ranges[i] = 0) {
-		// don't divide by zero the first time
-			ret.push_back(0);
-		} else {
-			double val = (bends[i] - _mins[i]) / _ranges[i];
+		double val = 0;
+		if (_ranges[i] > 0) {
+			// don't divide by zero the first time
+			 val = (bends[i] - _mins[i]) / _ranges[i];
 			if (val < 0) {
 				/// @todo warn here?
 				val = 0;
@@ -74,8 +77,8 @@ std::vector<double> Calibration::processBends(std::vector<double> const& bends) 
 				/// @todo warn here?
 				val = 1;							
 			}
-			ret.push_back(val);
 		}
+		ret.push_back(val);
 	}
 	return ret;			
 }

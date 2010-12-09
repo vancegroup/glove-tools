@@ -44,6 +44,7 @@ namespace glove {
 			
 		private:
 			bool _autoCalibrating;
+			bool _init;
 			std::vector<double> _ranges;
 			std::vector<double> _mins;
 			std::vector<double> _maxes;
