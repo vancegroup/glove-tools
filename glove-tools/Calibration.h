@@ -54,9 +54,10 @@ namespace glove {
 	Stream & operator<<(Stream & s, Calibration const& c) {
 		std::vector<double> mins = c.getMins();
 		std::vector<double> maxes = c.getMaxes();
-		s << std::setw(10) << "Min" << std::setw(10) << "Max" << std::endl;
-		for (unsigned int i = 0; i < mins.size(); ++i) {
-			s << std::setw(10) << mins[i] << std::setw(10) << maxes[i] << std::endl;
+		std::vector<double> ranges = c.getRanges();
+		s << std::setw(10) << "Min" << std::setw(10) << "Max" << std::setw(10) << "Range" << std::endl;
+		for (unsigned int i = 0; i < ranges.size(); ++i) {
+			s << std::setw(10) << mins[i] << std::setw(10) << maxes[i] << std::setw(10) << ranges[i]  << std::endl;
 		}
 		return s;	
 	}
