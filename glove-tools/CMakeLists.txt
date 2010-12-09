@@ -3,6 +3,7 @@
 ###
 # glove-tools Library
 set(SOURCES
+	Calibration.cpp
 	FakeFlexingGloveHardware.cpp
 	Glove.cpp
 	GloveHardwareFactory.cpp
@@ -13,6 +14,7 @@ set(SOURCES
 	MockGloveHardware.cpp)
 
 set(API
+	Calibration.h
 	FakeFlexingGloveHardware.h
 	Finger.h
 	Glove.h
