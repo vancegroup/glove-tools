@@ -23,6 +23,7 @@ set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}-${CPACK_PACKAGE_VERSION}-src
 ###
 
 option(BUILD_WITH_GLOVE5DT "Build with a 5DT Glove driver?" off)
+option(BUILD_WITH_EIGEN3 "Build with the Eigen 3.0 prerelease instead of 2.x?" on)
 
 set(BIN_DIR bin)
 set(INCLUDE_DIR include)
@@ -76,6 +77,17 @@ find_package(Glove5DT)
 if(BUILD_WITH_GLOVE5DT)
 	include_directories(${GLOVE5DT_INCLUDE_DIRS})
 	list(APPEND EXTRA_LIBS ${GLOVE5DT_LIBRARIES})
+endif()
+
+set(BUILD_WITH_EIGENKF)
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/third-party/eigen-kalman/eigenkf/KalmanFilter.h")
+	set(BUILD_WITH_EIGENKF ON)
+	include_directories("${CMAKE_CURRENT_SOURCE_DIR}/third-party/eigen-kalman/")
+	if(BUILD_WITH_EIGEN3)
+		include_directories("${CMAKE_CURRENT_SOURCE_DIR}/third-party/eigen-kalman/third-party/eigen/")
+	else()
+		include_directories("${CMAKE_CURRENT_SOURCE_DIR}/third-party/eigen-kalman/third-party/eigen/")
+	endif()
 endif()
 
 ###

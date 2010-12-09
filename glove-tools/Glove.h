@@ -29,6 +29,7 @@
 namespace glove {
 	namespace detail {
 		struct GloveNodeContainer;
+		struct GloveFilterContainer;
 	}
 
 	class Glove {
@@ -53,6 +54,7 @@ namespace glove {
 			/// @}
 		private:
 			detail::GloveNodeContainer * _node;
+			detail::GloveFilterContainer * _filter;
 
 			Handedness _hand;
 

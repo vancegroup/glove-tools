@@ -17,9 +17,13 @@
 #include "GloveNode.h"
 #include "GloveUpdater.h"
 #include "IGloveHardware.h"
+#include <GloveToolsConfig.h>
 
 // Library/third-party includes
-// - none
+#ifdef BUILD_WITH_EIGENKF
+#include <eigenkf/KalmanFilter.h>
+using namespace eigenkf;
+#endif
 
 // Standard includes
 #include <iostream>
@@ -29,10 +33,20 @@ namespace glove {
 		struct GloveNodeContainer {
 			osg::ref_ptr<GloveNode> n;
 		};
+		
+#ifdef BUILD_WITH_EIGENKF
+		typedef SimpleState<2> state_t;
+		typedef ConstantProcess<2, state_t> process_t;
+		struct GloveFilterContainer {
+			EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+			KalmanFilter<state_t, process_t> kf;
+		};
+#endif
 	}
 
 	Glove::Glove(GloveHardwarePtr hardware) :
 			_node(new detail::GloveNodeContainer),
+			_filter(NULL),
 			_hand(LEFT_HAND),
 			_hardware(hardware) {
 		if (!_node) {
@@ -45,11 +59,19 @@ namespace glove {
 		_bends.push_back(0.0);
 		_bends.push_back(0.0);
 		_bends.push_back(0.0);
+		
+#ifdef BUILD_WITH_EIGENKF
+		_filter = new detail::GloveFilterContainer;
+#endif
 	}
 
 	Glove::~Glove() {
 		delete _node;
 		_node = NULL;
+#ifdef BUILD_WITH_EIGENKF
+		delete _filter;
+		_node = NULL;
+#endif
 	}
 
 	void Glove::updateData() {		
