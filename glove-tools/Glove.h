@@ -35,10 +35,27 @@ namespace glove {
 	class Glove {
 		public:
 			Glove(GloveHardwarePtr hardware);
-			~Glove();	
+			~Glove();
+
+			enum ReportType {
+				/// raw values from the device
+				REPORT_RAW,
+
+				/// values scaled by the device's hardware/drivers
+				REPORT_HWSCALED,
+
+				/// values scaled by glove-tools
+				REPORT_CALIBRATED,
+
+				/// values scaled and filtered by glove-tools
+				REPORT_FILTERED
+			};
 
 			/// Fetch updated data from hardware and process it.
 			void updateData();
+
+			/// Set requested report type.  Returns true if successful.
+			bool setReportType(ReportType r);
 
 
 			/// @name Accessors
@@ -56,11 +73,13 @@ namespace glove {
 			detail::GloveNodeContainer * _node;
 			detail::GloveFilterContainer * _filter;
 
+			ReportType _r;
+
 			Handedness _hand;
 
 			GloveHardwarePtr _hardware;
 			std::vector<double> _bends;
-	
+
 	};
 
 } // end of namespace glove

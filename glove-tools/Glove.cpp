@@ -47,6 +47,7 @@ namespace glove {
 	Glove::Glove(GloveHardwarePtr hardware) :
 			_node(new detail::GloveNodeContainer),
 			_filter(NULL),
+			_r(REPORT_HWSCALED),
 			_hand(LEFT_HAND),
 			_hardware(hardware) {
 		if (!_node) {
@@ -77,17 +78,51 @@ namespace glove {
 	void Glove::updateData() {		
 		_hardware->updateData();
 
-		_bends = _hardware->getBends();
+		std::vector<double> bends = _hardware->getBends();
+		std::vector<double> raw = _hardware->getRaw();
 		/// @todo Eventually will want kalman filter here rather than just copying the latest update
 		for (unsigned int i = 0; i < 5; ++i) {
-			if (_bends[i] > 1.0) {
-				std::cerr << "WARNING: your GloveHardware driver is returning too high of a bend value (" << _bends[i] << ") ! Please report this bug to glovetools." << std::endl;
-				_bends[i] = 1.0;
-			} else if (_bends[i] < 0.0) {
-				std::cerr << "WARNING: your GloveHardware driver is returning too low of a bend value (" << _bends[i] << ") ! Please report this bug to glovetools." << std::endl;
-				_bends[i] = 0.0;
+			if (bends[i] > 1.0) {
+				std::cerr << "WARNING: your GloveHardware driver is returning too high of a bend value (" << bends[i] << ") ! Please report this bug to glovetools." << std::endl;
+				bends[i] = 1.0;
+			} else if (bends[i] < 0.0) {
+				std::cerr << "WARNING: your GloveHardware driver is returning too low of a bend value (" << bends[i] << ") ! Please report this bug to glovetools." << std::endl;
+				bends[i] = 0.0;
+			}
+			if (raw.size() > 0) {
+				if (raw[i] > 1.0) {
+					std::cerr << "WARNING: your GloveHardware driver is returning too high of a raw value (" << raw[i] << ") ! Please report this bug to glovetools." << std::endl;
+					raw[i] = 1.0;
+				} else if (raw[i] < 0.0) {
+					std::cerr << "WARNING: your GloveHardware driver is returning too low of a raw value (" << raw[i] << ") ! Please report this bug to glovetools." << std::endl;
+					raw[i] = 0.0;
+				}
 			}
 		}
+		
+		/// @todo pass into calib here
+		if (_r == REPORT_RAW && raw.size() > 0) {
+			_bends = raw;
+			return;
+		}
+		/*
+		if (_r == REPORT_FILTERED) {
+		
+		}
+		*/
+		
+		/// Fallback
+		_bends = bends;
+	}
+	
+	bool Glove::setReportType(ReportType r) {
+#ifndef BUILD_WITH_EIGENKF
+		/// Disallow filtered mode if built without filtering.
+		if (r == REPORT_FILTERED) {
+			return false;
+		}
+#endif
+		_r = r;	
 	}
 
 	osg::ref_ptr<osg::Node> Glove::getNode() const {
