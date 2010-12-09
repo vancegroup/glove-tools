@@ -1,0 +1,3 @@
+[submodule "third-party/eigen-kalman"]
+	path = third-party/eigen-kalman
+	url = ssh://keymaker.vrac.iastate.edu/~rpavlik/git-repos/eigen-kalman.git
