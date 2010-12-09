@@ -88,6 +88,8 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/third-party/eigen-kalman/eigenkf/KalmanFi
 	else()
 		include_directories("${CMAKE_CURRENT_SOURCE_DIR}/third-party/eigen-kalman/third-party/eigen/")
 	endif()
+else()
+	message(STATUS "eigen-kalman submodule not found - please run 'git submodule update --init' to download code required for Kalman filtering.")
 endif()
 
 ###
