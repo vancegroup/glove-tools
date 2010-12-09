@@ -91,6 +91,10 @@ int main(int argc, char * argv[]) {
 	std::cout << "Connection successful! Startup is continuing..." << std::endl;
 	Glove g(hardware);
 
+	double sum[5] = {0, 0, 0, 0, 0};
+	double variance[5] = {0, 0, 0, 0, 0};
+	double average[5] = {0, 0, 0, 0, 0};
+
 	// Open file
 	std::ofstream outfile (filename.c_str());
 	if (!outfile.is_open())
@@ -103,6 +107,12 @@ int main(int argc, char * argv[]) {
 		/// log to file here in csv format
 		outfile << i << "," << g.getBend(Finger(THUMB)) << "," << g.getBend(Finger(INDEX_FINGER)) << "," 
 		<< g.getBend(Finger(MIDDLE_FINGER)) << "," << g.getBend(Finger(RING_FINGER)) << "," << g.getBend(Finger(PINKY_FINGER)) << "\n";
+		// Update variables
+		sum[0] = sum[0] + g.getBend(Finger(THUMB));
+		sum[1] = sum[1] + g.getBend(Finger(INDEX_FINGER));
+		sum[2] = sum[2] + g.getBend(Finger(MIDDLE_FINGER));
+		sum[3] = sum[3] + g.getBend(Finger(RING_FINGER));
+		sum[4] = sum[4] + g.getBend(Finger(PINKY_FINGER));
 		sleepSeconds(1.0/1000.0);
 	}
 
