@@ -92,6 +92,8 @@ int main(int argc, char * argv[]) {
 	double sum[5] = {0, 0, 0, 0, 0};
 	double variance[5] = {0, 0, 0, 0, 0};
 	double average[5] = {0, 0, 0, 0, 0};
+	double min[5] = {999, 999, 999, 999, 999};
+	double max[5] = {0, 0, 0, 0, 0};
 
 	// Open file
 	std::ofstream outfile (filename.c_str());
@@ -143,12 +145,21 @@ int main(int argc, char * argv[]) {
 			//ignore the first value (just the counter)
 			if (counter != 0) {
 				//Subtract value from average
-				int temp = atoi(token.c_str());
-				temp = temp - average[counter];
+				double temp = atof(token.c_str());
+
+				//update min/max while we're at it
+				if (min[counter-1] > temp) {
+					min[counter-1] = temp;
+				}
+				if (max[counter-1] < temp) {
+					max[counter-1] = temp;
+				}
+
+				temp = temp - average[counter-1];
 				//square the result (make sure it's positive)
 				temp = pow(temp, 2.0);
 				// update variance (just total at this point)
-				variance[counter] += temp;
+				variance[counter-1] += temp;
 			}
 			counter++;
 		}
@@ -168,6 +179,9 @@ int main(int argc, char * argv[]) {
 		std::cout << "Finger: " << i << std::endl;
 		std::cout << "Average: " << average[i] << std::endl;
 		std::cout << "Variance: " << variance[i] << std::endl;
+		std::cout << "Min: " << min[i] << std::endl;
+		std::cout << "Max: " << max[i] << std::endl;
+		std::cout << "-----------------" << std::endl;
 	}
 
 	return 0;
