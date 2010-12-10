@@ -155,6 +155,25 @@ install(FILES hand-structured.osg
 	DESTINATION ${DATA_DIR})
 
 ###
+# Compilation Options
+###
+
+message(STATUS "Optional Modules Enabled:\n")
+if(BUILD_WITH_EIGENKF)
+	message(STATUS " - Kalman filter module: enabled")
+else()
+	message(STATUS " - Kalman filter module: disabled (see above for info)")
+endif()
+
+if(BUILD_WITH_GLOVE5DT)
+	message(STATUS " - 5DT Data Glove: enabled")
+else()
+	message(STATUS " - 5DT Data Glove: disabled")
+endif()
+
+message(STATUS "\n")
+
+###
 # Set packaging options (for CPack)
 ###
 
