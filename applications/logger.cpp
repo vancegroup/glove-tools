@@ -17,6 +17,7 @@
 
 // Library/third-party includes
 #include <osg/ArgumentParser>
+#include <osg/Timer>
 
 // Standard includes
 #include <iostream>
@@ -139,12 +140,17 @@ int main(int argc, char * argv[]) {
 		std::cerr << "Unable to open file for writing" << std::endl;
 	
 	outfile << "Timestep, Thumb, Index, Middle, Ring, Pinky\n";
+	osg::Timer t;
+	t.setStartTick();
+	double last;
 	for (unsigned int i = 0; i < maxSamples; ++i) {
+		last = t.time_s();
 		hardware->updateData();
 		g.updateData();
 		/// log to file here in csv format
 		outfile << i << ", " << g.getBend(Finger(THUMB)) << ", " << g.getBend(Finger(INDEX_FINGER)) << ", " 
 		<< g.getBend(Finger(MIDDLE_FINGER)) << ", " << g.getBend(Finger(RING_FINGER)) << ", " << g.getBend(Finger(PINKY_FINGER)) << "\n";
+		while (t.time_s() < last + 0.001) {}
 	}
 
 	// Close file
