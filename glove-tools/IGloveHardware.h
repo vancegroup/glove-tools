@@ -62,10 +62,22 @@ namespace glove {
 				return _raw;
 			}
 
+			bool knowsRawVariance() const {
+				return (!_rawVariance.empty());
+			}
+
+			std::vector<double> const& getRawVariance() const {
+				return _rawVariance;
+			}
+
 		protected:
 			void _setBend(Finger const f, double bend, double raw = -1);
 			void _setHand(Handedness const h) {
 				_hand = h;
+			}
+			void _setRawVariance(std::vector<double> const& var) {
+				assert(var.size() == 5);
+				_rawVariance = var;
 			}
 			
 		private:
@@ -73,6 +85,8 @@ namespace glove {
 			std::vector<double> _raw;
 
 			Handedness _hand;
+
+			std::vector<double> _rawVariance;
 	};
 }
 

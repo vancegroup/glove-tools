@@ -51,6 +51,8 @@ namespace glove {
 
 			osg::Timer timer;
 
+			Vector5d rawVar;
+
 			double lastTime;
 			double getDt() {
 				if (lastTime < 0) {
@@ -74,6 +76,14 @@ namespace glove {
 		/// Set our process model's variance
 		/// @todo tune the process model variance
 		_filter->kf.processModel.sigma = detail::Vector5d::Constant(0.25);
+		if (_hardware->knowsRawVariance()) {
+			for (unsigned int i = 0; i < 5; ++i) {
+				_filter->rawVar[i] = _hardware->getRawVariance()[i];
+			}
+		} else {
+			/// @todo tune the default
+			_filter->rawVar = detail::Vector5d::Constant(0.125);
+		}
 	}
 
 	void Glove::_destroyFilter() {
@@ -108,12 +118,11 @@ namespace glove {
 				}
 			}
 
-			/// @todo this should be the device's raw variance
-			detail::Vector5d rawVar(detail::Vector5d::Constant(0.25));
+			/// @todo is this the right way to scale variance?
 #if EIGEN_VERSION_AT_LEAST(2, 9, 0)
-			detail::Vector5d scaledVar = rawVar.array() / ranges.array();
+			detail::Vector5d scaledVar = _filter->rawVar.array() / ranges.array();
 #else
-			detail::Vector5d scaledVar = rawVar.cwise() / ranges.cwise();
+			detail::Vector5d scaledVar = _filter->rawVar.cwise() / ranges.cwise();
 #endif
 			meas.covariance = scaledVar.asDiagonal();
 
