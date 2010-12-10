@@ -111,6 +111,8 @@ namespace glove {
 
 		/// @todo do these vary significantly from glove to glove?
 		const double varianceScale = 1.0;
+
+		/// Tight fist, Raw input of 5000 steps
 		std::vector<double> variance;
 		variance.push_back(0.0000015335 * varianceScale);
 		variance.push_back(0.000000324218 * varianceScale);
