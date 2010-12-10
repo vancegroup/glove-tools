@@ -40,6 +40,7 @@ int main(int argc, char * argv[]) {
 	arguments.getApplicationUsage()->addCommandLineOption("--raw","Use raw values.");
 	arguments.getApplicationUsage()->addCommandLineOption("--calib","Use values calibrated by glovetools.");
 	arguments.getApplicationUsage()->addCommandLineOption("--filter","Use values processed by the Kalman filter.");
+	arguments.getApplicationUsage()->addCommandLineOption("--save-calib <filename>","Use values processed by the Kalman filter.");
 
 	unsigned int helpType = 0;
 	if ((helpType = arguments.readHelpType()))
@@ -52,12 +53,14 @@ int main(int argc, char * argv[]) {
 	std::string deviceType = "FakeFlexingGloveHardware";
 	std::string deviceOption = "";
 	std::string filename = "log.csv";
+	std::string saveCalib = "";
 	unsigned int maxSamples = 300;
 
 	while (arguments.read("--device", deviceType)) {}
 	while (arguments.read("--option", deviceOption)) {}
 	while (arguments.read("--max", maxSamples)) {}
 	while (arguments.read("--file", filename)) {}
+	while (arguments.read("--save-calib", saveCalib)) {}
 
 	Glove::ReportType r = Glove::REPORT_HWSCALED;
 	while (arguments.read("--raw")) {
@@ -150,6 +153,11 @@ int main(int argc, char * argv[]) {
 	
 	std::cout << std::endl << "Ending calibration values: " << std::endl;
 	g.printCalibration(std::cout);
+	
+	if (!saveCalib.empty()) {
+		std::ofstream s(saveCalib.c_str());
+		g.printCalibration(s);
+	}
 
 	return 0;
 }
