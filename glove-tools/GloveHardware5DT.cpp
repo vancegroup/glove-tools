@@ -108,6 +108,16 @@ namespace glove {
 
 		// Reset the calibration settings
 		resetGloveCalibration();
+
+		/// @todo do these vary significantly from glove to glove?
+		const double varianceScale = 1.0;
+		std::vector<double> variance;
+		variance.push_back(0.0000015335 * varianceScale);
+		variance.push_back(0.000000324218 * varianceScale);
+		variance.push_back(0.000000363943 * varianceScale);
+		variance.push_back(0.000000280055 * varianceScale);
+		variance.push_back(0.000000139414 * varianceScale);
+		_setRawVariance(variance);
 	}
 
 	GloveHardware5DT::~GloveHardware5DT() {
