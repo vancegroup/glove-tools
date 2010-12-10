@@ -102,6 +102,7 @@ namespace glove {
 
 		std::vector<double> calib;
 		if (raw.size() > 0) {
+			assert(raw.size() == 5);
 			calib = _calib.processBends(raw);
 		}
 
@@ -113,6 +114,7 @@ namespace glove {
 		}
 
 		if (_r == REPORT_CALIBRATED && calib.size() > 0) {
+			assert(calib.size() == 5);
 			_bends = calib;
 			return;
 		}
