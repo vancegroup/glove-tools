@@ -24,8 +24,7 @@
 namespace glove {
 
 Calibration::Calibration() :
-	_autoCalibrating(true),
-	_init(false) {
+	_autoCalibrating(true) {
 }
 Calibration::~Calibration() {}
 
@@ -41,14 +40,13 @@ std::vector<double> Calibration::processBends(std::vector<double> const& bends) 
 	
 	if (_autoCalibrating) {
 	
-		if (!_init) {
+		if (_ranges.size() == 0) {
 			// first time!
 			for (unsigned int i = 0; i < 5; ++i) {
 				_ranges.push_back(0);
 				_mins.push_back(bends[i]);
 				_maxes.push_back(bends[i]);
 			}
-			_init = true;
 		} else {
 			// been here before, just update
 			for (unsigned int i = 0; i < 5; ++i) {
