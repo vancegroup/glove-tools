@@ -23,6 +23,8 @@
 #ifdef BUILD_WITH_EIGENKF
 #include <eigenkf/KalmanFilter.h>
 using namespace eigenkf;
+
+#include <ctime>
 #endif
 
 // Standard includes
@@ -33,15 +35,6 @@ namespace glove {
 		struct GloveNodeContainer {
 			osg::ref_ptr<GloveNode> n;
 		};
-
-#ifdef BUILD_WITH_EIGENKF
-		typedef SimpleState<2> state_t;
-		typedef ConstantProcess<2, state_t> process_t;
-		struct GloveFilterContainer {
-			EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-			KalmanFilter<state_t, process_t> kf;
-		};
-#endif
 	}
 
 	Glove::Glove(GloveHardwarePtr hardware) :
@@ -61,18 +54,13 @@ namespace glove {
 		_bends.push_back(0.0);
 		_bends.push_back(0.0);
 
-#ifdef BUILD_WITH_EIGENKF
-		_filter = new detail::GloveFilterContainer;
-#endif
+		_allocateFilter();
 	}
 
 	Glove::~Glove() {
 		delete _node;
 		_node = NULL;
-#ifdef BUILD_WITH_EIGENKF
-		delete _filter;
-		_node = NULL;
-#endif
+		_destroyFilter();
 	}
 
 	void Glove::updateData() {
@@ -101,28 +89,45 @@ namespace glove {
 		}
 
 		std::vector<double> calib;
+		std::vector<double> filtered;
 		if (raw.size() > 0) {
 			assert(raw.size() == 5);
 			calib = _calib.processBends(raw);
+			filtered = _updateFilter(calib);
 		}
 
 
 		/// @todo Eventually will want kalman filter here rather than just copying the latest update
 		if (_r == REPORT_RAW && raw.size() > 0) {
+			assert(raw.size() == 5);
+#ifdef DEBUG_REPORT_TYPE
+			std::cout << "DEBUG: Reporting raw" << std::endl;
+#endif
 			_bends = raw;
 			return;
 		}
 
 		if (_r == REPORT_CALIBRATED && calib.size() > 0) {
 			assert(calib.size() == 5);
+#ifdef DEBUG_REPORT_TYPE
+			std::cout << "DEBUG: Reporting glovetools-calibrated" << std::endl;
+#endif
 			_bends = calib;
 			return;
 		}
-		/*
-		if (_r == REPORT_FILTERED) {
 
+		if (_r == REPORT_FILTERED && filtered.size() > 0) {
+			assert(filtered.size() == 5);
+#ifdef DEBUG_REPORT_TYPE
+			std::cout << "DEBUG: Reporting filtered" << std::endl;
+#endif
+			_bends = filtered;
+			return;
 		}
-		*/
+
+#ifdef DEBUG_REPORT_TYPE
+		std::cout << "DEBUG: Reporting device-calibrated" << std::endl;
+#endif
 
 		/// Fallback
 		_bends = bends;
@@ -175,6 +180,19 @@ namespace glove {
 		_calib.stopCalibrating();
 	}
 
+#ifndef BUILD_WITH_EIGENKF
+	void Glove::_allocateFilter() {
+		/// do nothing
+	}
+
+	void Glove::_destroyFilter() {
+		/// do nothing
+	}
+	
+	std::vector<double> Glove::_updateFilter(std::vector<double> const& /*calibBends*/) {
+		return std::vector<double>();
+	}
+#endif
 
 } // end of namespace glove
 

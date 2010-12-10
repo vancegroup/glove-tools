@@ -83,6 +83,10 @@ namespace glove {
 		private:
 			detail::GloveNodeContainer * _node;
 			detail::GloveFilterContainer * _filter;
+			
+			void _allocateFilter();
+			void _destroyFilter();
+			std::vector<double> _updateFilter(std::vector<double> const& calibBends);
 
 			ReportType _r;
 
