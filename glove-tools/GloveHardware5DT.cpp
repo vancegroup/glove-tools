@@ -203,7 +203,7 @@ namespace glove {
 					/// Convert to a floating-point number by dividing by the max value from the sensor (12-bit unsigned -> 0 to 4095)
 					double raw = static_cast<double>(rawVal)/4095.0;
 					double bend = fdGetSensorScaled(_fd, i);
-					_setBend(j, bend, raw);
+					_setBend(Finger(j), bend, raw);
 				}
 			}
 			else if (fdGetGloveType(_fd) == FD_GLOVE16 || fdGetGloveType(_fd) == FD_GLOVE16W || fdGetGloveType(_fd) == FD_GLOVE14U 
