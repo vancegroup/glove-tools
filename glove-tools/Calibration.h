@@ -24,6 +24,7 @@
 
 // Standard includes
 #include <iostream>
+#include <sstream>
 #include <iomanip>
 #include <vector>
 
@@ -49,6 +50,29 @@ namespace glove {
 			std::vector<double> _mins;
 			std::vector<double> _maxes;
 	};
+	
+	
+	template<class Stream>
+	Stream & operator>>(Stream & s, Calibration & c) {
+		std::string line;
+		std::getline(s, line); // read and throw away headers
+		std::vector<double> mins;
+		std::vector<double> maxes;
+		
+		for (unsigned int i = 0; i < 5; ++i) {
+			std::getline(s, line);
+			std::stringstream ls(line);
+			double nextMin;
+			ls >> nextMin;
+			mins.push_back(nextMin);
+			
+			double nextMax;
+			ls >> nextMax;
+			maxes.push_back(nextMax);
+		}
+		c = Calibration(mins, maxes);
+		return s;		
+	}
 	
 	template<class Stream>
 	Stream & operator<<(Stream & s, Calibration const& c) {
