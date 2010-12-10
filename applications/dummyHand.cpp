@@ -40,6 +40,7 @@ int main(int argc, char * argv[]) {
 	arguments.getApplicationUsage()->addCommandLineOption("--raw","Use raw values.");
 	arguments.getApplicationUsage()->addCommandLineOption("--calib","Use values calibrated by glovetools.");
 	arguments.getApplicationUsage()->addCommandLineOption("--filter","Use values processed by the Kalman filter.");
+	arguments.getApplicationUsage()->addCommandLineOption("--load-calib <filename>","Load calibration values from a file (implies --calib).");
 
 	osgViewer::Viewer viewer;
 
@@ -58,6 +59,13 @@ int main(int argc, char * argv[]) {
 	while (arguments.read("--option", deviceOption)) {}
 
 	Glove::ReportType r = Glove::REPORT_HWSCALED;
+	
+	std::string loadCalib;
+	while (arguments.read("--load-calib", loadCalib)) {
+		/// implies calib
+		r = Glove::REPORT_CALIBRATED;
+	}
+	
 	while (arguments.read("--raw")) {
 		r = Glove::REPORT_RAW;
 	}
@@ -95,7 +103,7 @@ int main(int argc, char * argv[]) {
 		exit(1);
 	}
 
-	std::cout << "Connection successful! Startup is continuing..." << std::endl;
+	std::cout << "Connection successful!" << std::endl;
 	Glove g(hardware);
 
 	bool didSetReport = g.setReportType(r);
@@ -126,6 +134,15 @@ int main(int argc, char * argv[]) {
 			break;
 		default:
 			std::cout << "an unknown report type - BUG - contact the glovetools authors!" << std::endl;
+	}
+	
+	if (!loadCalib.empty()) {
+		std::ifstream calibFile(loadCalib.c_str());
+		if (calibFile.good()) {
+			g.loadCalibration(calibFile);
+		} else {
+			std::cerr << "WARNING: could not load calibration file " << loadCalib << std::endl;
+		}
 	}
 
 
