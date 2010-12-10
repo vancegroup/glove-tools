@@ -33,7 +33,7 @@ namespace glove {
 
 	void FakeFlexingGloveHardware::updateData() {
 		double bend = (- std::cos(static_cast<double>(_counter) / 50.0) + 1.0) / 2.0;
-		_setBend(THUMB, bend);
+		_setBend(THUMB, bend, bend);
 		_setBend(INDEX_FINGER, bend, bend);
 		_setBend(MIDDLE_FINGER, bend, bend);
 		_setBend(RING_FINGER, bend, bend);
