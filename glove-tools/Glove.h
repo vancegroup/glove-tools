@@ -72,6 +72,10 @@ namespace glove {
 			void setHand(Handedness hand);
 			void startCalibrating();
 			void stopCalibrating();
+			template<class Stream>
+			void loadCalibration(Stream & s) {
+				s >> _calib;
+			}
 			
 			/// Set requested report type.  Returns true if successful.
 			bool setReportType(ReportType r);
