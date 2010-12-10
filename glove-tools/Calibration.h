@@ -31,6 +31,7 @@ namespace glove {
 	class Calibration {
 		public:
 			Calibration();
+			Calibration(std::vector<double> const& mins, std::vector<double> const& maxes);
 			~Calibration();
 			
 			void startCalibrating();

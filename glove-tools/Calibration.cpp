@@ -19,13 +19,26 @@
 // - none
 
 // Standard includes
-// - none
+#include <stdexcept>
 
 namespace glove {
 
 Calibration::Calibration() :
 	_autoCalibrating(true) {
 }
+	
+Calibration::Calibration(std::vector<double> const& mins, std::vector<double> const& maxes) :
+		_autoCalibrating(false),
+		_mins(mins),
+		_maxes(maxes) {
+	if (_mins.size() != 5 || _maxes.size() != 5) {
+		throw new std::invalid_argument("Must pass in 5 mins and 5 maxes!");
+	}
+	for (unsigned int i = 0; i < 5; ++i) {
+		_ranges.push_back(_maxes[i] - _mins[i]);
+	}
+}
+	
 Calibration::~Calibration() {}
 
 void Calibration::startCalibrating() {
