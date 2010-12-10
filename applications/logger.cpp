@@ -36,7 +36,7 @@ int main(int argc, char * argv[]) {
 	arguments.getApplicationUsage()->addCommandLineOption("--device <type>","Choose a different device type.");
 	arguments.getApplicationUsage()->addCommandLineOption("--option <option>","Pass an option to the GloveHardware driver - like an address/port.");
 	arguments.getApplicationUsage()->addCommandLineOption("--max <type>","Specify the max number of lines to write to the file.");
-	arguments.getApplicationUsage()->addCommandLineOption("--file <type>","Specify the filename in CSV format.");
+	arguments.getApplicationUsage()->addCommandLineOption("--file <filename>","Specify the filename in CSV format.");
 	arguments.getApplicationUsage()->addCommandLineOption("--raw","Use raw values.");
 	arguments.getApplicationUsage()->addCommandLineOption("--calib","Use values calibrated by glovetools.");
 	arguments.getApplicationUsage()->addCommandLineOption("--filter","Use values processed by the Kalman filter.");
