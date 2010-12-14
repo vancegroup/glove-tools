@@ -61,7 +61,9 @@ namespace glove {
 		/// load the model and set the updater here
 
 		osg::ref_ptr<osg::Node> model = osgDB::readNodeFile("hand-structured.osg");
-		assert(model.valid());
+		if (!model.valid()) {
+			throw new std::runtime_error("Could not find hand-structured.osg to load!");
+		}
 		
 		/// Grab the meaningful parent node.
 		osg::ref_ptr<osg::Group> hand = model->asGroup();
