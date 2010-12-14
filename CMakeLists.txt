@@ -22,7 +22,6 @@ set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}-${CPACK_PACKAGE_VERSION}-src
 # Set up options
 ###
 
-option(BUILD_WITH_GLOVE5DT "Build with a 5DT Glove driver?" off)
 option(BUILD_WITH_EIGEN3 "Build with the Eigen 3.0 prerelease instead of 2.x?" on)
 
 set(BIN_DIR bin)
@@ -52,6 +51,7 @@ include(CppcheckTargets)
 include(DoxygenTargets)
 include(GetDirectoryList)
 include(EnableExtraCompilerWarnings)
+include(OptionRequires)
 
 include(CTest)
 include(CreateDashboardScripts)
@@ -74,6 +74,7 @@ find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
 find_package(Glove5DT)
+option_requires(BUILD_WITH_GLOVE5DT "Build with a 5DT Glove driver?" GLOVE5DT_FOUND)
 if(BUILD_WITH_GLOVE5DT)
 	include_directories(${GLOVE5DT_INCLUDE_DIRS})
 	list(APPEND EXTRA_LIBS ${GLOVE5DT_LIBRARIES})
