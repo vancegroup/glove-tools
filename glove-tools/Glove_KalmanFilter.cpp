@@ -139,8 +139,8 @@ namespace glove {
 
 		return ret;
 	}
-#endif
+
 
 
 } // end of namespace glove
-
+#endif
