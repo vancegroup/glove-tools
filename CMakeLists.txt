@@ -23,6 +23,7 @@ set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}-${CPACK_PACKAGE_VERSION}-src
 ###
 
 option(BUILD_WITH_GLOVE5DT "Build with a 5DT Glove driver?" off)
+option(BUILD_WITH_EIGEN3 "Build with the Eigen 3.0 prerelease instead of 2.x?" on)
 
 set(BIN_DIR bin)
 set(INCLUDE_DIR include)
@@ -76,6 +77,24 @@ find_package(Glove5DT)
 if(BUILD_WITH_GLOVE5DT)
 	include_directories(${GLOVE5DT_INCLUDE_DIRS})
 	list(APPEND EXTRA_LIBS ${GLOVE5DT_LIBRARIES})
+endif()
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/third-party/eigen-kalman/eigenkf/KalmanFilter.h")
+	option(BUILD_WITH_EIGENKF "Build with Eigen-based Kalman filter support?" on)
+else()
+	message(STATUS "eigen-kalman submodule not found - please run 'git submodule update --init' to download code required for Kalman filtering.")
+	if(BUILD_WITH_EIGENKF)
+		message(FATAL_ERROR "Either uncheck BUILD_WITH_EIGENKF or get the eigen-kalman submodule.")
+	endif()
+endif()
+
+if(BUILD_WITH_EIGENKF)
+	include_directories("${CMAKE_CURRENT_SOURCE_DIR}/third-party/eigen-kalman/")
+	if(BUILD_WITH_EIGEN3)
+		include_directories("${CMAKE_CURRENT_SOURCE_DIR}/third-party/eigen-kalman/third-party/eigen/")
+	else()
+		include_directories("${CMAKE_CURRENT_SOURCE_DIR}/third-party/eigen-kalman/third-party/eigen/")
+	endif()
 endif()
 
 ###
@@ -139,6 +158,25 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/glovetools-config-for-install.cmake
 
 install(FILES hand-structured.osg
 	DESTINATION ${DATA_DIR})
+
+###
+# Compilation Options
+###
+
+message(STATUS "Optional Modules Enabled:\n")
+if(BUILD_WITH_EIGENKF)
+	message(STATUS " - Kalman filter module: enabled")
+else()
+	message(STATUS " - Kalman filter module: disabled (see above for info)")
+endif()
+
+if(BUILD_WITH_GLOVE5DT)
+	message(STATUS " - 5DT Data Glove: enabled")
+else()
+	message(STATUS " - 5DT Data Glove: disabled")
+endif()
+
+message(STATUS "\n")
 
 ###
 # Set packaging options (for CPack)

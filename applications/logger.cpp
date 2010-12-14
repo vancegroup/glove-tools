@@ -17,18 +17,12 @@
 
 // Library/third-party includes
 #include <osg/ArgumentParser>
+#include <osg/Timer>
 
 // Standard includes
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <sstream>
-#include <ctime>
-
-static void sleepSeconds(double seconds) {
-	std::clock_t done = clock() + seconds * CLOCKS_PER_SEC;
-	while (clock() < done) {}
-}
 
 using namespace glove;
 
@@ -43,7 +37,11 @@ int main(int argc, char * argv[]) {
 	arguments.getApplicationUsage()->addCommandLineOption("--device <type>","Choose a different device type.");
 	arguments.getApplicationUsage()->addCommandLineOption("--option <option>","Pass an option to the GloveHardware driver - like an address/port.");
 	arguments.getApplicationUsage()->addCommandLineOption("--max <type>","Specify the max number of lines to write to the file.");
-	arguments.getApplicationUsage()->addCommandLineOption("--file <type>","Specify the filename in CSV format.");
+	arguments.getApplicationUsage()->addCommandLineOption("--file <filename>","Specify the filename in CSV format.");
+	arguments.getApplicationUsage()->addCommandLineOption("--raw","Use raw values.");
+	arguments.getApplicationUsage()->addCommandLineOption("--calib","Use values calibrated by glovetools.");
+	arguments.getApplicationUsage()->addCommandLineOption("--filter","Use values processed by the Kalman filter.");
+	arguments.getApplicationUsage()->addCommandLineOption("--save-calib <filename>","Use values processed by the Kalman filter.");
 
 	unsigned int helpType = 0;
 	if ((helpType = arguments.readHelpType())) {
@@ -55,12 +53,27 @@ int main(int argc, char * argv[]) {
 	std::string deviceType = "FakeFlexingGloveHardware";
 	std::string deviceOption = "";
 	std::string filename = "log.csv";
+	std::string saveCalib = "";
 	unsigned int maxSamples = 300;
 
 	while (arguments.read("--device", deviceType)) {}
 	while (arguments.read("--option", deviceOption)) {}
 	while (arguments.read("--max", maxSamples)) {}
 	while (arguments.read("--file", filename)) {}
+	while (arguments.read("--save-calib", saveCalib)) {}
+
+	Glove::ReportType r = Glove::REPORT_HWSCALED;
+	while (arguments.read("--raw")) {
+		r = Glove::REPORT_RAW;
+	}
+
+	while (arguments.read("--calib")) {
+		r = Glove::REPORT_CALIBRATED;
+	}
+
+	while (arguments.read("--filter")) {
+		r = Glove::REPORT_FILTERED;
+	}
 
 	// any option left unread are converted into errors to write out later.
 	arguments.reportRemainingOptionsAsUnrecognized();
@@ -88,6 +101,36 @@ int main(int argc, char * argv[]) {
 
 	std::cout << "Connection successful! Startup is continuing..." << std::endl;
 	Glove g(hardware);
+	
+	bool didSetReport = g.setReportType(r);
+	if (!didSetReport) {
+		std::cerr << "Warning: could not set report type - usually this means you chose 'filter' but didn't build with Kalman filter turned on" << std::endl;
+	}
+
+	std::cout << "Glove will report ";
+	switch (g.getReportType()) {
+		/// raw values from the device
+		case Glove::REPORT_RAW:
+			std::cout << "raw values from the hardware" << std::endl;
+			break;
+
+		/// values scaled by the device's hardware/drivers
+		case Glove::REPORT_HWSCALED:
+			std::cout << "values scaled by the hardware/driver (default)." << std::endl;
+			break;
+
+		/// values scaled by glove-tools
+		case Glove::REPORT_CALIBRATED:
+			std::cout << "values calibrated by glovetools" << std::endl;
+			break;
+
+		/// values scaled and filtered by glove-tools
+		case Glove::REPORT_FILTERED:
+			std::cout << "values processed by the Kalman filter" << std::endl;
+			break;
+		default:
+			std::cout << "an unknown report type - BUG - contact the glovetools authors!" << std::endl;
+	}
 
 	double sum[5] = {0, 0, 0, 0, 0};
 	double variance[5] = {0, 0, 0, 0, 0};
@@ -102,7 +145,11 @@ int main(int argc, char * argv[]) {
 	}
 	
 	outfile << "Timestep, Thumb, Index, Middle, Ring, Pinky\n";
+	osg::Timer t;
+	t.setStartTick();
+	double last;
 	for (unsigned int i = 0; i < maxSamples; ++i) {
+		last = t.time_s();
 		hardware->updateData();
 		g.updateData();
 		/// log to file here in csv format
@@ -114,7 +161,7 @@ int main(int argc, char * argv[]) {
 		sum[2] = sum[2] + g.getBend(Finger(MIDDLE_FINGER));
 		sum[3] = sum[3] + g.getBend(Finger(RING_FINGER));
 		sum[4] = sum[4] + g.getBend(Finger(PINKY_FINGER));
-		sleepSeconds(1.0/1000.0);
+		while (t.time_s() < last + 0.001) {}
 	}
 
 	// Calculate average for each finger
@@ -125,6 +172,14 @@ int main(int argc, char * argv[]) {
 	// Close file
 	outfile.close();
 	std::cout << "Finished writing to file." << std::endl;
+	
+	std::cout << std::endl << "Ending calibration values: " << std::endl;
+	g.printCalibration(std::cout);
+	
+	if (!saveCalib.empty()) {
+		std::ofstream s(saveCalib.c_str());
+		g.printCalibration(s);
+	}
 
 	// Open the file up and read it in to calculate the variance
 	std::string line;

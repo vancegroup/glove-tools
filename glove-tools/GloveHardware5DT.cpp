@@ -108,6 +108,18 @@ namespace glove {
 
 		// Reset the calibration settings
 		resetGloveCalibration();
+
+		/// @todo do these vary significantly from glove to glove?
+		const double varianceScale = 1.0;
+
+		/// Tight fist, Raw input of 5000 steps
+		std::vector<double> variance;
+		variance.push_back(0.0000015335 * varianceScale);
+		variance.push_back(0.000000324218 * varianceScale);
+		variance.push_back(0.000000363943 * varianceScale);
+		variance.push_back(0.000000280055 * varianceScale);
+		variance.push_back(0.000000139414 * varianceScale);
+		_setRawVariance(variance);
 	}
 
 	GloveHardware5DT::~GloveHardware5DT() {
@@ -199,13 +211,11 @@ namespace glove {
 				// 5 total sensors for all fingers
 				for (unsigned int i = 0, j = 0; i <= 12; i+=3, j++)
 				{
-					if (_raw) {
-						unsigned short rawVal = fdGetSensorRaw(_fd, i);
-						/// Convert to a floating-point number by dividing by the max value from the sensor (12-bit unsigned -> 0 to 4095)
-						_bends[j] = static_cast<double>(rawVal)/4095.0;
-					} else {
-						_bends[j] = fdGetSensorScaled(_fd, i);
-					}
+					unsigned short rawVal = fdGetSensorRaw(_fd, i);
+					/// Convert to a floating-point number by dividing by the max value from the sensor (12-bit unsigned -> 0 to 4095)
+					double raw = static_cast<double>(rawVal)/4095.0;
+					double bend = fdGetSensorScaled(_fd, i);
+					_setBend(Finger(j), bend, raw);
 				}
 			}
 			else if (fdGetGloveType(_fd) == FD_GLOVE16 || fdGetGloveType(_fd) == FD_GLOVE16W || fdGetGloveType(_fd) == FD_GLOVE14U 
