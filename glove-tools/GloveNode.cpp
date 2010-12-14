@@ -25,6 +25,7 @@
 #include <cassert>
 #include <iostream>
 #include <cmath>
+#include <stdexcept>
 
 namespace glove {
 	osg::Vec3f const& GloveNode::_getJointAxis(Finger f, int joint) {
