@@ -35,7 +35,7 @@ using namespace eigenkf;
 
 namespace glove {
 
-	bool Glove::_kfAvailable = true;
+	const bool Glove::_kfAvailable = true;
 	
 	namespace detail {
 
@@ -151,7 +151,7 @@ namespace glove {
 
 namespace glove {
 
-	bool Glove::_kfAvailable = false;
+	const bool Glove::_kfAvailable = false;
 	
 	void Glove::_allocateFilter() {
 		/// do nothing
