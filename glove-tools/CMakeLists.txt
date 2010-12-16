@@ -28,15 +28,15 @@ set(API
 	IGloveHardware.h
 	MockGloveHardware.h)
 
-set(GLOVEHARDWARE5DT_SOURCES
-	GloveHardware5DT/GloveHardware5DT.cpp
-	GloveHardware5DT/GloveHardware5DT.h)
+macro(add_driver _name)
+	string(TOUPPER "${_name}" _ucname)
+	set(${_ucname}_SOURCES ${_name}/${_name}.cpp ${_name}/${_name}.h)
+	list(APPEND SOURCES ${${_ucname}_SOURCES})
+	source_group("${_name}" FILES ${${_ucname}_SOURCES})
+endmacro()
 
 if(BUILD_WITH_GLOVE5DT)
-	list(APPEND
-		SOURCES
-		${GLOVEHARDWARE5DT_SOURCES})
-	source_group("GloveHardware5DT" FILES ${GLOVEHARDWARE5DT_SOURCES})
+	add_driver(GloveHardware5DT)
 endif()
 
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")

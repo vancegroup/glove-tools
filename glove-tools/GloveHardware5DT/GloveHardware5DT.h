@@ -17,12 +17,10 @@
 #define INCLUDED_GloveHardware5DT_h_GUID_5edd9ba4_a60c_454f_9e0a_f0e135f6d6c4
 
 // Internal Includes
-#include "IGloveHardware.h"
+#include "../IGloveHardware.h"
 
 // Library/third-party includes
-#define LPVOID void *
-#include <fglove.h>
-#undef LPVOID
+// - none
 
 // Standard includes
 #include <string>
@@ -40,6 +38,10 @@ namespace glove {
 	struct SerialGlove5DTConnectionFailed : public GloveConnectionError {
 		SerialGlove5DTConnectionFailed() : GloveConnectionError("Unable to open 5DT data glove on serial port!") {}
 	};
+	
+	namespace detail {
+		struct GloveHardware5DTDevice;	
+	}
 
 	class GloveHardware5DT : public IGloveHardware {
 		public:
@@ -63,7 +65,7 @@ namespace glove {
 
 		protected:
 			GloveHardware5DT(std::string const & option);
-			fdGlove * _fd;
+			detail::GloveHardware5DTDevice * _d;
 			bool _raw;
 	};
 }
