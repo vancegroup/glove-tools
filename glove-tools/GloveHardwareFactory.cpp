@@ -22,7 +22,7 @@
 #include "FakeFlexingGloveHardware.h"
 
 #ifdef BUILD_WITH_GLOVE5DT
-#	include "GloveHardware5DT.h"
+#	include "GloveHardware5DT/GloveHardware5DT.h"
 #endif
 
 // Library/third-party includes

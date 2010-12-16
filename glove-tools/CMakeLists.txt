@@ -28,11 +28,15 @@ set(API
 	IGloveHardware.h
 	MockGloveHardware.h)
 
+set(GLOVEHARDWARE5DT_SOURCES
+	GloveHardware5DT/GloveHardware5DT.cpp
+	GloveHardware5DT/GloveHardware5DT.h)
+
 if(BUILD_WITH_GLOVE5DT)
 	list(APPEND
 		SOURCES
-		GloveHardware5DT.cpp
-		GloveHardware5DT.h)
+		${GLOVEHARDWARE5DT_SOURCES})
+	source_group("GloveHardware5DT" FILES ${GLOVEHARDWARE5DT_SOURCES})
 endif()
 
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
