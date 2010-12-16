@@ -3,6 +3,7 @@
 ###
 # glove-tools Library
 set(SOURCES
+	AvailableHardware.h.in
 	Calibration.cpp
 	FakeFlexingGloveHardware.cpp
 	Glove.cpp
@@ -36,6 +37,7 @@ endif()
 
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 configure_file(GloveToolsConfig.h.in GloveToolsConfig.h)
+configure_file(AvailableHardware.h.in AvailableHardware.h)
 
 add_library(glovetools ${SOURCES} ${API})
 set_target_properties(glovetools PROPERTIES PUBLIC_HEADER "${API}")

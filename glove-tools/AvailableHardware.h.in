@@ -1,0 +1,31 @@
+/** @file AvailableHardware.h
+	@brief Configure available hardware device types
+
+	@date 2010
+
+	@author
+	Ryan Pavlik
+	<rpavlik@iastate.edu> and <abiryan@ryand.net>
+	http://academic.cleardefinition.com/
+	Iowa State University Virtual Reality Applications Center
+	Human-Computer Interaction Graduate Program
+*/
+
+
+#pragma once
+#ifndef INCLUDED_AvailableHardware_h_GUID_4ec6a1a7_e72b_46ff_89d9_a98b9d8158fa
+#define INCLUDED_AvailableHardware_h_GUID_4ec6a1a7_e72b_46ff_89d9_a98b9d8158fa
+
+// Internal Includes
+// - none
+
+// Library/third-party includes
+// - none
+
+// Standard includes
+// - none
+
+#cmakedefine BUILD_WITH_GLOVE5DT
+
+#endif // INCLUDED_AvailableHardware_h_GUID_4ec6a1a7_e72b_46ff_89d9_a98b9d8158fa
+

@@ -1,5 +1,5 @@
 /** @file GloveToolsConfig.h
-	@brief
+	@brief Configure non-hardware related build-time options
 
 	@date 2010
 
@@ -23,7 +23,6 @@
 // Standard includes
 // - none
 
-#cmakedefine BUILD_WITH_GLOVE5DT
 #cmakedefine BUILD_WITH_EIGENKF
 
 #endif // INCLUDED_GloveToolsConfig_h_GUID_27e0976b_7200_4e0c_9f4e_3a28bf054dd9

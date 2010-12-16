@@ -15,7 +15,7 @@
 // Internal Includes
 #include "GloveHardwareFactory.h"
 
-#include <GloveToolsConfig.h>
+#include <AvailableHardware.h>
 
 #include "MockGloveHardware.h"
 
