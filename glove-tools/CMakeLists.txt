@@ -5,7 +5,6 @@
 set(SOURCES
 	AvailableHardware.h.in
 	Calibration.cpp
-	FakeFlexingGloveHardware.cpp
 	Glove.cpp
 	Glove_KalmanFilter.cpp
 	GloveHardwareFactory.cpp
@@ -17,7 +16,6 @@ set(SOURCES
 
 set(API
 	Calibration.h
-	FakeFlexingGloveHardware.h
 	Finger.h
 	Glove.h
 	GloveHardwareFactory.h
@@ -29,12 +27,11 @@ set(API
 	MockGloveHardware.h)
 
 macro(add_driver _name)
-	string(TOUPPER "${_name}" _ucname)
-	set(${_ucname}_SOURCES ${_name}/${_name}.cpp ${_name}/${_name}.h)
-	list(APPEND SOURCES ${${_ucname}_SOURCES})
-	source_group("${_name}" FILES ${${_ucname}_SOURCES})
+	list(APPEND SOURCES ${_name}/${_name}.cpp ${_name}/${_name}.h)
+	source_group("${_name}" FILES ${_name}/${_name}.cpp ${_name}/${_name}.h)
 endmacro()
 
+add_driver(FakeFlexingGloveHardware)
 if(BUILD_WITH_GLOVE5DT)
 	add_driver(GloveHardware5DT)
 endif()

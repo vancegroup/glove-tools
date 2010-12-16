@@ -16,7 +16,7 @@
 #define INCLUDED_FakeFlexingGloveHardware_h_GUID_e4064cee_ec76_40b1_9660_6eef14208c35
 
 // Internal Includes
-#include "IGloveHardware.h"
+#include "../IGloveHardware.h"
 
 // Library/third-party includes
 // - none

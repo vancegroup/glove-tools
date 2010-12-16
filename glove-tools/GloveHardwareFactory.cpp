@@ -19,7 +19,7 @@
 
 #include "MockGloveHardware.h"
 
-#include "FakeFlexingGloveHardware.h"
+#include "FakeFlexingGloveHardware/FakeFlexingGloveHardware.h"
 
 #ifdef BUILD_WITH_GLOVE5DT
 #	include "GloveHardware5DT/GloveHardware5DT.h"
