@@ -20,12 +20,7 @@
 #include <GloveToolsConfig.h>
 
 // Library/third-party includes
-#ifdef BUILD_WITH_EIGENKF
-#include <eigenkf/KalmanFilter.h>
-using namespace eigenkf;
-
-#include <ctime>
-#endif
+// - none
 
 // Standard includes
 #include <iostream>
@@ -134,12 +129,10 @@ namespace glove {
 	}
 
 	bool Glove::setReportType(ReportType r) {
-#ifndef BUILD_WITH_EIGENKF
 		/// Disallow filtered mode if built without filtering.
-		if (r == REPORT_FILTERED) {
+		if ((!_kfAvailable) && (r == REPORT_FILTERED)) {
 			return false;
 		}
-#endif
 		_r = r;
 		return true;
 	}
@@ -179,20 +172,6 @@ namespace glove {
 	void Glove::stopCalibrating() {
 		_calib.stopCalibrating();
 	}
-
-#ifndef BUILD_WITH_EIGENKF
-	void Glove::_allocateFilter() {
-		/// do nothing
-	}
-
-	void Glove::_destroyFilter() {
-		/// do nothing
-	}
-	
-	std::vector<double> Glove::_updateFilter(std::vector<double> const& /*calibBends*/) {
-		return std::vector<double>();
-	}
-#endif
 
 } // end of namespace glove
 

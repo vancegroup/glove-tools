@@ -96,6 +96,8 @@ namespace glove {
 			std::vector<double> _bends;
 			
 			Calibration _calib;
+			
+			static const bool _kfAvailable;
 	};
 
 } // end of namespace glove

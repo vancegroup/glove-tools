@@ -16,9 +16,9 @@
 
 // Internal Includes
 #include <GloveToolsConfig.h>
+#include "Glove.h"
 
 #ifdef BUILD_WITH_EIGENKF
-#include "Glove.h"
 #include "GloveNode.h"
 #include "GloveUpdater.h"
 #include "IGloveHardware.h"
@@ -34,6 +34,9 @@ using namespace eigenkf;
 #include <iostream>
 
 namespace glove {
+
+	bool Glove::_kfAvailable = true;
+	
 	namespace detail {
 
 		typedef SimpleState<5> state_t;
@@ -143,4 +146,23 @@ namespace glove {
 
 
 } // end of namespace glove
+
+#else // start section for no KF
+
+namespace glove {
+
+	bool Glove::_kfAvailable = false;
+	
+	void Glove::_allocateFilter() {
+		/// do nothing
+	}
+
+	void Glove::_destroyFilter() {
+		/// do nothing
+	}
+	
+	std::vector<double> Glove::_updateFilter(std::vector<double> const& /*calibBends*/) {
+		return std::vector<double>();
+	}
+}
 #endif
