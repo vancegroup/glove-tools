@@ -126,8 +126,14 @@ namespace glove {
 		
 		/// Set up handedness right the first time
 		_leftyrighty->setSingleChildOn(_g.getHand());
-
-		this->addChild(_leftyrighty.get());
+				
+		/// Make sure the model is centered;
+				
+		const osg::BoundingSphere & bs = _leftyrighty->getBound();
+		osg::ref_ptr<osg::PositionAttitudeTransform> centering = new osg::PositionAttitudeTransform;
+		centering->setPosition(bs.center() * -1);
+		centering->addChild(_leftyrighty.get());
+		this->addChild(centering.get());
 	}
 	
 	void GloveNode::doUpdate() {
