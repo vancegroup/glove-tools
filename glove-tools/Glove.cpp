@@ -91,8 +91,6 @@ namespace glove {
 			filtered = _updateFilter(calib);
 		}
 
-
-		/// @todo Eventually will want kalman filter here rather than just copying the latest update
 		if (_r == REPORT_RAW && raw.size() > 0) {
 			assert(raw.size() == 5);
 #ifdef DEBUG_REPORT_TYPE
