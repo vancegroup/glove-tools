@@ -55,3 +55,7 @@ set(GLOVETOOLS_MODEL "${_IMPORT_PREFIX}/@DATA_DIR@/hand-structured.osg")
 set(_IMPORT_PREFIX)
 
 set(GLOVETOOLS_FOUND ON)
+if(NOT "${OPENSCENEGRAPH_VERSION}" VERSION_EQUAL "@OPENSCENEGRAPH_VERSION@")
+	message(STATUS "glove-tools found, but current build uses OpenSceneGraph version ${OPENSCENEGRAPH_VERSION} while glove-tools was built with @OPENSCENEGRAPH_VERSION@!")
+	set(GLOVETOOLS_FOUND OFF)
+endif()

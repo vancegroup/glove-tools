@@ -45,4 +45,8 @@ set(GLOVETOOLS_INCLUDE_DIRS "@CMAKE_CURRENT_SOURCE_DIR@")
 set(GLOVETOOLS_MODEL "@CMAKE_CURRENT_SOURCE_DIR@/hand-structured.osg")
 
 set(GLOVETOOLS_FOUND ON)
+if(NOT "${OPENSCENEGRAPH_VERSION}" VERSION_EQUAL "@OPENSCENEGRAPH_VERSION@")
+	message(STATUS "glove-tools found, but current build uses OpenSceneGraph version ${OPENSCENEGRAPH_VERSION} while glove-tools was built with @OPENSCENEGRAPH_VERSION@!")
+	set(GLOVETOOLS_FOUND OFF)
+endif()
 
