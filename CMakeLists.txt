@@ -56,6 +56,9 @@ include(OptionRequires)
 include(CTest)
 include(CreateDashboardScripts)
 
+include(SetDefaultBuildType)
+set_default_build_type(RelWithDebInfo)
+
 set(EXTRA_LIBS)
 include(SearchProgramFilesForOpenSceneGraph)
 find_package(OpenSceneGraph REQUIRED COMPONENTS osgDB osgUtil)
