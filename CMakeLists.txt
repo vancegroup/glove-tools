@@ -23,6 +23,7 @@ set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}-${CPACK_PACKAGE_VERSION}-src
 ###
 
 option(BUILD_WITH_EIGEN3 "Build with the Eigen 3.0 prerelease instead of 2.x?" on)
+option(BUILD_DOCS "Add a target to build documentation" on)
 
 set(BIN_DIR bin)
 set(INCLUDE_DIR include)
@@ -117,7 +118,10 @@ add_subdirectory(glove-tools)
 
 add_subdirectory(applications)
 
-add_doxygen(Doxyfile)
+# Build documentation
+if(BUILD_DOCS)
+	add_doxygen(Doxyfile)
+endif()
 
 if(BUILD_TESTING)
 	include(BoostTestTargets)
