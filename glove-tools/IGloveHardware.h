@@ -20,7 +20,7 @@
 #include "GlovePointerTypes.h"
 
 // Library/third-party includes
-#include <boost/function.hpp>
+// - none
 
 // Standard includes
 #include <vector>
