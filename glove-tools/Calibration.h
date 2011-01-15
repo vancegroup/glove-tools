@@ -17,7 +17,7 @@
 #define INCLUDED_Calibration_h_GUID_7a455249_4847_42c1_ada5_8856a142caf0
 
 // Internal Includes
-#include "Finger.h"
+// - none
 
 // Library/third-party includes
 // - none
