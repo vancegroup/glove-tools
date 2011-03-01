@@ -82,6 +82,7 @@ option_requires(BUILD_WITH_GLOVE5DT "Build with a 5DT Glove driver?" GLOVE5DT_FO
 if(BUILD_WITH_GLOVE5DT)
 	include_directories(${GLOVE5DT_INCLUDE_DIRS})
 	list(APPEND EXTRA_LIBS ${GLOVE5DT_LIBRARIES})
+	list(APPEND RUNTIME_LIBRARY_DIRS ${GLOVE5DT_RUNTIME_LIBRARY_DIRS})
 endif()
 
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/third-party/eigen-kalman/eigenkf/KalmanFilter.h")
