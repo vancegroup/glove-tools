@@ -109,8 +109,8 @@ namespace glove {
 			throw MissingGloveOptionError();
 		}
 
-		std::cout << "Connecting to vrpn analog device " << devname;
-		std::cout << "with channel mapping:" << std::endl;
+		std::cout << "Connecting to vrpn analog device " << devname << std::endl;
+		std::cout << "Channel mapping:" << std::endl;
 		std::cout << "  - Thumb:  " << _channelMap[0] << std::endl;
 		std::cout << "  - Index:  " << _channelMap[1] << std::endl;
 		std::cout << "  - Middle: " << _channelMap[2] << std::endl;
