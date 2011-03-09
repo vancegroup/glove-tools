@@ -28,7 +28,7 @@
 namespace glove {
 
 	namespace detail {
-		struct GloveHardwareVRPNDevice;	
+		struct GloveHardwareVRPNDevice;
 	}
 
 	class GloveHardwareVRPN : public IGloveHardware {
@@ -41,9 +41,7 @@ namespace glove {
 
 			/// Factory function for use with create-by-name
 			static GloveHardwarePtr create(std::string const & option);
-			
-			/// Internal use - signal an updated report.
-			void signalUpdated(std::vector<double> const& values);
+
 		protected:
 			GloveHardwareVRPN(std::string const & option);
 			detail::GloveHardwareVRPNDevice * _d;

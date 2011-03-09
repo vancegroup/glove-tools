@@ -31,7 +31,7 @@ namespace glove {
 			vrpn_Analog_Remote * ana;
 		};
 	}
-	
+
 	static void handle_analog(void* userdata, const vrpn_ANALOGCB a) {
 		std::cout << "VRPN sent a report!" << std::endl;
 		std::vector<double> * v = static_cast<std::vector<double> *>(userdata);
@@ -51,15 +51,21 @@ namespace glove {
 			_minResponseSize(5),
 			_max(1.0),
 			_min(0.0) {
-		// For the option parameter, specify the vrpn device name including machine (with @)
-		// and optionally the word "channels" followed by the channel numbers for
-		// the digits starting with the thumb. Specify RIGHT or LEFT as desired.
+		// For the option parameter, specify:
+		//  - the vrpn device name including machine (with @)
+		//  - optionally the word "variance" follow by the raw variance for
+		//    each digit starting with the thumb
+		//  - optionally the word "channels" followed by the channel numbers for
+		//    the digits starting with the thumb
+		//  - optionally RIGHT or LEFT as desired.
 
 		for (unsigned int i = 0; i < 5; ++i) {
 			_channelMap.push_back(i);
 		}
 
 		std::string devname;
+		std::vector<double> variance;
+
 		std::vector<std::string> strs;
 		boost::split(strs, option, boost::is_any_of("\t ;,"));
 		for (unsigned int i = 0; i < strs.size(); ++i) {
@@ -85,6 +91,15 @@ namespace glove {
 					}
 				}
 				_minResponseSize = maxChan + 1;
+			} else if (optCaps == "VARIANCE") {
+				i++;
+				for (unsigned int j = 0; j < 5; ++j, ++i) {
+					if (i >= strs.size()) {
+						// got to specify them all!
+						throw MissingGloveOptionError();
+					}
+					variance.push_back(boost::lexical_cast<double>(strs[i]));
+				}
 			} else {
 				std::cerr << "ERROR: Unrecognized option! '" << opt << std::endl;
 				throw InvalidGloveOptionError();
@@ -94,7 +109,7 @@ namespace glove {
 		if (devname.empty()) {
 			throw MissingGloveOptionError();
 		}
-		
+
 		std::cout << "Connecting to vrpn analog device " << devname;
 		std::cout << "with channel mapping:" << std::endl;
 		std::cout << "  - Thumb:  " << _channelMap[0] << std::endl;
@@ -105,43 +120,26 @@ namespace glove {
 		std::cout << std::endl;
 		std::cout << "with 0.0 bend mapped from value of " << _min;
 		std::cout << " and 1.0 bend mapped from value of " << _max << std::endl;
-		
-		
-		
+
+
+
 		_d->ana = new vrpn_Analog_Remote(devname.c_str());
 		if (!_d->ana) {
 			throw GloveConnectionError();
 		}
 		_d->ana->register_change_handler(&_channels, &handle_analog);
-/*
-		_d->_ana = new vrpn_Analog_Remote(devname.c_str());
-		
-		if (!_d->_ana) {
-			throw GloveConnectionError();
-		}
-		_d->_ana->register_change_handler(this, &handle_analog);
-		*/
-/*
-		/// @todo do these vary significantly from glove to glove?
-		const double varianceScale = 1.0;
 
-		/// Tight fist, Raw input of 5000 steps
-		std::vector<double> variance;
-		variance.push_back(0.0000015335 * varianceScale);
-		variance.push_back(0.000000324218 * varianceScale);
-		variance.push_back(0.000000363943 * varianceScale);
-		variance.push_back(0.000000280055 * varianceScale);
-		variance.push_back(0.000000139414 * varianceScale);
-		_setRawVariance(variance);
-*/
+		if (!variance.empty()) {
+			_setRawVariance(variance);
+		}
 	}
 
 	GloveHardwareVRPN::~GloveHardwareVRPN() {
-		
+
 		if (_d->ana) {
 			_d->ana->unregister_change_handler(&_channels, &handle_analog);
 		}
-		
+
 		delete _d;
 		_d = NULL;
 	}
