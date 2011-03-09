@@ -19,9 +19,6 @@
 #include <vrpn_Analog.h>
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/thread.hpp>
-
-//#include <boost/thread/locks.hpp>
 
 // Standard includes
 #include <iostream>
@@ -29,69 +26,10 @@
 namespace glove {
 	namespace detail {
 		struct GloveHardwareVRPNDevice {
-			GloveHardwareVRPNDevice() : ana(NULL), stopflag(false), thread(NULL) {}
-			~GloveHardwareVRPNDevice() {
-				//ana->unregister_change_handler(this, &handle_analog);
-				delete ana;
-			}
+			GloveHardwareVRPNDevice() : ana(NULL){}
+			~GloveHardwareVRPNDevice() { delete ana; ana = NULL; }
 			vrpn_Analog_Remote * ana;
-			bool stopflag;
-			std::vector<double> channels;
-			void startSampleThread(std::string devname);
-			void exitSampleThread();
-			
-			boost::mutex channelMutex;
-			
-			
-		private:
-			//static void vrpnSampleThreadEntry(GloveHardwareVRPNDevice * device, std::string devname);
-			
-			void vrpnSampleThread(std::string devname);
-			
-			static void VRPN_CALLBACK handle_analog(void* userdata, const vrpn_ANALOGCB a);
-			boost::thread * thread;
 		};
-		
-		void GloveHardwareVRPNDevice::startSampleThread(std::string devname) {
-			ana = new vrpn_Analog_Remote(devname.c_str());
-		
-			if (!ana) {
-				throw GloveConnectionError();
-			}
-			thread = new boost::thread(&GloveHardwareVRPNDevice::vrpnSampleThread, this, devname);
-		
-		}
-		void GloveHardwareVRPNDevice::exitSampleThread() {
-			if (thread) {
-				stopflag = true;
-				thread->join();
-			}
-		}
-		/*
-		void GloveHardwareVRPNDevice::vrpnSampleThreadEntry(GloveHardwareVRPNDevice * device, std::string devname) {
-			device->vrpnSampleThread(devname);
-		}
-		*/
-		
-		void GloveHardwareVRPNDevice::vrpnSampleThread(std::string devname) {
-			
-			
-			while (!stopflag) {
-				ana->mainloop();
-				vrpn_SleepMsecs(1);
-			}
-			ana->unregister_change_handler(this, &handle_analog);
-		}
-		
-		void GloveHardwareVRPNDevice::handle_analog(void* userdata, const vrpn_ANALOGCB a) {
-			std::cout << "VRPN sent a report!" << std::endl;
-			GloveHardwareVRPNDevice * d = static_cast<GloveHardwareVRPNDevice *>(userdata);
-			boost::lock_guard<boost::mutex> mutexLocker(d->channelMutex);
-			d->channels.clear();
-			for (unsigned int i = 0; i < a.num_channel; ++i) {
-				d->channels.push_back(static_cast<double>(a.channel[i]));
-			}
-		}
 	}
 	
 	static void handle_analog(void* userdata, const vrpn_ANALOGCB a) {
@@ -199,7 +137,6 @@ namespace glove {
 	}
 
 	GloveHardwareVRPN::~GloveHardwareVRPN() {
-		//_d->exitSampleThread();
 		
 		if (_d->ana) {
 			_d->ana->unregister_change_handler(&_channels, &handle_analog);
@@ -211,7 +148,6 @@ namespace glove {
 
 
 	void GloveHardwareVRPN::updateData() {
-		//boost::lock_guard<boost::mutex> mutexLocker(_d->channelMutex);
 		_d->ana->mainloop();
 		if (!_channels.empty()) {
 			if (_channels.size() < _minResponseSize) {
