@@ -35,7 +35,7 @@ namespace glove {
 	static void VRPN_CALLBACK handle_analog(void* userdata, const vrpn_ANALOGCB a) {
 		std::vector<double> * v = static_cast<std::vector<double> *>(userdata);
 		v->clear();
-		for (unsigned int i = 0; i < a.num_channel; ++i) {
+		for (int i = 0; i < a.num_channel; ++i) {
 			v->push_back(static_cast<double>(a.channel[i]));
 		}
 	}
