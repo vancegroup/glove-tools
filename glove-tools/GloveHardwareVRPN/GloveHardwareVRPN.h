@@ -48,6 +48,7 @@ namespace glove {
 			GloveHardwareVRPN(std::string const & option);
 			detail::GloveHardwareVRPNDevice * _d;
 			std::vector<int> _channelMap;
+			std::vector<double> _channels;
 			int _minResponseSize;
 			double _max;
 			double _min;

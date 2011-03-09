@@ -25,14 +25,13 @@
 
 // Standard includes
 #include <iostream>
-#include <iomanip>
 
 namespace glove {
 	namespace detail {
 		struct GloveHardwareVRPNDevice {
 			GloveHardwareVRPNDevice() : ana(NULL), stopflag(false), thread(NULL) {}
 			~GloveHardwareVRPNDevice() {
-				ana->unregister_change_handler(this, &handle_analog);
+				//ana->unregister_change_handler(this, &handle_analog);
 				delete ana;
 			}
 			vrpn_Analog_Remote * ana;
@@ -76,7 +75,7 @@ namespace glove {
 		
 		void GloveHardwareVRPNDevice::vrpnSampleThread(std::string devname) {
 			
-			ana->register_change_handler(this, &GloveHardwareVRPNDevice::handle_analog);
+			
 			while (!stopflag) {
 				ana->mainloop();
 				vrpn_SleepMsecs(1);
@@ -95,7 +94,14 @@ namespace glove {
 		}
 	}
 	
-	
+	static void handle_analog(void* userdata, const vrpn_ANALOGCB a) {
+		std::cout << "VRPN sent a report!" << std::endl;
+		std::vector<double> * v = static_cast<std::vector<double> *>(userdata);
+		v->clear();
+		for (unsigned int i = 0; i < a.num_channel; ++i) {
+			v->push_back(static_cast<double>(a.channel[i]));
+		}
+	}
 
 	GloveHardwarePtr GloveHardwareVRPN::create(std::string const & option) {
 		GloveHardwarePtr temp(new GloveHardwareVRPN(option));
@@ -119,9 +125,7 @@ namespace glove {
 		std::vector<std::string> strs;
 		boost::split(strs, option, boost::is_any_of("\t ;,"));
 		for (unsigned int i = 0; i < strs.size(); ++i) {
-			std::cout << "i = " << i << std::endl;
 			std::string opt = strs[i];
-			std::cout << opt << std::endl;
 			std::string optCaps = boost::to_upper_copy(strs[i]);
 			if (optCaps.find("@") != std::string::npos) {
 				devname = strs[i];
@@ -130,7 +134,6 @@ namespace glove {
 			} else if (optCaps == "LEFT") {
 				_setHand(LEFT_HAND);
 			} else if (optCaps == "CHANNELS") {
-				std::cout << "Channels: ";
 				i++;
 				int maxChan = 0;
 				for (unsigned int j = 0; j < 5; ++j, ++i) {
@@ -142,9 +145,7 @@ namespace glove {
 					if (_channelMap[j] > maxChan) {
 						maxChan = _channelMap[j];
 					}
-					std::cout << " " << _channelMap[j];
 				}
-				std::cout << "  - i = " << i << std::endl;
 				_minResponseSize = maxChan + 1;
 			} else {
 				std::cerr << "ERROR: Unrecognized option! '" << opt << std::endl;
@@ -167,7 +168,13 @@ namespace glove {
 		std::cout << "with 0.0 bend mapped from value of " << _min;
 		std::cout << " and 1.0 bend mapped from value of " << _max << std::endl;
 		
-		_d->startSampleThread(devname);
+		
+		
+		_d->ana = new vrpn_Analog_Remote(devname.c_str());
+		if (!_d->ana) {
+			throw GloveConnectionError();
+		}
+		_d->ana->register_change_handler(&_channels, &handle_analog);
 /*
 		_d->_ana = new vrpn_Analog_Remote(devname.c_str());
 		
@@ -192,37 +199,34 @@ namespace glove {
 	}
 
 	GloveHardwareVRPN::~GloveHardwareVRPN() {
-		_d->exitSampleThread();
-		/*
-		if (_d->_ana) {
-			_d->_ana->unregister_change_handler(this, &handle_analog);
+		//_d->exitSampleThread();
+		
+		if (_d->ana) {
+			_d->ana->unregister_change_handler(&_channels, &handle_analog);
 		}
-		*/
+		
 		delete _d;
 		_d = NULL;
 	}
 
 
 	void GloveHardwareVRPN::updateData() {
-		
-		//std::cout << "in updateData checking for report" << std::endl;
-		boost::lock_guard<boost::mutex> mutexLocker(_d->channelMutex);
-		if (!_d->channels.empty()) {
-			if (_d->channels.size() < _minResponseSize) {
-				std::cout << "Got a response with " << _d->channels.size() << " channels but need " << _minResponseSize << std::endl;
-				_d->channels.clear();
+		//boost::lock_guard<boost::mutex> mutexLocker(_d->channelMutex);
+		_d->ana->mainloop();
+		if (!_channels.empty()) {
+			if (_channels.size() < _minResponseSize) {
+				std::cerr << "Got a response with " << _channels.size() << " channels but need " << _minResponseSize << std::endl;
+				_channels.clear();
 				return;
 			}
-			std::cout << "Receiving the report and passing it along!" << std::endl;
 			// Update stored bend values
 			for (unsigned int i = 0; i < 5; ++i)
 			{
-				double data = _d->channels[_channelMap[i]];
+				double data = _channels[_channelMap[i]];
 				double bend = (data - _min) / (_max - _min);
-				std::cout << std::setw(5) << bend;
 				_setBend(Finger(i), bend, bend);
 			}
-			_d->channels.clear();
+			_channels.clear();
 		}
 	}
 } // end of namespace glove
