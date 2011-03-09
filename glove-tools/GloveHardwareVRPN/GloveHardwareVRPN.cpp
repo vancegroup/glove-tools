@@ -33,7 +33,6 @@ namespace glove {
 	}
 
 	static void handle_analog(void* userdata, const vrpn_ANALOGCB a) {
-		std::cout << "VRPN sent a report!" << std::endl;
 		std::vector<double> * v = static_cast<std::vector<double> *>(userdata);
 		v->clear();
 		for (unsigned int i = 0; i < a.num_channel; ++i) {
