@@ -34,7 +34,7 @@ namespace glove {
 	void IGloveHardware::_setBend(Finger const f, double bend, double raw) {
 		_bends[f] = bend;
 		if (raw > 0) {
-			while (_raw.size() <= f) {
+			while (_raw.size() < 5) {
 				_raw.push_back(0.0);
 			}
 			_raw[f] = raw;
