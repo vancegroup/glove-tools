@@ -26,6 +26,7 @@
 // - none
 
 #cmakedefine BUILD_WITH_GLOVE5DT
+#cmakedefine BUILD_WITH_VRPN
 
 #endif // INCLUDED_AvailableHardware_h_GUID_4ec6a1a7_e72b_46ff_89d9_a98b9d8158fa
 

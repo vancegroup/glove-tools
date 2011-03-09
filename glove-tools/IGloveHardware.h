@@ -36,6 +36,10 @@ namespace glove {
 		InvalidGloveOptionError(std::string const& what = "Could not understand provided glove option!") : std::runtime_error(what) {}
 	};
 
+	struct MissingGloveOptionError : public std::runtime_error {
+		MissingGloveOptionError(std::string const& what = "Missing required glove option!") : std::runtime_error(what) {}
+	};
+
 	class IGloveHardware {
 		public:
 			IGloveHardware();

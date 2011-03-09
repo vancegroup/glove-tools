@@ -24,6 +24,9 @@
 #ifdef BUILD_WITH_GLOVE5DT
 #	include "GloveHardware5DT/GloveHardware5DT.h"
 #endif
+#ifdef BUILD_WITH_VRPN
+#	include "GloveHardwareVRPN/GloveHardwareVRPN.h"
+#endif
 
 // Library/third-party includes
 // - none
@@ -57,6 +60,9 @@ namespace glove {
 		
 		#ifdef BUILD_WITH_GLOVE5DT
 		registerHardwareCreator("GloveHardware5DT", & GloveHardware5DT::create);
+		#endif
+		#ifdef BUILD_WITH_VRPN
+		registerHardwareCreator("GloveHardwareVRPN", & GloveHardwareVRPN::create);
 		#endif
 	}
 
