@@ -25,6 +25,7 @@
 
 // Standard includes
 #include <iostream>
+#include <iomanip>
 
 namespace glove {
 	namespace detail {
@@ -84,6 +85,7 @@ namespace glove {
 		}
 		
 		void GloveHardwareVRPNDevice::handle_analog(void* userdata, const vrpn_ANALOGCB a) {
+			std::cout << "VRPN sent a report!" << std::endl;
 			GloveHardwareVRPNDevice * d = static_cast<GloveHardwareVRPNDevice *>(userdata);
 			boost::lock_guard<boost::mutex> mutexLocker(d->channelMutex);
 			d->channels.clear();
@@ -102,6 +104,7 @@ namespace glove {
 
 	GloveHardwareVRPN::GloveHardwareVRPN(std::string const & option) :
 			_d(new detail::GloveHardwareVRPNDevice),
+			_minResponseSize(5),
 			_max(1.0),
 			_min(0.0) {
 		// For the option parameter, specify the vrpn device name including machine (with @)
@@ -115,9 +118,10 @@ namespace glove {
 		std::string devname;
 		std::vector<std::string> strs;
 		boost::split(strs, option, boost::is_any_of("\t ;,"));
-		for(unsigned int i = 0; i < strs.size(); ++i) {
+		for (unsigned int i = 0; i < strs.size(); ++i) {
 			std::cout << "i = " << i << std::endl;
 			std::string opt = strs[i];
+			std::cout << opt << std::endl;
 			std::string optCaps = boost::to_upper_copy(strs[i]);
 			if (optCaps.find("@") != std::string::npos) {
 				devname = strs[i];
@@ -128,15 +132,20 @@ namespace glove {
 			} else if (optCaps == "CHANNELS") {
 				std::cout << "Channels: ";
 				i++;
+				int maxChan = 0;
 				for (unsigned int j = 0; j < 5; ++j, ++i) {
 					if (i >= strs.size()) {
 						// got to specify them all!
 						throw MissingGloveOptionError();
 					}
 					_channelMap[j] = boost::lexical_cast<int>(strs[i]);
+					if (_channelMap[j] > maxChan) {
+						maxChan = _channelMap[j];
+					}
 					std::cout << " " << _channelMap[j];
 				}
 				std::cout << "  - i = " << i << std::endl;
+				_minResponseSize = maxChan + 1;
 			} else {
 				std::cerr << "ERROR: Unrecognized option! '" << opt << std::endl;
 				throw InvalidGloveOptionError();
@@ -146,6 +155,17 @@ namespace glove {
 		if (devname.empty()) {
 			throw MissingGloveOptionError();
 		}
+		
+		std::cout << "Connecting to vrpn analog device " << devname;
+		std::cout << "with channel mapping:" << std::endl;
+		std::cout << "  - Thumb:  " << _channelMap[0] << std::endl;
+		std::cout << "  - Index:  " << _channelMap[1] << std::endl;
+		std::cout << "  - Middle: " << _channelMap[2] << std::endl;
+		std::cout << "  - Ring:   " << _channelMap[3] << std::endl;
+		std::cout << "  - Pinky:  " << _channelMap[4] << std::endl;
+		std::cout << std::endl;
+		std::cout << "with 0.0 bend mapped from value of " << _min;
+		std::cout << " and 1.0 bend mapped from value of " << _max << std::endl;
 		
 		_d->startSampleThread(devname);
 /*
@@ -184,14 +204,23 @@ namespace glove {
 
 
 	void GloveHardwareVRPN::updateData() {
+		
+		//std::cout << "in updateData checking for report" << std::endl;
 		boost::lock_guard<boost::mutex> mutexLocker(_d->channelMutex);
 		if (!_d->channels.empty()) {
-		// Update stored bend values
+			if (_d->channels.size() < _minResponseSize) {
+				std::cout << "Got a response with " << _d->channels.size() << " channels but need " << _minResponseSize << std::endl;
+				_d->channels.clear();
+				return;
+			}
+			std::cout << "Receiving the report and passing it along!" << std::endl;
+			// Update stored bend values
 			for (unsigned int i = 0; i < 5; ++i)
 			{
-				double raw = _d->channels[_channelMap[i]];
-				double bend = (raw - _min) / (_max - _min);
-				_setBend(Finger(i), bend, raw);
+				double data = _d->channels[_channelMap[i]];
+				double bend = (data - _min) / (_max - _min);
+				std::cout << std::setw(5) << bend;
+				_setBend(Finger(i), bend, bend);
 			}
 			_d->channels.clear();
 		}
