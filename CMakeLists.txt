@@ -192,6 +192,12 @@ else()
 	message(STATUS " - 5DT Data Glove: disabled")
 endif()
 
+if(BUILD_WITH_VRPN)
+	message(STATUS " - VRPN Analog client: enabled")
+else()
+	message(STATUS " - VRPN Analog client: disabled")
+endif()
+
 message(STATUS "\n")
 
 ###
