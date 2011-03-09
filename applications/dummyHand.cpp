@@ -157,7 +157,7 @@ int main(int argc, char * argv[]) {
 	viewer.setSceneData(root.get());
 
 	viewer.addEventHandler(new osgViewer::ScreenCaptureHandler);
-
+	viewer.setUpViewInWindow(15, 15, 320, 240);
 	viewer.realize();
 	return viewer.run();
 }
