@@ -98,7 +98,7 @@ namespace glove {
 		double dt = _filter->getDt();
 
 		if (dt < 0) {
-			/// This is the first update - we just set the initial state and belive it
+			/// This is the first update - we just set the initial state and believe it
 			for (unsigned int i = 0; i < 5; ++i) {
 				_filter->kf.state.x[i] = calibBends[i];
 			}

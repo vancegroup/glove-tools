@@ -70,7 +70,7 @@ namespace glove {
 		if (!model.valid()) {
 			/// Then, try the embedded model
 			std::string osgfile(reinterpret_cast<char*>(hand_structured_osg), hand_structured_osg_len);
-			model = osgDB::readNodeFile(osgfile + ".osgs"); // Psuedo OpenSceneGraph file, with file encoded in filename string
+			model = osgDB::readNodeFile(osgfile + ".osgs"); // Pseudo OpenSceneGraph file, with file encoded in filename string
 		}
 		
 		if (!model.valid()) {
