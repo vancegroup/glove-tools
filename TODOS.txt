@@ -3,3 +3,13 @@
 ## Testing
 
 - Make a unit test for radius of GloveNode bounding sphere as 0.085
+
+## Refactoring
+
+- Make the VRPN driver (and others as needed?) use smart pointers from boost
+
+## Features
+
+- Add a VR Juggler "analog interface" driver (for cluster sync of VRPN or other drivers)
+- Add a VR Juggler "glove device" driver
+- Add a VRPN server application
