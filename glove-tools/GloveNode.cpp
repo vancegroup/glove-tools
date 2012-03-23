@@ -111,6 +111,8 @@ namespace glove {
 
 
 		{
+			/// Make a switch with two children, each a matrix transform.
+			/// One will be the right hand, the other will be the left hand.
 			osg::ref_ptr<osg::MatrixTransform> handedness = new osg::MatrixTransform;
 			handedness->addChild(model);
 			_leftyrighty->addChild(handedness);
