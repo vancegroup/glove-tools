@@ -80,7 +80,6 @@ namespace glove {
 		{
 			/// Grab the meaningful parent node "hand" and use it only to find the finger joints
 			osg::ref_ptr<osg::Group> hand = model->asGroup();
-			hand->computeBound(); //calculate bound information since we need this before update is called
 			while (hand->getName() != "hand") {
 				assert(hand->getNumChildren() == 1);
 				hand = hand->getChild(0)->asGroup(); // only has 1 child
@@ -146,7 +145,6 @@ namespace glove {
 		/// Make sure the model is centered and human-sized
 		/// (hand length arbitrarily considered to be .170 m based on
 		/// http://usability.gtri.gatech.edu/eou_info/hand_anthro.php )
-
 
 		const osg::BoundingSphere & bs = _leftyrighty->getBound();
 
