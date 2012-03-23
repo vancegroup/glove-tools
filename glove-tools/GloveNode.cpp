@@ -146,8 +146,10 @@ namespace glove {
 		/// Make sure the model is centered;
 
 		const osg::BoundingSphere & bs = _leftyrighty->getBound();
+
 		osg::ref_ptr<osg::PositionAttitudeTransform> centering = new osg::PositionAttitudeTransform;
-		centering->setPosition(bs.center() * -1);
+		centering->setPosition(bs.center() * -1.0);
+
 		centering->addChild(_leftyrighty.get());
 		this->addChild(centering.get());
 	}
