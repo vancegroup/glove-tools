@@ -36,7 +36,7 @@ using namespace eigenkf;
 namespace glove {
 
 	const bool Glove::_kfAvailable = true;
-	
+
 	namespace detail {
 
 		typedef SimpleState<5> state_t;
@@ -152,7 +152,7 @@ namespace glove {
 namespace glove {
 
 	const bool Glove::_kfAvailable = false;
-	
+
 	void Glove::_allocateFilter() {
 		/// do nothing
 	}
@@ -160,7 +160,7 @@ namespace glove {
 	void Glove::_destroyFilter() {
 		/// do nothing
 	}
-	
+
 	std::vector<double> Glove::_updateFilter(std::vector<double> const& /*calibBends*/) {
 		return std::vector<double>();
 	}

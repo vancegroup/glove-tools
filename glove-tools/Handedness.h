@@ -27,9 +27,9 @@
 
 namespace glove {
 	enum Handedness {
-		LEFT_HAND,
-		RIGHT_HAND,
-		UNKNOWN_HAND
+	    LEFT_HAND,
+	    RIGHT_HAND,
+	    UNKNOWN_HAND
 	};
 }
 

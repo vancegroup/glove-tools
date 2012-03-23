@@ -26,8 +26,11 @@
 namespace glove {
 	namespace detail {
 		struct GloveHardwareVRPNDevice {
-			GloveHardwareVRPNDevice() : ana(NULL){}
-			~GloveHardwareVRPNDevice() { delete ana; ana = NULL; }
+			GloveHardwareVRPNDevice() : ana(NULL) {}
+			~GloveHardwareVRPNDevice() {
+				delete ana;
+				ana = NULL;
+			}
 			vrpn_Analog_Remote * ana;
 		};
 	}
@@ -46,10 +49,10 @@ namespace glove {
 	}
 
 	GloveHardwareVRPN::GloveHardwareVRPN(std::string const & option) :
-			_d(new detail::GloveHardwareVRPNDevice),
-			_minResponseSize(5),
-			_max(1.0),
-			_min(0.0) {
+		_d(new detail::GloveHardwareVRPNDevice),
+		_minResponseSize(5),
+		_max(1.0),
+		_min(0.0) {
 		// For the option parameter, specify:
 		//  - the vrpn device name including machine (with @)
 		//  - optionally the word "variance" follow by the raw variance for
@@ -153,8 +156,7 @@ namespace glove {
 				return;
 			}
 			// Update stored bend values
-			for (unsigned int i = 0; i < 5; ++i)
-			{
+			for (unsigned int i = 0; i < 5; ++i) {
 				double data = _channels[_channelMap[i]];
 				double bend = (data - _min) / (_max - _min);
 				_setBend(Finger(i), bend, bend);

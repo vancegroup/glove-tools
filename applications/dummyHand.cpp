@@ -30,23 +30,22 @@ using namespace glove;
 int main(int argc, char * argv[]) {
 
 	// use an ArgumentParser object to manage the program arguments.
-	osg::ArgumentParser arguments(&argc,argv);
+	osg::ArgumentParser arguments(&argc, argv);
 
 	arguments.getApplicationUsage()->setApplicationName(arguments.getApplicationName());
-	arguments.getApplicationUsage()->setDescription(arguments.getApplicationName()+" shows a dummy hand.");
-	arguments.getApplicationUsage()->setCommandLineUsage(arguments.getApplicationName()+" [options] ...");
-	arguments.getApplicationUsage()->addCommandLineOption("--device <type>","Choose a different device type.");
-	arguments.getApplicationUsage()->addCommandLineOption("--option <option>","Pass an option to the GloveHardware driver - like an address/port.");
-	arguments.getApplicationUsage()->addCommandLineOption("--raw","Use raw values.");
-	arguments.getApplicationUsage()->addCommandLineOption("--calib","Use values calibrated by glovetools.");
-	arguments.getApplicationUsage()->addCommandLineOption("--filter","Use values processed by the Kalman filter.");
-	arguments.getApplicationUsage()->addCommandLineOption("--load-calib <filename>","Load calibration values from a file (implies --calib).");
+	arguments.getApplicationUsage()->setDescription(arguments.getApplicationName() + " shows a dummy hand.");
+	arguments.getApplicationUsage()->setCommandLineUsage(arguments.getApplicationName() + " [options] ...");
+	arguments.getApplicationUsage()->addCommandLineOption("--device <type>", "Choose a different device type.");
+	arguments.getApplicationUsage()->addCommandLineOption("--option <option>", "Pass an option to the GloveHardware driver - like an address/port.");
+	arguments.getApplicationUsage()->addCommandLineOption("--raw", "Use raw values.");
+	arguments.getApplicationUsage()->addCommandLineOption("--calib", "Use values calibrated by glovetools.");
+	arguments.getApplicationUsage()->addCommandLineOption("--filter", "Use values processed by the Kalman filter.");
+	arguments.getApplicationUsage()->addCommandLineOption("--load-calib <filename>", "Load calibration values from a file (implies --calib).");
 
 	osgViewer::Viewer viewer;
 
 	unsigned int helpType = 0;
-	if ((helpType = arguments.readHelpType()))
-	{
+	if ((helpType = arguments.readHelpType())) {
 		arguments.getApplicationUsage()->write(std::cout, helpType);
 		return 1;
 	}
@@ -59,13 +58,13 @@ int main(int argc, char * argv[]) {
 	while (arguments.read("--option", deviceOption)) {}
 
 	Glove::ReportType r = Glove::REPORT_HWSCALED;
-	
+
 	std::string loadCalib;
 	while (arguments.read("--load-calib", loadCalib)) {
 		/// implies calib
 		r = Glove::REPORT_CALIBRATED;
 	}
-	
+
 	while (arguments.read("--raw")) {
 		r = Glove::REPORT_RAW;
 	}
@@ -82,8 +81,7 @@ int main(int argc, char * argv[]) {
 	arguments.reportRemainingOptionsAsUnrecognized();
 
 	// report any errors if they have occurred when parsing the program arguments.
-	if (arguments.errors())
-	{
+	if (arguments.errors()) {
 		arguments.writeErrorMessages(std::cout);
 		return 1;
 	}
@@ -113,29 +111,29 @@ int main(int argc, char * argv[]) {
 
 	std::cout << "Glove will report ";
 	switch (g.getReportType()) {
-		/// raw values from the device
+			/// raw values from the device
 		case Glove::REPORT_RAW:
 			std::cout << "raw values from the hardware" << std::endl;
 			break;
 
-		/// values scaled by the device's hardware/drivers
+			/// values scaled by the device's hardware/drivers
 		case Glove::REPORT_HWSCALED:
 			std::cout << "values scaled by the hardware/driver (default)." << std::endl;
 			break;
 
-		/// values scaled by glove-tools
+			/// values scaled by glove-tools
 		case Glove::REPORT_CALIBRATED:
 			std::cout << "values calibrated by glovetools" << std::endl;
 			break;
 
-		/// values scaled and filtered by glove-tools
+			/// values scaled and filtered by glove-tools
 		case Glove::REPORT_FILTERED:
 			std::cout << "values processed by the Kalman filter" << std::endl;
 			break;
 		default:
 			std::cout << "an unknown report type - BUG - contact the glovetools authors!" << std::endl;
 	}
-	
+
 	if (!loadCalib.empty()) {
 		std::ifstream calibFile(loadCalib.c_str());
 		if (calibFile.good()) {

@@ -33,11 +33,11 @@ namespace glove {
 	}
 
 	Glove::Glove(GloveHardwarePtr hardware) :
-			_node(new detail::GloveNodeContainer),
-			_filter(NULL),
-			_r(REPORT_HWSCALED),
-			_hand(LEFT_HAND),
-			_hardware(hardware) {
+		_node(new detail::GloveNodeContainer),
+		_filter(NULL),
+		_r(REPORT_HWSCALED),
+		_hand(LEFT_HAND),
+		_hardware(hardware) {
 		if (!_node) {
 			throw new std::bad_alloc();
 		}
@@ -160,7 +160,7 @@ namespace glove {
 	}
 
 	void Glove::setHand(Handedness hand) {
-	  _hand = hand;
+		_hand = hand;
 	}
 
 	void Glove::startCalibrating() {

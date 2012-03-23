@@ -38,9 +38,9 @@ namespace glove {
 	struct SerialGlove5DTConnectionFailed : public GloveConnectionError {
 		SerialGlove5DTConnectionFailed() : GloveConnectionError("Unable to open 5DT data glove on serial port!") {}
 	};
-	
+
 	namespace detail {
-		struct GloveHardware5DTDevice;	
+		struct GloveHardware5DTDevice;
 	}
 
 	class GloveHardware5DT : public IGloveHardware {

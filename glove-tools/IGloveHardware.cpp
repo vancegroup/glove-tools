@@ -23,14 +23,14 @@
 
 namespace glove {
 	IGloveHardware::IGloveHardware() :
-			_hand(UNKNOWN_HAND) {
+		_hand(UNKNOWN_HAND) {
 		_bends.push_back(0.0);
 		_bends.push_back(0.0);
 		_bends.push_back(0.0);
 		_bends.push_back(0.0);
 		_bends.push_back(0.0);
 	}
-	
+
 	void IGloveHardware::_setBend(Finger const f, double bend, double raw) {
 		_bends[f] = bend;
 		if (raw > 0) {
@@ -39,6 +39,6 @@ namespace glove {
 			}
 			_raw[f] = raw;
 		}
-	
+
 	}
 }
