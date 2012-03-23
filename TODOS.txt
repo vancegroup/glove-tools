@@ -1,0 +1,5 @@
+# TODOS
+
+## Testing
+
+- Make a unit test for radius of GloveNode bounding sphere as 0.085
