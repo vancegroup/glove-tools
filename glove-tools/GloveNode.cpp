@@ -76,35 +76,39 @@ namespace glove {
 		if (!model.valid()) {
 			throw new std::runtime_error("Could not find hand-structured.osg to load and embedded copy failed too!");
 		}
-		/// Grab the meaningful parent node.
-		osg::ref_ptr<osg::Group> hand = model->asGroup();
-		hand->computeBound(); //calculate bound information since we need this before update is called
-		while (hand->getName() != "hand") {
-			assert(hand->getNumChildren() == 1);
-			hand = hand->getChild(0)->asGroup(); // only has 1 child
+
+		{
+			/// Grab the meaningful parent node "hand" and use it only to find the finger joints
+			osg::ref_ptr<osg::Group> hand = model->asGroup();
+			hand->computeBound(); //calculate bound information since we need this before update is called
+			while (hand->getName() != "hand") {
+				assert(hand->getNumChildren() == 1);
+				hand = hand->getChild(0)->asGroup(); // only has 1 child
+			}
+
+			osg::ref_ptr<osg::PositionAttitudeTransform> fingerBase;
+
+			fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "thumb0").get());
+			assert(fingerBase.valid());
+			_joints.push_back(_findJoints(fingerBase));
+
+			fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "index0").get());
+			assert(fingerBase.valid());
+			_joints.push_back(_findJoints(fingerBase));
+
+			fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "middle0").get());
+			assert(fingerBase.valid());
+			_joints.push_back(_findJoints(fingerBase));
+
+			fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "ring0").get());
+			assert(fingerBase.valid());
+			_joints.push_back(_findJoints(fingerBase));
+
+			fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "pinky0").get());
+			assert(fingerBase.valid());
+			_joints.push_back(_findJoints(fingerBase));
 		}
 
-		osg::ref_ptr<osg::PositionAttitudeTransform> fingerBase;
-		
-		fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "thumb0").get());
-		assert(fingerBase.valid());
-		_joints.push_back(_findJoints(fingerBase));
-		
-		fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "index0").get());
-		assert(fingerBase.valid());
-		_joints.push_back(_findJoints(fingerBase));
-		
-		fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "middle0").get());
-		assert(fingerBase.valid());
-		_joints.push_back(_findJoints(fingerBase));
-		
-		fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "ring0").get());
-		assert(fingerBase.valid());
-		_joints.push_back(_findJoints(fingerBase));
-		
-		fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "pinky0").get());
-		assert(fingerBase.valid());
-		_joints.push_back(_findJoints(fingerBase));
 
 		{
 			osg::ref_ptr<osg::MatrixTransform> handedness = new osg::MatrixTransform;
