@@ -142,13 +142,21 @@ namespace glove {
 
 		/// Set up handedness right the first time
 		_leftyrighty->setSingleChildOn(_g.getHand());
-				
-		/// Make sure the model is centered;
+
+		/// Make sure the model is centered and human-sized
+		/// (hand length arbitrarily considered to be .170 m based on
+		/// http://usability.gtri.gatech.edu/eou_info/hand_anthro.php )
+
 
 		const osg::BoundingSphere & bs = _leftyrighty->getBound();
 
 		osg::ref_ptr<osg::PositionAttitudeTransform> centering = new osg::PositionAttitudeTransform;
 		centering->setPosition(bs.center() * -1.0);
+
+		static const double desiredHandRadius = .170 / 2.0;
+		static const double scaleFactor = desiredHandRadius / bs.radius();
+		centering->setScale(osg::Vec3d(scaleFactor, scaleFactor, scaleFactor));
+		centering->getOrCreateStateSet()->setMode(GL_RESCALE_NORMAL, 1);
 
 		centering->addChild(_leftyrighty.get());
 		this->addChild(centering.get());
