@@ -61,7 +61,7 @@ namespace glove {
 			std::vector<double> getBends() const {
 				return _bends;
 			}
-			
+
 			std::vector<double> getRaw() const {
 				return _raw;
 			}
@@ -83,7 +83,7 @@ namespace glove {
 				assert(var.size() == 5);
 				_rawVariance = var;
 			}
-			
+
 		private:
 			std::vector<double> _bends;
 			std::vector<double> _raw;

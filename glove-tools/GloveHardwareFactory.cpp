@@ -53,17 +53,17 @@ namespace glove {
 		_creators[name] = creatorFunc;
 		return true;
 	}
-	
+
 	GloveHardwareFactory::GloveHardwareFactory() {
 		registerHardwareCreator("MockGloveHardware", & MockGloveHardware::create);
 		registerHardwareCreator("FakeFlexingGloveHardware", & FakeFlexingGloveHardware::create);
-		
-		#ifdef BUILD_WITH_GLOVE5DT
+
+#ifdef BUILD_WITH_GLOVE5DT
 		registerHardwareCreator("GloveHardware5DT", & GloveHardware5DT::create);
-		#endif
-		#ifdef BUILD_WITH_VRPN
+#endif
+#ifdef BUILD_WITH_VRPN
 		registerHardwareCreator("GloveHardwareVRPN", & GloveHardwareVRPN::create);
-		#endif
+#endif
 	}
 
 

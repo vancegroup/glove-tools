@@ -34,46 +34,46 @@ namespace glove {
 			Calibration();
 			Calibration(std::vector<double> const& mins, std::vector<double> const& maxes);
 			~Calibration();
-			
+
 			void startCalibrating();
 			void stopCalibrating();
-			
+
 			std::vector<double> processBends(std::vector<double> const& bends);
-			
+
 			std::vector<double> const& getRanges() const;
 			std::vector<double> const& getMins() const;
-			std::vector<double> const& getMaxes() const;	
-			
+			std::vector<double> const& getMaxes() const;
+
 		private:
 			bool _autoCalibrating;
 			std::vector<double> _ranges;
 			std::vector<double> _mins;
 			std::vector<double> _maxes;
 	};
-	
-	
+
+
 	template<class Stream>
 	Stream & operator>>(Stream & s, Calibration & c) {
 		std::string line;
 		std::getline(s, line); // read and throw away headers
 		std::vector<double> mins;
 		std::vector<double> maxes;
-		
+
 		for (unsigned int i = 0; i < 5; ++i) {
 			std::getline(s, line);
 			std::stringstream ls(line);
 			double nextMin;
 			ls >> nextMin;
 			mins.push_back(nextMin);
-			
+
 			double nextMax;
 			ls >> nextMax;
 			maxes.push_back(nextMax);
 		}
 		c = Calibration(mins, maxes);
-		return s;		
+		return s;
 	}
-	
+
 	template<class Stream>
 	Stream & operator<<(Stream & s, Calibration const& c) {
 		std::vector<double> mins = c.getMins();
@@ -83,7 +83,7 @@ namespace glove {
 		for (unsigned int i = 0; i < ranges.size(); ++i) {
 			s << std::setw(10) << mins[i] << std::setw(10) << maxes[i] << std::setw(10) << ranges[i]  << std::endl;
 		}
-		return s;	
+		return s;
 	}
 }
 

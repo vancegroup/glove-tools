@@ -25,11 +25,11 @@
 
 namespace glove {
 	enum Finger {
-		THUMB,
-		INDEX_FINGER,
-		MIDDLE_FINGER,
-		RING_FINGER,
-		PINKY_FINGER
+	    THUMB,
+	    INDEX_FINGER,
+	    MIDDLE_FINGER,
+	    RING_FINGER,
+	    PINKY_FINGER
 	};
 }
 

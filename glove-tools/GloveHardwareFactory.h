@@ -32,21 +32,21 @@ namespace glove {
 
 	typedef boost::function<GloveHardwarePtr(std::string const &)> HardwareCreator;
 
-	
-	
+
+
 	/// singleton for hardware create-by-name
 	class GloveHardwareFactory {
 		public:
 			static GloveHardwareFactory * instance();
 			GloveHardwarePtr createByName(std::string const & name, std::string const & option = "");
-			
+
 			bool registerHardwareCreator(std::string const & name, HardwareCreator creatorFunc);
 
 			struct UnregisteredHardwareTypeException : public std::runtime_error {
 				UnregisteredHardwareTypeException(std::string const& name) :
 					std::runtime_error("The following device type is not registered so could not be created: " + name) {}
 			};
-			
+
 
 		private:
 			GloveHardwareFactory();

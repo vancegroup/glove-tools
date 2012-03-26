@@ -41,8 +41,8 @@ namespace glove {
 				osg::Vec3f thumb_oppose(0.1, 0, -1);
 				thumb_oppose.normalize();
 				finger.push_back(thumb_oppose);
-				finger.push_back(osg::Vec3f(1/std::sqrt(2.0), 0, -1/std::sqrt(2.0)));
-				finger.push_back(osg::Vec3f(1/std::sqrt(2.0), 0, -1/std::sqrt(2.0)));
+				finger.push_back(osg::Vec3f(1 / std::sqrt(2.0), 0, -1 / std::sqrt(2.0)));
+				finger.push_back(osg::Vec3f(1 / std::sqrt(2.0), 0, -1 / std::sqrt(2.0)));
 				axes.push_back(finger);
 			}
 			for (unsigned int i = 0; i < 4; ++i) {
@@ -57,13 +57,13 @@ namespace glove {
 		}
 		return axes[f][joint];
 	}
-			
+
 
 	GloveNode::GloveNode(Glove const & g) :
-			_g(g),
-			_leftyrighty(new osg::Switch) {
+		_g(g),
+		_leftyrighty(new osg::Switch) {
 		/// load the model and set the updater here
-		
+
 		/// First try the file
 		osg::ref_ptr<osg::Node> model = osgDB::readNodeFile("hand-structured.osg");
 
@@ -72,55 +72,59 @@ namespace glove {
 			std::string osgfile(reinterpret_cast<char*>(hand_structured_osg), hand_structured_osg_len);
 			model = osgDB::readNodeFile(osgfile + ".osgs"); // Pseudo OpenSceneGraph file, with file encoded in filename string
 		}
-		
+
 		if (!model.valid()) {
 			throw new std::runtime_error("Could not find hand-structured.osg to load and embedded copy failed too!");
 		}
-		
-		/// Grab the meaningful parent node.
-		osg::ref_ptr<osg::Group> hand = model->asGroup();
-		hand->computeBound(); //calculate bound information since we need this before update is called
-		while (hand->getName() != "hand") {
-			assert(hand->getNumChildren() == 1);
-			hand = hand->getChild(0)->asGroup(); // only has 1 child
+
+		{
+			/// Grab the meaningful parent node "hand" and use it only to find the finger joints
+			osg::ref_ptr<osg::Group> hand = model->asGroup();
+			while (hand->getName() != "hand") {
+				assert(hand->getNumChildren() == 1);
+				hand = hand->getChild(0)->asGroup(); // only has 1 child
+			}
+
+			osg::ref_ptr<osg::PositionAttitudeTransform> fingerBase;
+
+			fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "thumb0").get());
+			assert(fingerBase.valid());
+			_joints.push_back(_findJoints(fingerBase));
+
+			fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "index0").get());
+			assert(fingerBase.valid());
+			_joints.push_back(_findJoints(fingerBase));
+
+			fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "middle0").get());
+			assert(fingerBase.valid());
+			_joints.push_back(_findJoints(fingerBase));
+
+			fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "ring0").get());
+			assert(fingerBase.valid());
+			_joints.push_back(_findJoints(fingerBase));
+
+			fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "pinky0").get());
+			assert(fingerBase.valid());
+			_joints.push_back(_findJoints(fingerBase));
 		}
 
-		osg::ref_ptr<osg::PositionAttitudeTransform> fingerBase;
-		
-		fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "thumb0").get());
-		assert(fingerBase.valid());
-		_joints.push_back(_findJoints(fingerBase));
-		
-		fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "index0").get());
-		assert(fingerBase.valid());
-		_joints.push_back(_findJoints(fingerBase));
-		
-		fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "middle0").get());
-		assert(fingerBase.valid());
-		_joints.push_back(_findJoints(fingerBase));
-		
-		fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "ring0").get());
-		assert(fingerBase.valid());
-		_joints.push_back(_findJoints(fingerBase));
-		
-		fingerBase = dynamic_cast<osg::PositionAttitudeTransform*>(_getNamedChild(hand, "pinky0").get());
-		assert(fingerBase.valid());
-		_joints.push_back(_findJoints(fingerBase));
-		
+
 		{
+			/// Make a switch with two children, each a matrix transform.
+			/// One will be the right hand, the other will be the left hand.
 			osg::ref_ptr<osg::MatrixTransform> handedness = new osg::MatrixTransform;
 			handedness->addChild(model);
 			_leftyrighty->addChild(handedness);
-		
+
 			handedness = new osg::MatrixTransform;
 			handedness->addChild(model);
 			_leftyrighty->addChild(handedness);
 		}
-		
+
 		{
 			/// Model is right hand by default, so leave right-hand xform as identity.
 			osg::ref_ptr<osg::MatrixTransform> leftXform = dynamic_cast<osg::MatrixTransform*>(_leftyrighty->getChild(LEFT_HAND));
-		
+
 			/* multiplying by:
 			1	0	0	0
 			0	-1	0	0
@@ -128,25 +132,34 @@ namespace glove {
 			0	0	0	1
 			should flip across the y axis */
 			leftXform->setMatrix(
-					osg::Matrix(1, 0, 0, 0,
-					0, -1, 0, 0,
-					0, 0, 1, 0,
-					0, 0, 0, 1)
-					);
+			    osg::Matrix(1, 0, 0, 0,
+			                0, -1, 0, 0,
+			                0, 0, 1, 0,
+			                0, 0, 0, 1)
+			);
 		}
-		
+
 		/// Set up handedness right the first time
 		_leftyrighty->setSingleChildOn(_g.getHand());
-				
-		/// Make sure the model is centered;
-				
+
+		/// Make sure the model is centered and human-sized
+		/// (hand length arbitrarily considered to be .170 m based on
+		/// http://usability.gtri.gatech.edu/eou_info/hand_anthro.php )
+
 		const osg::BoundingSphere & bs = _leftyrighty->getBound();
+
 		osg::ref_ptr<osg::PositionAttitudeTransform> centering = new osg::PositionAttitudeTransform;
-		centering->setPosition(bs.center() * -1);
+		centering->setPosition(bs.center() * -1.0);
+
+		static const double desiredHandRadius = .170 / 2.0;
+		static const double scaleFactor = desiredHandRadius / bs.radius();
+		centering->setScale(osg::Vec3d(scaleFactor, scaleFactor, scaleFactor));
+		centering->getOrCreateStateSet()->setMode(GL_RESCALE_NORMAL, 1);
+
 		centering->addChild(_leftyrighty.get());
 		this->addChild(centering.get());
 	}
-	
+
 	void GloveNode::doUpdate() {
 		/// Update Handedness
 		_leftyrighty->setSingleChildOn(_g.getHand());
@@ -176,17 +189,17 @@ namespace glove {
 			_joints[finger][i]->setAttitude(osg::Quat(jointAngle, _getJointAxis(finger, i))); //rotate around X axis
 		}
 	}
-	
+
 	GloveNode::JointList GloveNode::_findJoints(osg::ref_ptr<osg::PositionAttitudeTransform> const& parent) {
 		JointList singleFinger;
 		osg::ref_ptr<osg::PositionAttitudeTransform> joint = parent;
-		
+
 		while (joint.valid()) {
 			//set pivot point so the joints don't jump around
 			const osg::BoundingSphere & bs = joint->getBound();
 			osg::Vec3d pivot(bs.center().x(),
-				bs.center().y() + 0.01,
-				bs.center().z() - 0.7 * bs.radius()); /// Scale radius to not pivot around the very bottom of the bounds.
+			                 bs.center().y() + 0.01,
+			                 bs.center().z() - 0.7 * bs.radius()); /// Scale radius to not pivot around the very bottom of the bounds.
 
 
 			//std::cout << "Radius: " << bs.radius() <<  ", Pivot at " << pivot.x() << ", " << pivot.y() << ", " << pivot.z() << std::endl;
@@ -196,9 +209,9 @@ namespace glove {
 			joint = _getChildTransform(joint);
 		}
 		//std::cout << "Finger starting with " << parent->getName() << " has " << singleFinger.size() << " joints." << std::endl;
-		return singleFinger;	
+		return singleFinger;
 	}
-	
+
 	osg::ref_ptr<osg::PositionAttitudeTransform> GloveNode::_getChildTransform(osg::ref_ptr<osg::Group> const& parent) {
 		osg::ref_ptr<osg::PositionAttitudeTransform> child;
 		for (unsigned int i = 0; i < parent->getNumChildren(); ++i) {
@@ -209,7 +222,7 @@ namespace glove {
 		}
 		return child;
 	}
-	
+
 	osg::ref_ptr<osg::Node> GloveNode::_getNamedChild(osg::ref_ptr<osg::Group> const& parent, std::string const& name) {
 		osg::ref_ptr<osg::Node> nullPtr;
 		if (!parent.valid()) {
@@ -222,7 +235,7 @@ namespace glove {
 				return child;
 			}
 		}
-	
+
 		return nullPtr;
 	}
 }
