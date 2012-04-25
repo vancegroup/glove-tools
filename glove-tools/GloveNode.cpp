@@ -148,14 +148,19 @@ namespace glove {
 
 		const osg::BoundingSphere & bs = _leftyrighty->getBound();
 
-		osg::ref_ptr<osg::PositionAttitudeTransform> centering = new osg::PositionAttitudeTransform;
-		centering->setPosition(bs.center() * -1.0);
+		osg::ref_ptr<osg::MatrixTransform> centering = new osg::MatrixTransform();
 
 		static const double desiredHandRadius = .170 / 2.0;
 		static const double scaleFactor = desiredHandRadius / bs.radius();
-		centering->setScale(osg::Vec3d(scaleFactor, scaleFactor, scaleFactor));
 		centering->getOrCreateStateSet()->setMode(GL_RESCALE_NORMAL, 1);
 
+		centering->setMatrix(
+			/// This is to make sure the center of the bounding sphere is
+			/// at the center of the origin.
+			osg::Matrix::translate(bs.center() * -1.0) *
+			/// and this does the resizing - not commutative so must be in this
+			/// order to stay centered.
+			osg::Matrix::scale(scaleFactor, scaleFactor, scaleFactor));
 		centering->addChild(_leftyrighty.get());
 		this->addChild(centering.get());
 	}
