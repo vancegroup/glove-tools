@@ -3,6 +3,7 @@
 ## Testing
 
 - Make a unit test for radius of GloveNode bounding sphere as 0.085
+- Unit test for center of glovenode bounding sphere to be approximately 0, 0, 0
 
 ## Refactoring
 
