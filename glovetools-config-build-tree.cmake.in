@@ -15,7 +15,7 @@ include("@CMAKE_CURRENT_BINARY_DIR@/glovetools-targets.cmake")
 
 set(GLOVETOOLS_LIBRARIES glovetools_imported_glovetools)
 set(GLOVETOOLS_RUNTIME_LIBRARIES)
-set(GLOVETOOLS_RUNTIME_LIBRARY_DIRS @RUNTIME_LIBRARY_DIRS@)
+set(GLOVETOOLS_RUNTIME_LIBRARY_DIRS "@RUNTIME_LIBRARY_DIRS@")
 
 
 # Runtime library info - only useful for shared libraries
