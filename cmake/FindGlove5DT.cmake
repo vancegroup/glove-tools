@@ -63,18 +63,21 @@ if(WIN32)
 		"${GLOVE5DT_ROOT_DIR}"
 		"${_dirsultra}"
 		SUFFIXES
+		"/"
 		"/lib")
 	list_combinations(_incsearchultra
 		PREFIXES
 		"${GLOVE5DT_ROOT_DIR}"
 		"${_dirsultra}"
 		SUFFIXES
+		"/"
 		"/inc")
 	list_combinations(_dllsearchultra
 		PREFIXES
 		"${GLOVE5DT_ROOT_DIR}"
 		"${_dirsultra}"
 		SUFFIXES
+		"/"
 		"/dll")
 endif()
 
