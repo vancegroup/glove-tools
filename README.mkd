@@ -1,0 +1,13 @@
+glove-tools
+==========
+
+
+Notes
+---------
+
+When using the 5Dt Glove, make a folder in the root installation
+location of the 5DT software called "SDK".  Download the Windows
+32/64bit driver zip file from [5DT](http://www.5dt.com/?page_id=34).
+Then, copy the contents of the zip to the SDK folder.  This allows
+CMake to appropriately find the includes and libraries without
+having to manually specify location of GLOVE5DT_ROOT_DIR.
