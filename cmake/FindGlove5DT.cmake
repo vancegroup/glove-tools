@@ -200,8 +200,8 @@ select_library_configurations(GLOVE5DT_RUNTIME)
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Glove5DT
 	DEFAULT_MSG
-	GLOVE5DT_LIBRARY_RELEASE
-	GLOVE5DT_RUNTIME_LIBRARY_RELEASE
+	GLOVE5DT_LIBRARY
+	GLOVE5DT_RUNTIME_LIBRARY
 	GLOVE5DT_INCLUDE_DIR)
 
 
