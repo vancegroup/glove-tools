@@ -92,20 +92,36 @@ find_path(GLOVE5DT_INCLUDE_DIR
 	${_incsearchultra}
 	${GLOVE5DT_ROOT_DIR})
 
-find_library(GLOVE5DT_LIBRARY_RELEASE
-	NAMES
-	fglove
-	HINTS
-	${_libsearchultra}
-	${GLOVE5DT_ROOT_DIR})
+if(WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 8)
+	find_library(GLOVE5DT_LIBRARY_RELEASE
+		NAMES
+		fglove64
+		HINTS
+		${_libsearchultra}
+		${GLOVE5DT_ROOT_DIR})
 
-find_library(GLOVE5DT_LIBRARY_DEBUG
-	NAMES
-	fgloved
-	HINTS
-	${_libsearchultra}
-	${GLOVE5DT_ROOT_DIR})
+	# Note: this library never seen in the wild.
+	find_library(GLOVE5DT_LIBRARY_DEBUG
+		NAMES
+		fgloved64
+		HINTS
+		${_libsearchultra}
+		${GLOVE5DT_ROOT_DIR})
+else()
+	find_library(GLOVE5DT_LIBRARY_RELEASE
+		NAMES
+		fglove
+		HINTS
+		${_libsearchultra}
+		${GLOVE5DT_ROOT_DIR})
 
+	find_library(GLOVE5DT_LIBRARY_DEBUG
+		NAMES
+		fgloved
+		HINTS
+		${_libsearchultra}
+		${GLOVE5DT_ROOT_DIR})
+endif()
 
 select_library_configurations(GLOVE5DT)
 # As a post condition, either both LIBRARY_RELEASE and LIBRARY_DEBUG are set, or
@@ -116,17 +132,25 @@ select_library_configurations(GLOVE5DT)
 # Ultra (2.0) SDK Runtime Libraries
 ###
 if(WIN32)
-	find_file(GLOVE5DT_RUNTIME_LIBRARY_RELEASE
-		NAMES
-		fglove.dll
-		HINTS
-		${_dllsearchultra})
+	if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+		find_file(GLOVE5DT_RUNTIME_LIBRARY_RELEASE
+			NAMES
+			fglove64.dll
+			HINTS
+			${_dllsearchultra})
+	else()
+		find_file(GLOVE5DT_RUNTIME_LIBRARY_RELEASE
+			NAMES
+			fglove.dll
+			HINTS
+			${_dllsearchultra})
 
-	find_file(GLOVE5DT_RUNTIME_LIBRARY_DEBUG
-		NAMES
-		fgloved.dll
-		HINTS
-		${_dllsearchultra})
+		find_file(GLOVE5DT_RUNTIME_LIBRARY_DEBUG
+			NAMES
+			fgloved.dll
+			HINTS
+			${_dllsearchultra})
+	endif()
 else()
 	# the library is the runtime library
 	set(GLOVE5DT_RUNTIME_LIBRARY_RELEASE "${GLOVE5DT_LIBRARY_RELEASE}")
